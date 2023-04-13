@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,16 +12,68 @@ namespace NexusAPIWrapper
     public class NexusHomeRessource
     {
         string url;
-        string tokenObject;
+        string accessToken;
         const string homeRessourceEndpointURL = "/api/core/mobile/ringsted/v2/";
 
-        public NexusHomeRessource(string url, string tokenObject)
+        public SortedDictionary<string, string> Links;
+
+        public NexusHomeRessource()
+        {
+            Links = new SortedDictionary<string, string>();
+        }
+        
+        public NexusHomeRessource(string url, string accessToken)
         {
             this.url = url;
-            this.tokenObject = tokenObject;
+            this.accessToken = accessToken;
         }
+        public void AddResource(string linkName, string href)
+        {
+            if (Links.ContainsKey(linkName))
+                return;
+            Links.Add(linkName, href);
+        }
+        public NexusResult GetHomeRessource() 
+        {
+            string homeRessourceEndpoint = this.url + homeRessourceEndpointURL;
+            var options = new RestClientOptions(this.url)
+                {
+                MaxTimeout = -1,
+            };
+            var restClient = new RestClient(options);
+            var request = new RestRequest(homeRessourceEndpoint);
+            request.AddHeader("Authorization", $"Bearer {accessToken}");
+            RestResponse response = restClient.ExecuteGet(request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(response.StatusDescription);
+            }
+            else
+            {
+                NexusResult result = new NexusResult(
+                    response.StatusCode, 
+                    response.StatusDescription, 
+                    MakeResult(response.Content));
+                return result;
+            }
 
 
+        }
+        private NexusHomeRessource MakeResult(string response)
+        {
+            dynamic result = JObject.Parse(response);
+            var links = result["_links"];
+            NexusHomeRessource resources = new NexusHomeRessource();
+
+            foreach (var item in links)
+            {
+                string ressourceName = Convert.ToString(item.Name);
+                string href = Convert.ToString(item.First["href"]);
+                resources.AddResource(ressourceName, href);
+            }
+            return resources;
+        }
     }
 
     

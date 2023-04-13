@@ -10,13 +10,7 @@ namespace NexusAPIWrapper
     public class NexusAPI
     {
         #region Properties
-        const string reviewURL = "https://ringsted.nexus-review.dk";
-        const string liveURL = "https://ringsted.nexus.dk";
-
-        const string clientId = "Ringsted_client";
-
-        const string reviewClientSecret = "";
-        const string liveClientSecret = "";
+        
 
         
 
@@ -27,10 +21,23 @@ namespace NexusAPIWrapper
 
         #endregion
 
+        public NexusAPI()
+        {
+            
+        }
+
+        NexusTokenObject tokenObject = new NexusTokenObject(liveURL, clientId, reviewClientSecret);
         public void GetHomeRessource(string environment)
         {
-            RestClient restClient = new RestSharp.RestClient();
-            restClient.op
+            if (environment.ToLower() == "live") 
+            {
+                NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(liveURL);
+            }
+            else
+            {
+                NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(reviewURL);
+            }
+            
         }
     }
 }
