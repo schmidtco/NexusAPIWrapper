@@ -15,7 +15,8 @@ namespace NexusAPIWrapper
         
 
         private NexusTokenObject _tokenObject;
-
+        private NexusHomeRessource _ressource;
+        private ClientCredentials _clientCredentials;
 
 
 
@@ -23,21 +24,33 @@ namespace NexusAPIWrapper
 
         public NexusAPI()
         {
+            _clientCredentials = new ClientCredentials();
+            _tokenObject = new NexusTokenObject(_clientCredentials.url, _clientCredentials.clientId, _clientCredentials.clientSecret);
+            _ressource = GetHomeRessource();
+        }
+
+        public NexusHomeRessource GetHomeRessource()
+        {
+                NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(_clientCredentials.url, _tokenObject.AccessToken);
+                return nexusHomeRessource;
+        }
+        public void CheckTokens()
+        {
             
         }
 
-        NexusTokenObject tokenObject = new NexusTokenObject(liveURL, clientId, reviewClientSecret);
-        public void GetHomeRessource(string environment)
+        public string GetHomeRessourceLink(string linkName)
         {
-            if (environment.ToLower() == "live") 
-            {
-                NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(liveURL);
-            }
-            else
-            {
-                NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(reviewURL);
-            }
-            
+            return _ressource.Links[linkName];
+        }
+        public string GetPatientDetailsSearchLink()
+        {
+            return GetHomeRessourceLink("patientDetailsSearch");
+        }
+        
+        public void GetPatientDetails(string CitizenCPR)
+        {
+
         }
     }
 }

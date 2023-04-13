@@ -64,15 +64,15 @@ namespace NexusAPIWrapper
         {
             dynamic result = JObject.Parse(response);
             var links = result["_links"];
-            NexusHomeRessource resources = new NexusHomeRessource();
+            NexusHomeRessource Links = new NexusHomeRessource();
 
             foreach (var item in links)
             {
                 string ressourceName = Convert.ToString(item.Name);
                 string href = Convert.ToString(item.First["href"]);
-                resources.AddResource(ressourceName, href);
+                Links.AddResource(ressourceName, href);
             }
-            return resources;
+            return Links;
         }
     }
 
