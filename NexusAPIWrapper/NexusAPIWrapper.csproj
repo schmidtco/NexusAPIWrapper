@@ -40,6 +40,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NexusHomeRessource.cs" />
     <Compile Include="NexusTokenObject.cs" />
     <Compile Include="NexusAPI.cs" />
     <Compile Include="NexusResult.cs" />

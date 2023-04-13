@@ -29,16 +29,16 @@ namespace NexusAPITest
         [Test]
         public void testSearchPatientByName()
         {
-            NexusAPI _nkNexusAPI = new NexusAPI();
-            NexusResult result = _nkNexusAPI.SearchPatient("Kaja Test Hansen");
-            Assert.IsFalse(string.IsNullOrEmpty(_nkNexusAPI.AccessToken));
+            NexusAPI _NexusAPI = new NexusAPI();
+            NexusResult result = _NexusAPI.SearchPatient("Kaja Test Hansen");
+            Assert.IsFalse(string.IsNullOrEmpty(_NexusAPI.AccessToken));
             Assert.IsTrue(result.httpStatusCode == System.Net.HttpStatusCode.OK);
         }
         [Test]
         public void testSearchPatientByCPR()
         {
-            NexusAPI _nkNexusAPI = new NexusAPI();
-            NexusResult result = _nkNexusAPI.SearchPatient("210300-9996");
+            NexusAPI _NexusAPI = new NexusAPI();
+            NexusResult result = _NexusAPI.SearchPatient("210300-9996");
             Assert.IsTrue(result.httpStatusCode == System.Net.HttpStatusCode.OK);
             NexusPatient patient = result.Result as NexusPatient;
 
@@ -60,8 +60,8 @@ namespace NexusAPITest
         [Test]
         public void testDocuments()
         {
-            NexusAPI _nkNexusAPI = new NexusAPI();
-            NexusResult result = _nkNexusAPI.Getdocuments(/*cpr*/"210300-9996");
+            NexusAPI _NexusAPI = new NexusAPI();
+            NexusResult result = _NexusAPI.Getdocuments(/*cpr*/"210300-9996");
         }
 
     }
