@@ -13,31 +13,42 @@ namespace NexusAPIWrapper
         public RestClientOptions clientOptions { get; set; }
         public RestRequest request { get; set; }
         public RestResponse response { get; set; }
+        public RestSharp.Method method { get; set; }
         
-        public WebRequest(string baseURL, string endpointURL, string requestMethod) 
+        public WebRequest(string baseURL, string endpointURL, RestSharp.Method requestMethod) 
         {
             
             clientOptions = new RestClientOptions(baseURL);
             restClient = new RestClient(clientOptions);
-            switch (requestMethod.ToUpper())
-            {
-                case "GET":
-                    request = new RestRequest(endpointURL, Method.Get);
-                    break;
-                case "POST":
-                    request = new RestRequest(endpointURL, Method.Post);
-                    break;
-                default:
-                    throw new Exception("Request method unknown");
-            }
+            method = requestMethod;
             
+            request = new RestRequest(endpointURL,requestMethod);
             
         }
 
-        public RestResponse ExecuteRequest(string method)
+        public RestResponse Execute(RestSharp.Method requestMethod)
         {
-            return restClient.ExecuteGet(request);
-            restClient.executepo
+            switch (requestMethod)
+            {
+                case Method.Get:
+                    return restClient.ExecuteGet(request);
+                case Method.Post:
+                    return restClient.ExecutePost(request);
+                case Method.Put:
+                    return restClient.ExecutePut(request);
+                case Method.Delete:
+                    return restClient.Delete(request);
+                case Method.Head:
+                    return restClient.Head(request);
+                case Method.Options:
+                    return restClient.Options(request);
+                case Method.Patch:
+                    return restClient.Patch(request);
+                default:
+                    throw new NotImplementedException("Request method not implemented.");
+            }
         }
+
+
     }
 }

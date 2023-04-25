@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CSharp;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace NexusAPIWrapper
 {
@@ -19,7 +21,7 @@ namespace NexusAPIWrapper
 
         public NexusHomeRessource()
         {
-            Links = new SortedDictionary<string, string>();
+            //Links = new SortedDictionary<string, string>();
         }
         
         public NexusHomeRessource(string url, string accessToken)
@@ -60,10 +62,14 @@ namespace NexusAPIWrapper
 
 
         }
-        private NexusHomeRessource MakeResult(string response)
+        public NexusHomeRessource MakeResult(string response)
         {
-            dynamic result = JObject.Parse(response);
-            var links = result["_links"];
+            dynamic result = JsonDocument.Parse(response);
+            dynamic links = result["_links"];
+            
+
+            //dynamic result = JObject.Parse(response);
+            //dynamic links = result["_links"];
             NexusHomeRessource Links = new NexusHomeRessource();
 
             foreach (var item in links)

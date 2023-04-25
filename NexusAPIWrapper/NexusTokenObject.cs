@@ -7,6 +7,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CSharp;
 
 namespace NexusAPIWrapper
 {
@@ -82,6 +83,7 @@ namespace NexusAPIWrapper
 
         private void SetProperties(string response)
         {
+            
             dynamic result = JObject.Parse(response);
             this.AccessToken = Convert.ToString(result["access_token"]);
             this.ExpiresIn = Convert.ToInt32(result["expires_in"]);

@@ -19,7 +19,10 @@ namespace NexusAPIWrapper
         private ClientCredentials _clientCredentials;
 
 
-
+        public NexusTokenObject tokenObject
+        {
+            get => _tokenObject;
+        }
         #endregion
 
         public NexusAPI()
@@ -31,26 +34,40 @@ namespace NexusAPIWrapper
 
         public NexusHomeRessource GetHomeRessource()
         {
-                NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(_clientCredentials.url, _tokenObject.AccessToken);
-                return nexusHomeRessource;
+            NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(_clientCredentials.url, _tokenObject.AccessToken);
+            return nexusHomeRessource;
         }
         public void CheckTokens()
         {
-            
+
         }
 
         public string GetHomeRessourceLink(string linkName)
         {
-            return _ressource.Links[linkName];
+            if (_ressource.Links.Count == 0)
+            {
+                _ressource.MakeResult(_ressource.GetHomeRessource().ToString());
+                return _ressource.Links[linkName];
+            }
+            else
+            {
+                return _ressource.Links[linkName];
+            }
+            
         }
         public string GetPatientDetailsSearchLink()
         {
             return GetHomeRessourceLink("patientDetailsSearch");
         }
         
-        public void GetPatientDetails(string CitizenCPR)
+        public NexusResult GetPatientDetailsByCPR(string CitizenCPR)
         {
-
+            WebRequest request = new WebRequest(_clientCredentials.url, GetPatientDetailsSearchLink(), Method.Get);
+            request.Execute(Method.Get);
+            NexusHomeRessource nexusHomeRessource = new NexusHomeRessource();
+            NexusResult result = new NexusResult(request.response.StatusCode,request.response.StatusDescription,nexusHomeRessource.MakeResult(request.response.ToString()));
+            return result;
+            
         }
     }
 }
