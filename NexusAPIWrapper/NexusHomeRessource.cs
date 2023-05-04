@@ -13,21 +13,25 @@ namespace NexusAPIWrapper
 {
     public class NexusHomeRessource
     {
+        #region Properties
         string url;
         string accessToken;
         const string homeRessourceEndpointURL = "/api/core/mobile/ringsted/v2/";
 
         public SortedDictionary<string, string> Links;
 
-        public NexusHomeRessource()
-        {
-            //Links = new SortedDictionary<string, string>();
-        }
+        #endregion
+        //public NexusHomeRessource()
+        //{
+        //    Links = new SortedDictionary<string, string>();
+        //}
         
         public NexusHomeRessource(string url, string accessToken)
         {
             this.url = url;
             this.accessToken = accessToken;
+            Links = new SortedDictionary<string, string>();
+            //GetHomeRessource();
         }
         public void AddResource(string linkName, string href)
         {
@@ -37,13 +41,13 @@ namespace NexusAPIWrapper
         }
         public NexusResult GetHomeRessource() 
         {
-            string homeRessourceEndpoint = this.url + homeRessourceEndpointURL;
+            //string homeRessourceEndpoint = homeRessourceEndpointURL;
             var options = new RestClientOptions(this.url)
                 {
                 MaxTimeout = -1,
             };
             var restClient = new RestClient(options);
-            var request = new RestRequest(homeRessourceEndpoint);
+            var request = new RestRequest(homeRessourceEndpointURL);
             request.AddHeader("Authorization", $"Bearer {accessToken}");
             RestResponse response = restClient.ExecuteGet(request);
 
@@ -62,24 +66,34 @@ namespace NexusAPIWrapper
 
 
         }
-        public NexusHomeRessource MakeResult(string response)
+        public SortedDictionary<string, string> MakeResult(string response)
         {
-            dynamic result = JsonDocument.Parse(response);
+            dynamic result = JObject.Parse(response);
             dynamic links = result["_links"];
-            
-
-            //dynamic result = JObject.Parse(response);
-            //dynamic links = result["_links"];
-            NexusHomeRessource Links = new NexusHomeRessource();
+            //NexusHomeRessource Ressources = new NexusHomeRessource(url, accessToken);
 
             foreach (var item in links)
             {
                 string ressourceName = Convert.ToString(item.Name);
                 string href = Convert.ToString(item.First["href"]);
-                Links.AddResource(ressourceName, href);
+                this.AddResource(ressourceName, href);
             }
             return Links;
         }
+        //public NexusHomeRessource MakeResult(string response)
+        //{
+        //    dynamic result = JObject.Parse(response);
+        //    dynamic links = result["_links"];
+        //    NexusHomeRessource Ressources = new NexusHomeRessource(url, accessToken);
+
+        //    foreach (var item in links)
+        //    {
+        //        string ressourceName = Convert.ToString(item.Name);
+        //        string href = Convert.ToString(item.First["href"]);
+        //        Ressources.AddResource(ressourceName, href);
+        //    }
+        //    return Ressources;
+        //}
     }
 
     

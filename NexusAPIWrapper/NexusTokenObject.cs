@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CSharp;
+using System.Runtime.CompilerServices;
 
 namespace NexusAPIWrapper
 {
@@ -17,7 +18,7 @@ namespace NexusAPIWrapper
         static Timer refreshTokenTimer;
         const string tokenEndpointURL = "/authx/realms/ringsted/protocol/openid-connect/token";
 
-        string _nkUrl;
+        string _url;
         string _clientID;
         string _clientSecret;
 
@@ -66,21 +67,45 @@ namespace NexusAPIWrapper
             get => string.IsNullOrEmpty(_session_state) ? throw new Exception("_session_state") : _session_state;
             private set => _session_state = value;
         }
-        public string url { get => string.IsNullOrEmpty(_nkUrl) ? throw new Exception("_nkUrl") : _nkUrl; private set => _nkUrl = value; }
-        public string clientID { get => string.IsNullOrEmpty(_clientID) ? throw new Exception("_clientID") : _clientID; private set => _clientID = value; }
-        public string clientSecret { get => string.IsNullOrEmpty(_clientSecret) ? throw new Exception("_clientSecret") : _clientSecret; private set => _clientSecret = value; }
+        public string url { get => string.IsNullOrEmpty(_url) ? throw new Exception("_Url") : _url; private set => _url = value; }
+        public string clientID 
+        {
+            get => string.IsNullOrEmpty(_clientID) ? throw new Exception("_clientID") : _clientID; 
+            private set => _clientID = value; 
+        }
+        public string clientSecret 
+        { 
+            get => string.IsNullOrEmpty(_clientSecret) ? throw new Exception("_clientSecret") : _clientSecret; 
+            private set => _clientSecret = value; 
+        }
 
         #endregion
 
 
-
-        public NexusTokenObject(string url, string clientid, string secret)
+        public NexusTokenObject(ClientCredentials credentials)
         {
-            this.url = url;
-            clientID = clientid;
-            clientSecret = secret;
-        }
+            url = credentials.Host;
+            clientID = credentials.Client_id;
+            clientSecret = credentials.Client_secret;
 
+            CheckProperties();
+        }
+        //public NexusTokenObject(string url, string clientid, string secret)
+        //{
+        //    this.url = url;
+        //    clientID = clientid;
+        //    clientSecret = secret;
+
+        //    CheckProperties();
+        //}
+
+        private void CheckProperties()
+        {
+            if (string.IsNullOrEmpty(_access_token))
+            {
+                GetAccessTokenFromNexus();
+            }
+        }
         private void SetProperties(string response)
         {
             
@@ -94,9 +119,9 @@ namespace NexusAPIWrapper
             this.SessionState = Convert.ToString(result["session_state"]);
         }
 
-        void GetToken(bool userefreshtoken)
+        public void GetToken(bool userefreshtoken)
         {
-            var options = new RestClientOptions(this.url)
+            var options = new RestClientOptions(url)
             {
                 MaxTimeout = -1,
             };
