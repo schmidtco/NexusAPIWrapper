@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit3TestAdapter.4.4.2\build\net462\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.4.4.2\build\net462\NUnit3TestAdapter.props')" />
+  <Import Project="..\packages\NUnit.3.13.3\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.13.3\build\NUnit.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E0981441-A46B-4B6A-B5C7-DB74726BB9D1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NexusAPIWrapper</RootNamespace>
+    <AssemblyName>NexusAPIWrapper</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="RKSQLRPA01DataSet.xsc">
+      <DependentUpon>RKSQLRPA01DataSet.xsd</DependentUpon>
+    </None>
+    <None Include="RKSQLRPA01DataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>RKSQLRPA01DataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RKSQLRPA01DataSet.xss">
+      <DependentUpon>RKSQLRPA01DataSet.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClientCredentials.cs" />
+    <Compile Include="Document Object\Create\AvailablePathwayAssociation.cs" />
+    <Compile Include="Document Object\Create\AvailableRootProgramPathways.cs" />
+    <Compile Include="Document Object\Create\AvailableTags.cs" />
+    <Compile Include="Document Object\Create\Create.cs" />
+    <Compile Include="Document Object\Create\Links.cs" />
+    <Compile Include="Document Object\Create\PathwayAssociation.cs" />
+    <Compile Include="Document Object\Create\PatientPathway.cs" />
+    <Compile Include="Document Object\Create\Placement.cs" />
+    <Compile Include="Document Object\Create\CreateDocumentObject.cs" />
+    <Compile Include="DataHandler.cs" />
+    <Compile Include="NexusAPI_processes.cs" />
+    <Compile Include="NexusHomeRessource.cs" />
+    <Compile Include="NexusTokenObject.cs" />
+    <Compile Include="NexusAPI.cs" />
+    <Compile Include="NexusResult.cs" />
+    <Compile Include="OrganizationsTree\OrganizationsTree_Child.cs" />
+    <Compile Include="OrganizationsTree\OrganizationsTree_Links.cs" />
+    <Compile Include="OrganizationsTree\OrganizationsTree_Root.cs" />
+    <Compile Include="OrganizationsTree\OrganizationsTree_Self.cs" />
+    <Compile Include="OrganizationsTree\OrganizationsTree_StsOrganization.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ActivePrograms.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ActivityLinks.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AddressIndicatorValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AddressPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Audit.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableAssignmentTypes.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableBaskets.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableConditionClassificationLaws.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableConditionClassifications.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableContacts.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableCountries.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableFormDefinitions.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableLanguages.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableLetterTemplates.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableLetterTemplatesNotPreassigned.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableOrganizations.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailablePathwayAssociation.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailablePatientStates.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AvailableProgramPathways.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AverageVisitedTimeLink.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_BulkActivitiesPrintPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_CitizenOverviewForms.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_CitizenRegistryConfiguration.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ConditionsBulkPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_CprSystemRelatives.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_CprSystemRelativesAvailableTypes.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_CreateOrReplaceActivityLink.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_CurrentHclBasket.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_CurrentHclBasketSummary.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_CurrentValue.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_DeletedMessages.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_DeleteValuePeriod.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_DischargeLetterPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_DocumentPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_DocumentPrototypeUndefinedPathway.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_DraftMessages.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_DynamicTemplate.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Eop.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_EopFollowUpPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_EopProblemPrototypes.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_EopVisitationPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_FinanceInsightFilters.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_FinanceOverview.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_GeoCoordinates.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_GetFormDataItemsByTags.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_HclDepotOrders.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_HclGrants.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_HealthInsuranceGroup.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_HistoricMedicationOverview.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_InboxMessages.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_LanguageResource.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Lendings.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_LifeTreatmentWill.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Links.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ManagePatientIncome.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ManageSms.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MeasurementData.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MeasurementInstructionPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MeasurementInstructions.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedcomClinicalEmailCorrespondencePrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedcomEmergencyMunicipalityLetterPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedcomFs3DataExchangeSetPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedcomMunicipalityLetterPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedicationCard.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedicationCardInViewModeHandout.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedicationCardInViewModeNursing.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedicationCardPatientInformation.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedicationDatainsight.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_MedicineDispensing.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_NetsMandates.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_NewObservationsBulkPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_NexusVideoConfiguration.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_OrganDonation.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_OutboxMessages.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientActivities.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientCardPrint.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientCategory.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientConditionById.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientConditions.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientEvents.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientIdentifier.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientNetworkContactPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientOrganizations.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientOverview.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientPreferenceById.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientPreferences.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientReimbursementInformation.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientReimbursementInformationUpdate.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientState.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PatientStateValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PayoutRecipientMediaList.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PhoneNumberUpdateEnabled.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PlanningAddress.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PnMedicationDatainsight.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PnMedicationDispensationAvailableStates.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PnMedicationGroups.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PnMedications.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PossibleValue.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PreferredLanguage.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrimaryAddress.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrototypeActingMunicipalityValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrototypeAddressIndicatorValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrototypeFreeChoiceValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrototypePatientIncomeValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrototypePatientStateValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrototypePayingMunicipalityValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrototypeResidentialMunicipalityValueSchedule.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_PrototypeValuePeriod.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_RelativeContactPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ReportOfAdmissionPrototype.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Root.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Sapa.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_SearchFormUids.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_SearchPostalDistrict.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_SecondaryAddress.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Self.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_SmsReminder.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_SupplementaryAddress.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_TaxRate.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_TemporaryAddress.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_TemporaryAddressUpdate.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Type.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Update.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_UpdateWithImage.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_Value.cs" />
+    <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ValuePeriod.cs" />
+    <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_ActivityIdentifier.cs" />
+    <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_Child.cs" />
+    <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_Links.cs" />
+    <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_Root.cs" />
+    <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_Self.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_CITIZENCALENDAR.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_CITIZENDASHBOARD.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_CITIZENDATA.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_CITIZENFINANCEINSIGHT.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_CITIZENPATHWAY.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_Links.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_MEASUREMENT.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_MOBILEPROFILE.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_Organization.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_PATIENTCONDITION.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_Root.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_Self.cs" />
+    <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_StsOrganization.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\Organizations\ProfessionalConfigurationOrganizations_Links.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\Organizations\ProfessionalConfigurationOrganizations_Root.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\Organizations\ProfessionalConfigurationOrganizations_Self.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\Organizations\ProfessionalConfigurationOrganizations_StsOrganization.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_ActiveDirectoryConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_AuthorizationCodeConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_AvailableCompetences.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_AvailableKmdExtraCprs.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_AvailableNationalRoles.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_AvailableOrganizationSuppliers.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_AvailableProfessionalJobs.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_DefaultOrganizationSupplier.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_DeleteStsSn.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_EventPlaningConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_ExchangeConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_FmkRole.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_KmdVagtplanConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_Links.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_Organizations.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_OrganizationsWithEAN.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_Patients.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\RoadTimesCalculationConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_Root.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_Self.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_SmdbConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_StsSn.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_Update.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_UpdateAuthorizationCode.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_UpdateEventPlaningConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_UpdateExchangeConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_UpdateOrganizations.cs" />
+    <Compile Include="Professional\ProfessionalConfiguration\ProfessionalConfiguration_UpdateSmdbConfiguration.cs" />
+    <Compile Include="Professional\ProfessionalJobs\ProfessionalJobs_Links.cs" />
+    <Compile Include="Professional\ProfessionalJobs\ProfessionalJobs_Root.cs" />
+    <Compile Include="Professional\ProfessionalJobs\ProfessionalJobs_Self.cs" />
+    <Compile Include="Professional\Professional_ActiveDirectoryConfiguration.cs" />
+    <Compile Include="Professional\Professional_Audit.cs" />
+    <Compile Include="Professional\Professional_AvailableCountries.cs" />
+    <Compile Include="Professional\Professional_AvailableOrganizationSuppliers.cs" />
+    <Compile Include="Professional\Professional_AvailableProfessionalAutosignatures.cs" />
+    <Compile Include="Professional\Professional_AvailableProfessionalJobs.cs" />
+    <Compile Include="Professional\Professional_AvailableRoles.cs" />
+    <Compile Include="Professional\Professional_Configuration.cs" />
+    <Compile Include="Professional\Professional_DefaultOrganizationSupplier.cs" />
+    <Compile Include="Professional\Professional_DefaultPagePreference.cs" />
+    <Compile Include="Professional\Professional_ExternalProfessionalPermissionAssignments.cs" />
+    <Compile Include="Professional\Professional_FmkRole.cs" />
+    <Compile Include="Professional\Professional_GeoCoordinates.cs" />
+    <Compile Include="Professional\Professional_Links.cs" />
+    <Compile Include="Professional\Professional_Organizations.cs" />
+    <Compile Include="Professional\Professional_OrganizationsFromApi.cs" />
+    <Compile Include="Professional\Professional_OrganizationsFromSts.cs" />
+    <Compile Include="Professional\Professional_Patients.cs" />
+    <Compile Include="Professional\Professional_PermissionAssignments.cs" />
+    <Compile Include="Professional\Professional_PermissionsTree.cs" />
+    <Compile Include="Professional\Professional_PrimaryAddress.cs" />
+    <Compile Include="Professional\Professional_PrioritizedOrganizationsIds.cs" />
+    <Compile Include="Professional\Professional_RoleAssignments.cs" />
+    <Compile Include="Professional\Professional_Roles.cs" />
+    <Compile Include="Professional\Professional_Root.cs" />
+    <Compile Include="Professional\Professional_SearchPostalDistrict.cs" />
+    <Compile Include="Professional\Professional_SecondaryAddress.cs" />
+    <Compile Include="Professional\Professional_Self.cs" />
+    <Compile Include="Professional\Professional_StsProfessional.cs" />
+    <Compile Include="Professional\Professional_StsRoles.cs" />
+    <Compile Include="Professional\Professional_Update.cs" />
+    <Compile Include="Professional\Professional_UpdateAuthorizationCode.cs" />
+    <Compile Include="Professional\Professional_UpdateEventPlaningConfiguration.cs" />
+    <Compile Include="Professional\Professional_UpdateExchangeConfiguration.cs" />
+    <Compile Include="Professional\Professional_UpdateOrganizations.cs" />
+    <Compile Include="Professional\Professional_UpdateRoles.cs" />
+    <Compile Include="Professional\Professional_UpdateSmdbConfiguration.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="RKSQLRPA01DataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RKSQLRPA01DataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTest1.cs" />
+    <Compile Include="WebRequest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.2.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=4.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.4.1.0\lib\net47\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MimeKit, Version=4.1.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.4.1.0\lib\net47\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.13.3.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.13.3\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=108.0.3.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.108.0.3\lib\netstandard2.0\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Formats.Asn1, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Formats.Asn1.7.0.0\lib\net462\System.Formats.Asn1.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.7.0.2\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NUnit.3.13.3\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.13.3\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\packages\NUnit3TestAdapter.4.4.2\build\net462\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.4.4.2\build\net462\NUnit3TestAdapter.props'))" />
+  </Target>
+</Project>
