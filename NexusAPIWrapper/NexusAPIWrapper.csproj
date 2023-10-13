@@ -90,11 +90,11 @@
     <Compile Include="NexusTokenObject.cs" />
     <Compile Include="NexusAPI.cs" />
     <Compile Include="NexusResult.cs" />
-    <Compile Include="OrganizationsTree\OrganizationsTree_Child.cs" />
-    <Compile Include="OrganizationsTree\OrganizationsTree_Links.cs" />
-    <Compile Include="OrganizationsTree\OrganizationsTree_Root.cs" />
-    <Compile Include="OrganizationsTree\OrganizationsTree_Self.cs" />
-    <Compile Include="OrganizationsTree\OrganizationsTree_StsOrganization.cs" />
+    <Compile Include="Organizations\OrganizationsTree\OrganizationsTree_Child.cs" />
+    <Compile Include="Organizations\OrganizationsTree\OrganizationsTree_Links.cs" />
+    <Compile Include="Organizations\OrganizationsTree\OrganizationsTree_Root.cs" />
+    <Compile Include="Organizations\OrganizationsTree\OrganizationsTree_Self.cs" />
+    <Compile Include="Organizations\OrganizationsTree\OrganizationsTree_StsOrganization.cs" />
     <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ActivePrograms.cs" />
     <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_ActivityLinks.cs" />
     <Compile Include="Patient_Citizen\PatientDetails\PatientDetails_AddressIndicatorValueSchedule.cs" />
