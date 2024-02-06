@@ -382,6 +382,9 @@
     <Compile Include="HomeRessource\Preferences\Preferences_Root.cs" />
     <Compile Include="HomeRessource\Preferences\Preferences_Self.cs" />
     <Compile Include="HomeRessource\Preferences\Preferences_StsOrganization.cs" />
+<<<<<<< HEAD
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+=======
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
     <Compile Include="NexusAPI_processes.cs" />
     <Compile Include="NexusHomeRessource.cs" />
@@ -526,12 +529,16 @@
     <Compile Include="HomeRessource\OrganizationsTree\OrganizationsTree_Root.cs" />
     <Compile Include="HomeRessource\OrganizationsTree\OrganizationsTree_Self.cs" />
     <Compile Include="HomeRessource\OrganizationsTree\OrganizationsTree_StsOrganization.cs" />
+<<<<<<< HEAD
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+=======
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
     <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_ActivityIdentifier.cs" />
     <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_Child.cs" />
     <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_Links.cs" />
     <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_Root.cs" />
     <Compile Include="Patient_Citizen\PatientPathwayReferences\PatientPathwayReferences_Self.cs" />
+<<<<<<< HEAD
 <<<<<<< HEAD
     <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_CITIZENCALENDAR.cs" />
     <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_CITIZENDASHBOARD.cs" />
@@ -547,6 +554,8 @@
     <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_Self.cs" />
     <Compile Include="Patient_Citizen\PatientPreferences\PatientPreferences_StsOrganization.cs" />
 =======
+=======
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Preferences\PatientPreferences_CITIZENCALENDAR.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Preferences\PatientPreferences_CITIZENDASHBOARD.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Preferences\PatientPreferences_CITIZENDATA.cs" />
@@ -560,6 +569,9 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Preferences\PatientPreferences_Root.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Preferences\PatientPreferences_Self.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Preferences\PatientPreferences_StsOrganization.cs" />
+<<<<<<< HEAD
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+=======
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
     <Compile Include="Professional\ProfessionalConfiguration\Organizations\ProfessionalConfigurationOrganizations_Links.cs" />
     <Compile Include="Professional\ProfessionalConfiguration\Organizations\ProfessionalConfigurationOrganizations_Root.cs" />

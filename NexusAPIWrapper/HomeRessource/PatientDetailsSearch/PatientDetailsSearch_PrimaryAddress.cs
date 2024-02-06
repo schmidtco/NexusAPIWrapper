@@ -1,7 +1,11 @@
 using Newtonsoft.Json; 
 namespace NexusAPIWrapper{ 
 
+<<<<<<< HEAD
     public class PatientDetails_TemporaryAddress
+=======
+    public class PatientDetails_PlanningAddress
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
     {
         [JsonProperty("addressLine1")]
         public object AddressLine1;

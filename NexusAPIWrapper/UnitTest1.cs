@@ -47,6 +47,9 @@ namespace NexusAPITest
             string cpr = "xxxxxx-xxxx";
 =======
             string cpr = nancyBerggrenTestCPR;
+<<<<<<< HEAD
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+=======
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             NexusAPI _NexusAPI = new NexusAPI(environment);
             var details = _NexusAPI.GetPatientDetails(cpr);
@@ -57,8 +60,11 @@ namespace NexusAPITest
         {
             NexusAPI _NexusAPI = new NexusAPI(environment);
 <<<<<<< HEAD
+<<<<<<< HEAD
             var links = _NexusAPI.GetPatientDetailsLinks("xxxxxx-xxxx");
 =======
+=======
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             var links = _NexusAPI.GetPatientDetailsLinks(nancyBerggrenTestCPR);
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             Assert.IsNotNull(links);
@@ -68,8 +74,11 @@ namespace NexusAPITest
         {
             NexusAPI _nexusAPI = new NexusAPI(environment);
 <<<<<<< HEAD
+<<<<<<< HEAD
             var preferences = _nexusAPI.GetPatientPreferences("xxxxxx-xxxx");
 =======
+=======
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             var preferences = _nexusAPI.GetPatientPreferences(nancyBerggrenTestCPR);
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             Assert.IsNotNull(preferences);
@@ -79,8 +88,11 @@ namespace NexusAPITest
         {
             NexusAPI _nexusAPI = new NexusAPI(environment);
 <<<<<<< HEAD
+<<<<<<< HEAD
             var pathways = _nexusAPI.GetCitizenPathways("xxxxxx-xxxx");
 =======
+=======
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             var pathways = _nexusAPI.GetCitizenPathways(nancyBerggrenTestCPR);
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             Assert.IsNotNull(pathways);
@@ -90,8 +102,11 @@ namespace NexusAPITest
         {
             NexusAPI _nexusAPI = new NexusAPI(environment);
 <<<<<<< HEAD
+<<<<<<< HEAD
             var pathwayLink = _nexusAPI.GetCitizenPathwayLink("xxxxxx-xxxx", "Dokumenttilknytning fra Vitae");
 =======
+=======
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             var pathwayLink = _nexusAPI.GetCitizenPathwayLink(nancyBerggrenTestCPR, "Dokumenttilknytning fra Vitae");
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             Assert.IsNotNull(pathwayLink);
@@ -102,7 +117,11 @@ namespace NexusAPITest
         {
             NexusAPI nexusAPI = new NexusAPI(environment);
 <<<<<<< HEAD
+<<<<<<< HEAD
             string CitizenCPR = "xxxxxx-xxxx";
+=======
+            string CitizenCPR = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
 =======
             string CitizenCPR = nancyBerggrenTestCPR;
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
@@ -111,6 +130,7 @@ namespace NexusAPITest
             var hrefLink = nexusAPI.GetCitizenPathwayLink(CitizenCPR, pathwayName);
 
             Assert.IsTrue(hrefLink == @"https://ringsted.nexus.kmd.dk:443/api/core/mobile/ringsted/v2/patient/1623/preferences/CITIZEN_PATHWAY/971");
+<<<<<<< HEAD
         }
 
         [Test]
@@ -146,6 +166,26 @@ namespace NexusAPITest
 
             var pathwayReferencesLink = nexusAPI.GetCitizenPathwayReferencesSelfLink(CitizenCPR, pathwayName);
             Assert.IsNotNull(pathwayReferencesLink);
+=======
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+        }
+
+
+        [Test]
+<<<<<<< HEAD
+        public void GetCitizenPathwayChildren()
+=======
+        public void GetPathwayReferencesLink()
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+        {
+            NexusAPI nexusAPI = new NexusAPI("live");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+
+<<<<<<< HEAD
+=======
+            var pathwayReferencesLink = nexusAPI.GetCitizenPathwayReferencesSelfLink(CitizenCPR, pathwayName);
+            Assert.IsNotNull(pathwayReferencesLink);
         }
 
 
@@ -156,6 +196,7 @@ namespace NexusAPITest
             string CitizenCPR = nancyBerggrenTestCPR;
             string pathwayName = "Dokumenttilknytning fra Vitae";
 
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             var pathwayChildren = nexusAPI.GetCitizenPathwayChildren(CitizenCPR, pathwayName);
             Assert.IsNotNull(pathwayChildren);
         }
@@ -216,6 +257,24 @@ namespace NexusAPITest
             Assert.IsNotNull(documentPrototypeLink);
         }
 
+<<<<<<< HEAD
+=======
+        [Test]
+        public void testGetCitizenPathwayChildDocumentPrototypelink()
+        {
+            NexusAPI nexusAPI = new NexusAPI("live");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+            string pathwayChildName = "Dokumenter fra Vitae";
+
+            var CitizenPathwayChildSelf_Links = nexusAPI.GetCitizenPathwayChildSelf_Links(CitizenCPR, pathwayName, pathwayChildName);
+
+            string documentPrototypeLink = nexusAPI.dataHandler.GetDocumentPrototypeLink(CitizenPathwayChildSelf_Links);
+
+            Assert.IsNotNull(documentPrototypeLink);
+        }
+
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         [Test]
         public void testGetCitizenPathwayChildDocumentPrototypelink()
         {
@@ -237,15 +296,21 @@ namespace NexusAPITest
         {
             NexusAPI nexusAPI = new NexusAPI("review");
 <<<<<<< HEAD
+<<<<<<< HEAD
             string CitizenCPR = "xxxxxx-xxxx";
             string pathwayName = "Dokumenttilknytning fra Vitae";
 =======
+=======
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             string CitizenCPR = nancyBerggrenTestCPR;
             string pathwayName = "Dokumenttilknytning fra Vitae";
 
             var pathwayReferencesDocuments = nexusAPI.GetCitizenPathwayReferences(CitizenCPR, pathwayName);
 
             Assert.IsNotNull(pathwayReferencesDocuments);
+<<<<<<< HEAD
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+=======
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
 
             var objects = nexusAPI.GetCitizenPathwayReferencesSelf(CitizenCPR, pathwayName);
@@ -353,7 +418,11 @@ namespace NexusAPITest
         {
             NexusAPI nexusAPI = new NexusAPI("review");
 <<<<<<< HEAD
+<<<<<<< HEAD
             string CitizenCPR = "xxxxxx-xxxx";
+=======
+            string CitizenCPR = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
 =======
             string CitizenCPR = nancyBerggrenTestCPR;
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
@@ -369,7 +438,11 @@ namespace NexusAPITest
         {
             NexusAPI nexusAPI = new NexusAPI("review");
 <<<<<<< HEAD
+<<<<<<< HEAD
             string CitizenCPR = "xxxxxx-xxxx";
+=======
+            string CitizenCPR = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
 =======
             string CitizenCPR = nancyBerggrenTestCPR;
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
@@ -385,7 +458,11 @@ namespace NexusAPITest
         //{
         //    NexusAPI nexusAPI = new NexusAPI("review");
 <<<<<<< HEAD
+<<<<<<< HEAD
         //    string CitizenCPR = "xxxxxx-xxxx";
+=======
+        //    string CitizenCPR = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
 =======
         //    string CitizenCPR = nancyBerggrenTestCPR;
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
@@ -575,6 +652,8 @@ namespace NexusAPITest
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
 =======
         [Test]
         public void GetCitizenJournalNotes()
@@ -595,9 +674,22 @@ namespace NexusAPITest
             string pathwayName = "Journalnotater fra Vitae";
             string cpr = "";
         }
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+        [Test]
+<<<<<<< HEAD
+        public void GetCitizenJournalNotes()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            string pathwayName = "Journalnotater fra Vitae";
+            string cpr = "";
+        }
         [Test]
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         public void GetCitizenPathwayNew()
         {
             NexusAPI_processes processes = new NexusAPI_processes("review");
@@ -834,6 +926,9 @@ namespace NexusAPITest
             //CitizenDashboardSelf_Root nancyHistoricDataVitae = JsonConvert.DeserializeObject<CitizenDashboardSelf_Root>(api.CallAPI(api, nancyCitizenDashboard.Links.Self.Href, Method.Get).Result.ToString());
             #endregion citizenpathway
         }
+<<<<<<< HEAD
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+=======
 >>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
     }
 }
