@@ -1,0 +1,1 @@
+﻿Classes from this folder is the same as the ones in CitizenPathway->Links->Self->Links->PathwayReferences->_Root

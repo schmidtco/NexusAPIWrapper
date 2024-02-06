@@ -151,8 +151,8 @@ namespace NexusAPIWrapper
 
         private void SetTimer()
         {
-            refreshTokenTimer = new Timer(new TimerCallback(_RefreshToken));
-            refreshTokenTimer.Change(this.ExpiresIn * 1000, 0);
+            refreshTokenTimer = new Timer(new TimerCallback(_RefreshToken)); //Callback method to be called, when the timer expires. This will use the refresh token to get a new access token
+            refreshTokenTimer.Change(this.ExpiresIn * 1000, 0); // Multiplied by 1000 to convert from seconds to milliseconds which is used in the timer
         }
 
         private void _RefreshToken(object state)

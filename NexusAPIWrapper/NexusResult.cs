@@ -310,24 +310,7 @@ namespace NexusAPIWrapper
             }
         }
 
-        public void GetCitizenPathwayChildSelf(NexusAPI api, string CitizenCPR, string pathwayName, string pathwayChildName)
-        {
-            WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayChildSelfLink(CitizenCPR, pathwayName, pathwayChildName), Method.Get);
-
-            webRequest.Execute();
-            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception(webRequest.response.StatusDescription);
-            }
-            else
-            {
-                NexusResult result = new NexusResult(
-                    webRequest.response.StatusCode,
-                    webRequest.response.StatusDescription,
-                    webRequest.response.Content);
-                api.result = result;
-            }
-        }
+        
 
         #endregion PatientDetailsSearch sub calls
 
@@ -359,5 +342,26 @@ namespace NexusAPIWrapper
        
 
         #endregion HomeRessource -> Professionals API calls
+
+        public NexusResult GetTransformedBodyOfMedcomMessage(NexusAPI api, string transformedBodyLink)
+        {
+            WebRequest webRequest = StandardWebRequest(api, transformedBodyLink, Method.Get);
+            webRequest.AddAcceptTypeXML();
+
+            webRequest.Execute();
+            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(webRequest.response.StatusDescription);
+            }
+            else
+            {
+                NexusResult result = new NexusResult(
+                    webRequest.response.StatusCode,
+                    webRequest.response.StatusDescription,
+                    webRequest.response.Content);
+                return result;
+            }
+
+        }
     }
 }
