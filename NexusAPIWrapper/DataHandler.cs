@@ -324,7 +324,7 @@ namespace NexusAPIWrapper
             var documentPrototypeDict = JsonStringToSortedDictionary(documentPrototypeObj);
             return GetHref(documentPrototypeDict, false);
         }
-        internal string GetDocumentPrototypeLink(PatientDetailsSearch_Links links)
+        internal string GetDocumentPrototypeLink(PatientDetails_Links links)
         {
             return links.DocumentPrototype.Href;
         }
@@ -343,17 +343,6 @@ namespace NexusAPIWrapper
             return JsonConvert.SerializeObject(result);
         }
 
-        /// <summary>
-        /// Removes the square brackets from an arrayJson in the nexus result, in order to properly convert to a class object.
-        /// </summary>
-        /// <param name="nexusResult"></param>
-        internal string RemoveArrayBracketsFromResult(NexusResult nexusResult)
-        {
-            string result = nexusResult.Result.ToString();
-            result = result.Substring(1);
-            result = result.Substring(0, result.Length - 1);
-
-            return result;
-        }
+        
     }
 }

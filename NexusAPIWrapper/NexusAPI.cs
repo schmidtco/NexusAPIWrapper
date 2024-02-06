@@ -132,29 +132,25 @@ namespace NexusAPIWrapper
         //    var dict = dataHandler.ConvertJsonToSortedDictionary(details);
         //    return dict;
         //}
-        public PatientDetailsSearch_Patient GetPatientDetails(string CitizenCPR)
+        public PatientDetails_Root GetPatientDetails(string CitizenCPR)
         {
             result.GetPatientDetails(this, CitizenCPR);
             //Returns object {string} - data is JSON and can be parsed to JObject
             //var stringObject = GetJsonObjectFromRestResponse(result,"patient"); //Now a JSON object
             //var stringObject1 = ConvertNexusResultToJsonObject(result, "patient");
 
-            PatientDetailsSearch_Root patientDetailsSearch = JsonConvert.DeserializeObject<PatientDetailsSearch_Root>(result.Result.ToString());
-
-            //var sortDict = dataHandler.ConvertJsonToSortedDictionary((string)result.Result);
-            //var details = sortDict["patient"]; //JSON string
-            //return JsonConvert.DeserializeObject<PatientDetails_Root>(details);
-
-            return patientDetailsSearch.Patient;
+            var sortDict = dataHandler.ConvertJsonToSortedDictionary((string)result.Result);
+            var details = sortDict["patient"]; //JSON string
+            return JsonConvert.DeserializeObject<PatientDetails_Root>(details);
         }
 
-        public PatientDetailsSearch_Patient GetPatientDetails(int id)
+        public PatientDetails_Root GetPatientDetails(int id)
         {
             string patientDetailsSearchEndpoint = GetPatientDetailsSearchLink();
             string patientDetailsSearchEndpointSubstring = patientDetailsSearchEndpoint.Substring(0, patientDetailsSearchEndpoint.Length - 6);
 
             var result = CallAPI(this, patientDetailsSearchEndpointSubstring + id, Method.Get);
-            return JsonConvert.DeserializeObject<PatientDetailsSearch_Patient> (result.Result.ToString());
+            return JsonConvert.DeserializeObject<PatientDetails_Root> (result.Result.ToString());
         }
 
 
@@ -172,7 +168,7 @@ namespace NexusAPIWrapper
         //    //return ConvertArrayDictionaryToKeyValueDictionary(links);
         //}
 
-        public PatientDetailsSearch_Links GetPatientDetailsLinks(string CitizenCPR)
+        public PatientDetails_Links GetPatientDetailsLinks(string CitizenCPR)
         {
             var patientDetails = GetPatientDetails(CitizenCPR);
             var links = patientDetails.Links;
@@ -181,7 +177,7 @@ namespace NexusAPIWrapper
             return links;
             //return ConvertArrayDictionaryToKeyValueDictionary(links);
         }
-        public PatientDetailsSearch_Links GetPatientDetailsLinks(int id)
+        public PatientDetails_Links GetPatientDetailsLinks(int id)
         {
             var patientDetails = GetPatientDetails(id);
             var links = patientDetails.Links;
@@ -356,108 +352,49 @@ namespace NexusAPIWrapper
             return result;
         }
         
-        //public SortedDictionary<string, string> GetCitizenPathwayInfo(string CitizenCPR, string pathwayName)
-        //{
-        //    //SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
-        //    result.GetCitizenPathwayInfo(this, CitizenCPR, pathwayName);
-        //    var stringObject = dataHandler.ConvertNexusResultToJsonObject(result);
-        //    var dict = dataHandler.ConvertJsonToSortedDictionary(stringObject);
-        //    return dict;
-        //}
-        
-        public CitizenPathwaySelf_Root GetCitizenPathway(string CitizenCPR, string pathwayName)
+        public SortedDictionary<string, string> GetCitizenPathwayInfo(string CitizenCPR, string pathwayName)
         {
-            var pathways = GetCitizenPathways(CitizenCPR);
-            PatientPreferences_CITIZENPATHWAY chosenPathway = new PatientPreferences_CITIZENPATHWAY();
-
-            foreach (var pathway in pathways)
-            {
-                if (pathway.Name == pathwayName)
-                {
-                    chosenPathway = pathway;
-                }
-            }
-            string chosenPathwaySelfLink = chosenPathway.Links.Self.Href;
-
-            return JsonConvert.DeserializeObject<CitizenPathwaySelf_Root>(CallAPI(this, chosenPathwaySelfLink, Method.Get).Result.ToString());
-
+            //SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
+            result.GetCitizenPathwayInfo(this, CitizenCPR, pathwayName);
+            var stringObject = dataHandler.ConvertNexusResultToJsonObject(result);
+            var dict = dataHandler.ConvertJsonToSortedDictionary(stringObject);
+            return dict;
         }
-        public CitizenPathwaySelf_Root GetCitizenPathway(int id, string pathwayName)
+        public SortedDictionary<string, string> GetCitizenPathwayInfo(int id, string pathwayName)
         {
-            var pathways = GetCitizenPathways(id);
-            PatientPreferences_CITIZENPATHWAY chosenPathway = new PatientPreferences_CITIZENPATHWAY();
-
-            foreach (var pathway in pathways)
-            {
-                if (pathway.Name == pathwayName)
-                {
-                    chosenPathway = pathway;
-                }
-            }
-            string chosenPathwaySelfLink = chosenPathway.Links.Self.Href;
-
-            return JsonConvert.DeserializeObject<CitizenPathwaySelf_Root>(CallAPI(this, chosenPathwaySelfLink, Method.Get).Result.ToString());
-
+            //SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
+            result.GetCitizenPathwayInfo(this, id, pathwayName);
+            var stringObject = dataHandler.ConvertNexusResultToJsonObject(result);
+            var dict = dataHandler.ConvertJsonToSortedDictionary(stringObject);
+            return dict;
         }
-        //public SortedDictionary<string, string> GetCitizenPathwayInfo(int id, string pathwayName)
-        //{
-        //    //SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
-        //    result.GetCitizenPathwayInfo(this, id, pathwayName);
-        //    var stringObject = dataHandler.ConvertNexusResultToJsonObject(result);
-        //    var dict = dataHandler.ConvertJsonToSortedDictionary(stringObject);
-        //    return dict;
-        //}
-
-        //public string GetCitizenPathwayReferencesLink(string CitizenCPR, string pathwayName)
-        //{
-        //    var pathwayInfo = GetCitizenPathwayInfo(CitizenCPR, pathwayName);
-
-        //    var links = pathwayInfo["_links"];
-        //    var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
-        //    var pathwayReferences = linksDict["pathwayReferences"];
-        //    var pathwayReferencesDict = dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
-        //    return dataHandler.GetHref(pathwayReferencesDict,false);
-        //}
 
         public string GetCitizenPathwayReferencesLink(string CitizenCPR, string pathwayName)
         {
-            var pathway = GetCitizenPathway(CitizenCPR, pathwayName);
-            return pathway.Links.PathwayReferences.Href;
-        }
+            var pathwayInfo = GetCitizenPathwayInfo(CitizenCPR, pathwayName);
 
+            var links = pathwayInfo["_links"];
+            var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
+            var pathwayReferences = linksDict["pathwayReferences"];
+            var pathwayReferencesDict = dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
+            return dataHandler.GetHref(pathwayReferencesDict,false);
+        }
         public string GetCitizenPathwayReferencesLink(int id, string pathwayName)
         {
-            var pathway = GetCitizenPathway(id, pathwayName);
-            return pathway.Links.PathwayReferences.Href;
+            var pathwayInfo = GetCitizenPathwayInfo(id, pathwayName);
+
+            var links = pathwayInfo["_links"];
+            var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
+            var pathwayReferences = linksDict["pathwayReferences"];
+            var pathwayReferencesDict = dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
+            return dataHandler.GetHref(pathwayReferencesDict, false);
         }
-        //public string GetCitizenPathwayReferencesLink(int id, string pathwayName)
-        //{
-        //    var pathwayInfo = GetCitizenPathwayInfo(id, pathwayName);
 
-        //    var links = pathwayInfo["_links"];
-        //    var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
-        //    var pathwayReferences = linksDict["pathwayReferences"];
-        //    var pathwayReferencesDict = dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
-        //    return dataHandler.GetHref(pathwayReferencesDict, false);
-        //}
-
-        //public SortedDictionary<string,string> GetCitizenPathwayReferences(string CitizenCPR, string pathwayName)
-        //{
-        //    result.GetCitizenPathwayReferences(this, CitizenCPR, pathwayName);
-        //    var pathwayReferences = dataHandler.ConvertNexusResultToJsonObject(result);
-        //    return dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
-        //}
-
-        public PathwayReferences_Root GetCitizenPathwayReferences(string CitizenCPR, string pathwayName)
+        public SortedDictionary<string,string> GetCitizenPathwayReferences(string CitizenCPR, string pathwayName)
         {
             result.GetCitizenPathwayReferences(this, CitizenCPR, pathwayName);
-            string resultString = result.Result.ToString();
-            var type = dataHandler.ReturnStringObjectType(result.Result.ToString());
-            if (type == DataHandler.StringObjectType.arrayJson )
-            {
-                resultString = dataHandler.RemoveArrayBracketsFromResult(result);
-            }
-            return JsonConvert.DeserializeObject<PathwayReferences_Root>(resultString);
+            var pathwayReferences = dataHandler.ConvertNexusResultToJsonObject(result);
+            return dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
         }
 
         //public SortedDictionary<string, string> GetCitizenPathwayReferences(int id, string pathwayName)
@@ -540,115 +477,64 @@ namespace NexusAPIWrapper
         public string GetCitizenPathwayReferencesSelfLink(string CitizenCPR, string pathwayName)
         {
             var pathwayReferences = GetCitizenPathwayReferences(CitizenCPR,pathwayName);
-            return pathwayReferences.Links.Self.Href;
-            //var links = pathwayReferences["_links"];
-            //var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
-            //return dataHandler.GetHref(linksDict,true);
+            var links = pathwayReferences["_links"];
+            var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
+            return dataHandler.GetHref(linksDict,true);
         }
 
-        public PathwayReferencesSelf_Root GetCitizenPathwayReferencesSelf(string CitizenCPR, string pathwayName)
+        public SortedDictionary<string,string> GetCitizenPathwayReferencesSelf(string CitizenCPR, string pathwayName)
         {
             result.GetCitizenPathwayReferencesSelf(this, CitizenCPR, pathwayName);
-            return JsonConvert.DeserializeObject<PathwayReferencesSelf_Root>(result.Result.ToString());
-        }
-        //public SortedDictionary<string,string> GetCitizenPathwayReferencesSelf(string CitizenCPR, string pathwayName)
-        //{
-        //    result.GetCitizenPathwayReferencesSelf(this, CitizenCPR, pathwayName);
-        //    var objects = dataHandler.ConvertNexusResultToJsonObject(result);
+            var objects = dataHandler.ConvertNexusResultToJsonObject(result);
             
-        //    return dataHandler.JsonToSortedDictionary(objects);
-        //}
-
-        public PathwayReferencesSelf_Links GetCitizenPathwayReferencesSelf_Links(string CitizenCPR, string pathwayName)
-        {
-            var CitizenPathwayReferencesSelf = GetCitizenPathwayReferencesSelf(CitizenCPR, pathwayName);
-            return CitizenPathwayReferencesSelf.Links;
+            return dataHandler.JsonToSortedDictionary(objects);
         }
-        //public SortedDictionary<string,string> GetCitizenPathwayReferencesSelf_Links(string CitizenCPR, string pathwayName)
-        //{
-        //    var CitizenPathwayReferencesSelf = GetCitizenPathwayReferencesSelf(CitizenCPR,pathwayName);
-        //    var links = CitizenPathwayReferencesSelf["_links"];
-        //    return dataHandler.JsonStringToSortedDictionary(links);
-        //}
 
-        public List<PathwayReferences_Child> GetCitizenPathwayChildren(string CitizenCPR, string pathwayName)
+        public SortedDictionary<string,string> GetCitizenPathwayReferencesSelf_Links(string CitizenCPR, string pathwayName)
+        {
+            var CitizenPathwayReferencesSelf = GetCitizenPathwayReferencesSelf(CitizenCPR,pathwayName);
+            var links = CitizenPathwayReferencesSelf["_links"];
+            return dataHandler.JsonStringToSortedDictionary(links);
+        }
+
+        public SortedDictionary<string,string> GetCitizenPathwayChildren(string CitizenCPR, string pathwayName)
         {
             var pathwayReferences = GetCitizenPathwayReferences(CitizenCPR, pathwayName);
-            if (pathwayReferences == null)
-            {
-                return null;
-            }
-            else
-            {
-                return pathwayReferences.Children;
-            }
-            //return dataHandler.ArrayJsonStringToSortedDictionary(pathwayReferences["children"]);
+            return dataHandler.ArrayJsonStringToSortedDictionary(pathwayReferences["children"]);
         }
 
-        public PathwayReferences_Child GetCitizenPathwayChild(string CitizenCPR, string pathwayName, string pathwayChildName)
+        public SortedDictionary<string,string> GetCitizenPathwayChild(string CitizenCPR,string pathwayName, string pathwayChildName)
         {
             var pathwayChildren = GetCitizenPathwayChildren(CitizenCPR, pathwayName);
-            if (pathwayChildren == null)
+            string strResult = string.Empty;
+            foreach (var item in pathwayChildren)
             {
-                return null;
+                if (item.Key == pathwayChildName)
+                {
+                    strResult = item.Value;
+                }
+            }
+
+            SortedDictionary<string, string> childDict = new SortedDictionary<string, string>();
+            if (strResult == string.Empty)
+            {
+
             }
             else
             {
-                PathwayReferences_Child chosenChild = new PathwayReferences_Child();
-                foreach (var child in pathwayChildren)
-                {
-                    if (child.Name == pathwayChildName)
-                    {
-                        chosenChild = child;
-                        break;
-                    }
-                }
-
-                return chosenChild;
+                childDict = dataHandler.JsonStringToSortedDictionary(strResult);
             }
             
+            return childDict;
         }
-        //public SortedDictionary<string,string> GetCitizenPathwayChild(string CitizenCPR,string pathwayName, string pathwayChildName)
-        //{
-        //    var pathwayChildren = GetCitizenPathwayChildren(CitizenCPR, pathwayName);
-        //    string strResult = string.Empty;
-        //    foreach (var item in pathwayChildren)
-        //    {
-        //        if (item.Key == pathwayChildName)
-        //        {
-        //            strResult = item.Value;
-        //        }
-        //    }
-
-        //    SortedDictionary<string, string> childDict = new SortedDictionary<string, string>();
-        //    if (strResult == string.Empty)
-        //    {
-
-        //    }
-        //    else
-        //    {
-        //        childDict = dataHandler.JsonStringToSortedDictionary(strResult);
-        //    }
-            
-        //    return childDict;
-        //}
         public string GetCitizenPathwayChildSelfLink(string CitizenCPR, string pathwayName, string pathwayChildName)
         {
             var pathwayChild = GetCitizenPathwayChild(CitizenCPR, pathwayName, pathwayChildName);
-            return pathwayChild.Links.Self.Href;
-            //var pathwayChildLinks = pathwayChild["_links"];
-            //var links = dataHandler.JsonStringToSortedDictionary(pathwayChildLinks);
+            var pathwayChildLinks = pathwayChild["_links"];
+            var links = dataHandler.JsonStringToSortedDictionary(pathwayChildLinks);
 
-            //return dataHandler.GetHref(links, true);
+            return dataHandler.GetHref(links, true);
         }
-        //public PathwayReferences_Links GetCitizenPathwayChildSelf(string CitizenCPR, string pathwayName, string pathwayChildName)
-        //{
-        //    result.GetCitizenPathwayChildSelf(this, CitizenCPR, pathwayName, pathwayChildName);
-        //    PathwayReferences_Child child = new PathwayReferences_Child();
-        //    string childSelfLink = child.Links.Self.Href;
-
-
-        //}
         public SortedDictionary<string, string> GetCitizenPathwayChildSelf(string CitizenCPR, string pathwayName, string pathwayChildName)
         {
             result.GetCitizenPathwayChildSelf(this, CitizenCPR, pathwayName, pathwayChildName);
@@ -665,42 +551,25 @@ namespace NexusAPIWrapper
             return dataHandler.JsonStringToSortedDictionary(links);
         }
 
-        public List<PathwayReferences_Child> GetCitizenPathwayChildDocuments(string CitizenCPR, string pathwayName, string pathwaysChildName)
+        public SortedDictionary<string, string> GetCitizenPathwayChildDocuments(string CitizenCPR, string pathwayName, string pathwaysChildName)
         {
-            var child = GetCitizenPathwayChild(CitizenCPR,pathwayName, pathwaysChildName);
-            List<PathwayReferences_Child> documents = new List<PathwayReferences_Child>();
+            var childDict = GetCitizenPathwayChild(CitizenCPR,pathwayName, pathwaysChildName);
+            SortedDictionary<string, string> documents = new SortedDictionary<string, string>();
 
-            if (child.Children.Count == 0)
+
+
+            if (childDict.Count == 0)
             {
 
             }
             else
             {
-                documents = child.Children;
+                var strDocuments = childDict["children"];
+                documents = dataHandler.ArrayJsonStringToSortedDictionary(strDocuments);
             }
+
             return documents;
         }
-        //public SortedDictionary<string, string> GetCitizenPathwayChildDocuments(string CitizenCPR, string pathwayName, string pathwaysChildName)
-        //{
-        //    var childDict = GetCitizenPathwayChild(CitizenCPR,pathwayName, pathwaysChildName);
-        //    SortedDictionary<string, string> documents = new SortedDictionary<string, string>();
-
-
-
-        //    if (childDict.Count == 0)
-        //    {
-
-        //    }
-        //    else
-        //    {
-        //        var strDocuments = childDict["children"];
-        //        documents = dataHandler.ArrayJsonStringToSortedDictionary(strDocuments);
-        //    }
-
-        //    return documents;
-        //}
-
-
 
         //public void CreateDocumentObject(string CitizenCPR) //This method uploads a document directly under the citizen/patient
         //{
@@ -752,126 +621,68 @@ namespace NexusAPIWrapper
 
         //}
 
-        //public SortedDictionary<string, string> GetOrganizations()
-        //{
-        //    result.GetOrganizations(this);
-        //    return dataHandler.ArrayJsonStringToSortedDictionary(result.Result.ToString());
-        //}
-
-        public List<Organizations_Root> GetOrganizations()
+        public SortedDictionary<string, string> GetOrganizations()
         {
             result.GetOrganizations(this);
-            return JsonConvert.DeserializeObject<List<Organizations_Root>>(result.Result.ToString());   
+            return dataHandler.ArrayJsonStringToSortedDictionary(result.Result.ToString());
         }
 
-        //public SortedDictionary<string, string> GetSpecificOrganization(string organizationName)
-        //{
-        //    result.GetOrganizations(this);
-        //    var organizations = dataHandler.ArrayJsonStringToSortedDictionary(result.Result.ToString());
-        //    var organization = organizations[organizationName];
-        //    var organizationData = dataHandler.JsonStringToSortedDictionary(organization);
-        //    var organizationDataLinks = organizationData["_links"];
-        //    var organizationsDataLinksHref = dataHandler.GetHref(JObject.Parse(organizationDataLinks), true);
-
-        //    var org = result.CallAPI(this,organizationsDataLinksHref, Method.Get);
-        //    return dataHandler.JsonStringToSortedDictionary(org.Result.ToString());
-        //}
-
-        public OrganizationsSelf_Root GetSpecificOrganization(string organizationName)
+        public SortedDictionary<string, string> GetSpecificOrganization(string organizationName)
         {
-            var organizations = GetOrganizations();
-            Organizations_Root chosenOrganization = new Organizations_Root();
+            result.GetOrganizations(this);
+            var organizations = dataHandler.ArrayJsonStringToSortedDictionary(result.Result.ToString());
+            var organization = organizations[organizationName];
+            var organizationData = dataHandler.JsonStringToSortedDictionary(organization);
+            var organizationDataLinks = organizationData["_links"];
+            var organizationsDataLinksHref = dataHandler.GetHref(JObject.Parse(organizationDataLinks), true);
 
-            foreach (var org in organizations)
-            {
-                if (org.Name == organizationName)
-                {
-                    chosenOrganization = org;
-                    break;
-                }
-            }
-            return JsonConvert.DeserializeObject<OrganizationsSelf_Root>(CallAPI(this, chosenOrganization.Links.Self.Href, Method.Get).Result.ToString());  
+            var org = result.CallAPI(this,organizationsDataLinksHref, Method.Get);
+            return dataHandler.JsonStringToSortedDictionary(org.Result.ToString());
         }
 
-        //public SortedDictionary<string, string> GetOrganizationLinks(string organizationName)
-        //{
-        //    var organization = GetSpecificOrganization(organizationName);
-        //    var links = organization["_links"];
-
-        //    return dataHandler.JsonStringToSortedDictionary(links);
-        //}
-
-        public OrganizationsSelf_Links GetOrganizationLinks(string organizationName)
+        public SortedDictionary<string, string> GetOrganizationLinks(string organizationName)
         {
             var organization = GetSpecificOrganization(organizationName);
-            return organization.Links;
+            var links = organization["_links"];
+
+            return dataHandler.JsonStringToSortedDictionary(links);
         }
 
-
-        //public string GetSpecificOrganizationLink(string organizationName, string linkName)
-        //{
-        //    var organizationLinks = GetOrganizationLinks(organizationName);
-        //    var specificLink = organizationLinks[linkName];
-
-        //    return dataHandler.GetHref(JObject.Parse(specificLink), false);
-        //}
-
-
-
-        //public SortedDictionary<string, string> GetOrganizationProfessionals(string organizationName)
-        //{
-        //    var link = GetSpecificOrganizationLink(organizationName, "professionals");
-        //    var org = GetSpecificOrganization(organizationName);
-        //    var link = org.Links.
-        //    var returnResult = result.CallAPI(this, link, Method.Get);
-        //    return dataHandler.ArrayJsonStringToSortedDictionary(returnResult.Result.ToString(), "fullName");
-        //}
-
-        public List<Professionals_Root> GetOrganizationProfessionals(string organizationName)
+        public string GetSpecificOrganizationLink(string organizationName, string linkName)
         {
-            var org = GetSpecificOrganization(organizationName);
-            var link = org.Links.Professionals.Href;
+            var organizationLinks = GetOrganizationLinks(organizationName);
+            var specificLink = organizationLinks[linkName];
 
-            return JsonConvert.DeserializeObject<List<Professionals_Root>>(CallAPI(this,link,Method.Get).Result.ToString());
+            return dataHandler.GetHref(JObject.Parse(specificLink),false);
         }
 
-        //public SortedDictionary<string, string> GetOrganizationPatients(string organizationName)
-        //{
-        //    var link = GetSpecificOrganizationLink(organizationName, "patients");
-        //    var returnResult = result.CallAPI(this, link, Method.Get);
-        //    return dataHandler.ArrayJsonStringToSortedDictionary(returnResult.Result.ToString(),"fullName");
-        //}
-
-
-
-
-        /// <summary>
-        /// TAKES TIME - getting all patient details in a list of patients
-        /// </summary>
-        /// <returns></returns>
-        public List<PatientDetailsSearch_Patient> GetAllPatients()
+        public SortedDictionary<string, string> GetOrganizationProfessionals(string organizationName)
         {
-            List<PatientDetailsSearch_Patient> patients = new List<PatientDetailsSearch_Patient>();
-
-            var patientIds = GetAllPatientIds();
-
-            foreach (var patientId in patientIds)
-            {
-                patients.Add(GetPatientDetails(patientId));
-            }
-            return patients;
+            var link = GetSpecificOrganizationLink(organizationName, "professionals");
+            var returnResult = result.CallAPI(this,link,Method.Get);
+            return dataHandler.ArrayJsonStringToSortedDictionary(returnResult.Result.ToString(),"fullName");
         }
 
-        public List<Int32> GetAllPatientIds()
+        public SortedDictionary<string, string> GetOrganizationPatients(string organizationName)
         {
-            //var allPatients = GetAllPatients();
+            var link = GetSpecificOrganizationLink(organizationName, "patients");
+            var returnResult = result.CallAPI(this, link, Method.Get);
+            return dataHandler.ArrayJsonStringToSortedDictionary(returnResult.Result.ToString(),"fullName");
+        }
+
+        public SortedDictionary<string, string> GetAllPatients()
+        {
             var link = GetHomeRessourceLink("patients");
             string queryText = "?pageSize=10000000&query=";
 
             string endpointURL = link + queryText;
             var returnResult = result.CallAPI(this, endpointURL, Method.Get);
-            var allPatients = dataHandler.JsonStringToSortedDictionary(returnResult.Result.ToString());
+            return dataHandler.JsonStringToSortedDictionary(returnResult.Result.ToString());
+        }
 
+        public List<Int32> GetAllPatientIds()
+        {
+            var allPatients = GetAllPatients();
             var pages = allPatients["pages"];
             var pagesDict = dataHandler.ArrayJsonStringToSortedDictionary(pages, "_links");
             var links = pagesDict["_links"];
@@ -961,17 +772,10 @@ namespace NexusAPIWrapper
         ///SHARED METHODS///
         ////////////////////
 
-        public NexusResult CallAPI(NexusAPI api, string endpointURL,Method callMethod, string JsonBody = null)
+        public NexusResult CallAPI(NexusAPI api, string endpointURL,Method callMethod)
         {
             NexusResult nexusResult = new NexusResult();
-            if (JsonBody == null)
-            {
-                return nexusResult.CallAPI(this, endpointURL, callMethod);
-            }
-            else
-            {
-                return nexusResult.CallAPI(this, endpointURL, JsonBody, callMethod);
-            }
+            return nexusResult.CallAPI(this, endpointURL, callMethod);
         }
 
         private string GetElementDataFromSortedDict(SortedDictionary<string, SortedDictionary<string, string>> dict, string elementName)

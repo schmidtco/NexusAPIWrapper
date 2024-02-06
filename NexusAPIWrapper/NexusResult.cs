@@ -36,7 +36,7 @@ namespace NexusAPIWrapper
             WebRequest webRequest = new WebRequest(api.clientCredentials.Host, endpointURL, callMethod, api.tokenObject.AccessToken);
             webRequest.AddBearerToken();
             webRequest.Execute();
-
+            
             if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(webRequest.response.StatusDescription);
@@ -47,27 +47,7 @@ namespace NexusAPIWrapper
                     webRequest.response.StatusCode,
                     webRequest.response.StatusDescription,
                     webRequest.response.Content);
-                return result;
-            }
-        }
-        public NexusResult CallAPI(NexusAPI api, string endpointURL, string JsonBody, Method callMethod)
-        {
-            WebRequest webRequest = new WebRequest(api.clientCredentials.Host, endpointURL, callMethod, api.tokenObject.AccessToken);
-            webRequest.AddBearerToken();
-            webRequest.request.AddJsonBody(JsonBody);
-            webRequest.Execute();
-
-            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception(webRequest.response.StatusDescription);
-            }
-            else
-            {
-                NexusResult result = new NexusResult(
-                    webRequest.response.StatusCode,
-                    webRequest.response.StatusDescription,
-                    webRequest.response.Content);
-                return result;
+               return result;
             }
         }
 
