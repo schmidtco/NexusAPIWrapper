@@ -132,16 +132,31 @@ namespace NexusAPIWrapper
         //    var dict = dataHandler.ConvertJsonToSortedDictionary(details);
         //    return dict;
         //}
+<<<<<<< HEAD
         public PatientDetails_Root GetPatientDetails(string CitizenCPR)
+=======
+        public PatientDetailsSearch_Patient GetPatientDetails(string CitizenCPR)
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         {
             result.GetPatientDetails(this, CitizenCPR);
             //Returns object {string} - data is JSON and can be parsed to JObject
             //var stringObject = GetJsonObjectFromRestResponse(result,"patient"); //Now a JSON object
             //var stringObject1 = ConvertNexusResultToJsonObject(result, "patient");
+<<<<<<< HEAD
 
             var sortDict = dataHandler.ConvertJsonToSortedDictionary((string)result.Result);
             var details = sortDict["patient"]; //JSON string
             return JsonConvert.DeserializeObject<PatientDetails_Root>(details);
+=======
+
+            PatientDetailsSearch_Root patientDetailsSearch = JsonConvert.DeserializeObject<PatientDetailsSearch_Root>(result.Result.ToString());
+
+            //var sortDict = dataHandler.ConvertJsonToSortedDictionary((string)result.Result);
+            //var details = sortDict["patient"]; //JSON string
+            //return JsonConvert.DeserializeObject<PatientDetails_Root>(details);
+
+            return patientDetailsSearch.Patient;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         }
 
         public PatientDetails_Root GetPatientDetails(int id)
@@ -168,7 +183,11 @@ namespace NexusAPIWrapper
         //    //return ConvertArrayDictionaryToKeyValueDictionary(links);
         //}
 
+<<<<<<< HEAD
         public PatientDetails_Links GetPatientDetailsLinks(string CitizenCPR)
+=======
+        public PatientDetailsSearch_Links GetPatientDetailsLinks(string CitizenCPR)
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         {
             var patientDetails = GetPatientDetails(CitizenCPR);
             var links = patientDetails.Links;
@@ -352,6 +371,7 @@ namespace NexusAPIWrapper
             return result;
         }
         
+<<<<<<< HEAD
         public SortedDictionary<string, string> GetCitizenPathwayInfo(string CitizenCPR, string pathwayName)
         {
             //SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
@@ -359,14 +379,83 @@ namespace NexusAPIWrapper
             var stringObject = dataHandler.ConvertNexusResultToJsonObject(result);
             var dict = dataHandler.ConvertJsonToSortedDictionary(stringObject);
             return dict;
+=======
+        //public SortedDictionary<string, string> GetCitizenPathwayInfo(string CitizenCPR, string pathwayName)
+        //{
+        //    //SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
+        //    result.GetCitizenPathwayInfo(this, CitizenCPR, pathwayName);
+        //    var stringObject = dataHandler.ConvertNexusResultToJsonObject(result);
+        //    var dict = dataHandler.ConvertJsonToSortedDictionary(stringObject);
+        //    return dict;
+        //}
+        
+        public CitizenPathwaySelf_Root GetCitizenPathway(string CitizenCPR, string pathwayName)
+        {
+            var pathways = GetCitizenPathways(CitizenCPR);
+            PatientPreferences_CITIZENPATHWAY chosenPathway = new PatientPreferences_CITIZENPATHWAY();
+
+            foreach (var pathway in pathways)
+            {
+                if (pathway.Name == pathwayName)
+                {
+                    chosenPathway = pathway;
+                }
+            }
+            string chosenPathwaySelfLink = chosenPathway.Links.Self.Href;
+
+            return JsonConvert.DeserializeObject<CitizenPathwaySelf_Root>(CallAPI(this, chosenPathwaySelfLink, Method.Get).Result.ToString());
+
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         }
         public SortedDictionary<string, string> GetCitizenPathwayInfo(int id, string pathwayName)
         {
+<<<<<<< HEAD
             //SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
             result.GetCitizenPathwayInfo(this, id, pathwayName);
             var stringObject = dataHandler.ConvertNexusResultToJsonObject(result);
             var dict = dataHandler.ConvertJsonToSortedDictionary(stringObject);
             return dict;
+=======
+            var pathways = GetCitizenPathways(id);
+            PatientPreferences_CITIZENPATHWAY chosenPathway = new PatientPreferences_CITIZENPATHWAY();
+
+            foreach (var pathway in pathways)
+            {
+                if (pathway.Name == pathwayName)
+                {
+                    chosenPathway = pathway;
+                }
+            }
+            string chosenPathwaySelfLink = chosenPathway.Links.Self.Href;
+
+            return JsonConvert.DeserializeObject<CitizenPathwaySelf_Root>(CallAPI(this, chosenPathwaySelfLink, Method.Get).Result.ToString());
+
+        }
+        //public SortedDictionary<string, string> GetCitizenPathwayInfo(int id, string pathwayName)
+        //{
+        //    //SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
+        //    result.GetCitizenPathwayInfo(this, id, pathwayName);
+        //    var stringObject = dataHandler.ConvertNexusResultToJsonObject(result);
+        //    var dict = dataHandler.ConvertJsonToSortedDictionary(stringObject);
+        //    return dict;
+        //}
+
+        //public string GetCitizenPathwayReferencesLink(string CitizenCPR, string pathwayName)
+        //{
+        //    var pathwayInfo = GetCitizenPathwayInfo(CitizenCPR, pathwayName);
+
+        //    var links = pathwayInfo["_links"];
+        //    var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
+        //    var pathwayReferences = linksDict["pathwayReferences"];
+        //    var pathwayReferencesDict = dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
+        //    return dataHandler.GetHref(pathwayReferencesDict,false);
+        //}
+
+        public string GetCitizenPathwayReferencesLink(string CitizenCPR, string pathwayName)
+        {
+            var pathway = GetCitizenPathway(CitizenCPR, pathwayName);
+            return pathway.Links.PathwayReferences.Href;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         }
 
         public string GetCitizenPathwayReferencesLink(string CitizenCPR, string pathwayName)
@@ -381,6 +470,7 @@ namespace NexusAPIWrapper
         }
         public string GetCitizenPathwayReferencesLink(int id, string pathwayName)
         {
+<<<<<<< HEAD
             var pathwayInfo = GetCitizenPathwayInfo(id, pathwayName);
 
             var links = pathwayInfo["_links"];
@@ -395,6 +485,39 @@ namespace NexusAPIWrapper
             result.GetCitizenPathwayReferences(this, CitizenCPR, pathwayName);
             var pathwayReferences = dataHandler.ConvertNexusResultToJsonObject(result);
             return dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
+=======
+            var pathway = GetCitizenPathway(id, pathwayName);
+            return pathway.Links.PathwayReferences.Href;
+        }
+        //public string GetCitizenPathwayReferencesLink(int id, string pathwayName)
+        //{
+        //    var pathwayInfo = GetCitizenPathwayInfo(id, pathwayName);
+
+        //    var links = pathwayInfo["_links"];
+        //    var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
+        //    var pathwayReferences = linksDict["pathwayReferences"];
+        //    var pathwayReferencesDict = dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
+        //    return dataHandler.GetHref(pathwayReferencesDict, false);
+        //}
+
+        //public SortedDictionary<string,string> GetCitizenPathwayReferences(string CitizenCPR, string pathwayName)
+        //{
+        //    result.GetCitizenPathwayReferences(this, CitizenCPR, pathwayName);
+        //    var pathwayReferences = dataHandler.ConvertNexusResultToJsonObject(result);
+        //    return dataHandler.ConvertJsonToSortedDictionary(pathwayReferences);
+        //}
+
+        public PathwayReferences_Root GetCitizenPathwayReferences(string CitizenCPR, string pathwayName)
+        {
+            result.GetCitizenPathwayReferences(this, CitizenCPR, pathwayName);
+            string resultString = result.Result.ToString();
+            var type = dataHandler.ReturnStringObjectType(result.Result.ToString());
+            if (type == DataHandler.StringObjectType.arrayJson )
+            {
+                resultString = dataHandler.RemoveArrayBracketsFromResult(result);
+            }
+            return JsonConvert.DeserializeObject<PathwayReferences_Root>(resultString);
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         }
 
         //public SortedDictionary<string, string> GetCitizenPathwayReferences(int id, string pathwayName)
@@ -477,6 +600,7 @@ namespace NexusAPIWrapper
         public string GetCitizenPathwayReferencesSelfLink(string CitizenCPR, string pathwayName)
         {
             var pathwayReferences = GetCitizenPathwayReferences(CitizenCPR,pathwayName);
+<<<<<<< HEAD
             var links = pathwayReferences["_links"];
             var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
             return dataHandler.GetHref(linksDict,true);
@@ -559,11 +683,49 @@ namespace NexusAPIWrapper
 
 
             if (childDict.Count == 0)
+=======
+            return pathwayReferences.Links.Self.Href;
+            //var links = pathwayReferences["_links"];
+            //var linksDict = dataHandler.ConvertJsonToSortedDictionary(links);
+            //return dataHandler.GetHref(linksDict,true);
+        }
+
+        public PathwayReferencesSelf_Root GetCitizenPathwayReferencesSelf(string CitizenCPR, string pathwayName)
+        {
+            result.GetCitizenPathwayReferencesSelf(this, CitizenCPR, pathwayName);
+            return JsonConvert.DeserializeObject<PathwayReferencesSelf_Root>(result.Result.ToString());
+        }
+        //public SortedDictionary<string,string> GetCitizenPathwayReferencesSelf(string CitizenCPR, string pathwayName)
+        //{
+        //    result.GetCitizenPathwayReferencesSelf(this, CitizenCPR, pathwayName);
+        //    var objects = dataHandler.ConvertNexusResultToJsonObject(result);
+            
+        //    return dataHandler.JsonToSortedDictionary(objects);
+        //}
+
+        public PathwayReferencesSelf_Links GetCitizenPathwayReferencesSelf_Links(string CitizenCPR, string pathwayName)
+        {
+            var CitizenPathwayReferencesSelf = GetCitizenPathwayReferencesSelf(CitizenCPR, pathwayName);
+            return CitizenPathwayReferencesSelf.Links;
+        }
+        //public SortedDictionary<string,string> GetCitizenPathwayReferencesSelf_Links(string CitizenCPR, string pathwayName)
+        //{
+        //    var CitizenPathwayReferencesSelf = GetCitizenPathwayReferencesSelf(CitizenCPR,pathwayName);
+        //    var links = CitizenPathwayReferencesSelf["_links"];
+        //    return dataHandler.JsonStringToSortedDictionary(links);
+        //}
+
+        public List<PathwayReferences_Child> GetCitizenPathwayChildren(string CitizenCPR, string pathwayName)
+        {
+            var pathwayReferences = GetCitizenPathwayReferences(CitizenCPR, pathwayName);
+            if (pathwayReferences == null)
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             {
 
             }
             else
             {
+<<<<<<< HEAD
                 var strDocuments = childDict["children"];
                 documents = dataHandler.ArrayJsonStringToSortedDictionary(strDocuments);
             }
@@ -617,7 +779,185 @@ namespace NexusAPIWrapper
         //        var returnResult = CallAPI(this, documentPrototypeLink, Method.Get);
         //        return JsonConvert.DeserializeObject<CreateDocumentObject>(returnResult.Result.ToString());
         //    }
+=======
+                return pathwayReferences.Children;
+            }
+            //return dataHandler.ArrayJsonStringToSortedDictionary(pathwayReferences["children"]);
+        }
 
+        public PathwayReferences_Child GetCitizenPathwayChild(string CitizenCPR, string pathwayName, string pathwayChildName)
+        {
+            var pathwayChildren = GetCitizenPathwayChildren(CitizenCPR, pathwayName);
+            if (pathwayChildren == null)
+            {
+                return null;
+            }
+            else
+            {
+                PathwayReferences_Child chosenChild = new PathwayReferences_Child();
+                foreach (var child in pathwayChildren)
+                {
+                    if (child.Name == pathwayChildName)
+                    {
+                        chosenChild = child;
+                        break;
+                    }
+                }
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
+
+                return chosenChild;
+            }
+            
+        }
+        //public SortedDictionary<string,string> GetCitizenPathwayChild(string CitizenCPR,string pathwayName, string pathwayChildName)
+        //{
+        //    var pathwayChildren = GetCitizenPathwayChildren(CitizenCPR, pathwayName);
+        //    string strResult = string.Empty;
+        //    foreach (var item in pathwayChildren)
+        //    {
+        //        if (item.Key == pathwayChildName)
+        //        {
+        //            strResult = item.Value;
+        //        }
+        //    }
+
+        //    SortedDictionary<string, string> childDict = new SortedDictionary<string, string>();
+        //    if (strResult == string.Empty)
+        //    {
+
+        //    }
+        //    else
+        //    {
+        //        childDict = dataHandler.JsonStringToSortedDictionary(strResult);
+        //    }
+            
+        //    return childDict;
+        //}
+        public string GetCitizenPathwayChildSelfLink(string CitizenCPR, string pathwayName, string pathwayChildName)
+        {
+            var pathwayChild = GetCitizenPathwayChild(CitizenCPR, pathwayName, pathwayChildName);
+            return pathwayChild.Links.Self.Href;
+            //var pathwayChildLinks = pathwayChild["_links"];
+            //var links = dataHandler.JsonStringToSortedDictionary(pathwayChildLinks);
+
+            //return dataHandler.GetHref(links, true);
+        }
+        //public PathwayReferences_Links GetCitizenPathwayChildSelf(string CitizenCPR, string pathwayName, string pathwayChildName)
+        //{
+        //    result.GetCitizenPathwayChildSelf(this, CitizenCPR, pathwayName, pathwayChildName);
+        //    PathwayReferences_Child child = new PathwayReferences_Child();
+        //    string childSelfLink = child.Links.Self.Href;
+
+
+        //}
+        public SortedDictionary<string, string> GetCitizenPathwayChildSelf(string CitizenCPR, string pathwayName, string pathwayChildName)
+        {
+            result.GetCitizenPathwayChildSelf(this, CitizenCPR, pathwayName, pathwayChildName);
+            var objects = dataHandler.ConvertNexusResultToJsonObject(result);
+
+            return dataHandler.JsonToSortedDictionary(objects);
+        }
+
+        public SortedDictionary<string, string> GetCitizenPathwayChildSelf_Links(string CitizenCPR, string pathwayName, string pathwayChildName)
+        {
+            var childSelf = GetCitizenPathwayChildSelf(CitizenCPR, pathwayName, pathwayChildName);
+            var links = childSelf["_links"];
+
+            return dataHandler.JsonStringToSortedDictionary(links);
+        }
+
+        public List<PathwayReferences_Child> GetCitizenPathwayChildDocuments(string CitizenCPR, string pathwayName, string pathwaysChildName)
+        {
+            var child = GetCitizenPathwayChild(CitizenCPR,pathwayName, pathwaysChildName);
+            List<PathwayReferences_Child> documents = new List<PathwayReferences_Child>();
+
+            if (child.Children.Count == 0)
+            {
+
+            }
+            else
+            {
+                documents = child.Children;
+            }
+            return documents;
+        }
+        //public SortedDictionary<string, string> GetCitizenPathwayChildDocuments(string CitizenCPR, string pathwayName, string pathwaysChildName)
+        //{
+        //    var childDict = GetCitizenPathwayChild(CitizenCPR,pathwayName, pathwaysChildName);
+        //    SortedDictionary<string, string> documents = new SortedDictionary<string, string>();
+
+
+
+        //    if (childDict.Count == 0)
+        //    {
+
+        //    }
+        //    else
+        //    {
+        //        var strDocuments = childDict["children"];
+        //        documents = dataHandler.ArrayJsonStringToSortedDictionary(strDocuments);
+        //    }
+
+        //    return documents;
+        //}
+
+
+
+        //public void CreateDocumentObject(string CitizenCPR) //This method uploads a document directly under the citizen/patient
+        //{
+        //    CreateDocumentObject(CitizenCPR, null);
+        //}
+        //public void CreateDocumentObject(string CitizenCPR, string pathwayName)//This method uploads a document directly under a specific pathway
+        //{
+        //    CreateDocumentObject(CitizenCPR,pathwayName ,null);
+        //}
+
+        //public CreateDocumentObject CreateDocumentObject(string CitizenCPR, string pathwayName, string pathwayChildName)//This method returns the document object in order to upload a document directly under a specific pathway/pathway child
+        //{
+        //    if (pathwayChildName == null)
+        //    {
+        //        // document NOT to be uploaded on a child pathway
+        //        if (pathwayName == null)
+        //        {
+        //            // document NOT to be uploaded on a pathway
+        //            // document to be uploaded directly on the patient/citizen
+
+        //            var patientDetailsLinks = GetPatientDetailsLinks_ByCPR(CitizenCPR);
+        //            string documentPrototypeLink = dataHandler.GetDocumentPrototypeLink(patientDetailsLinks);
+
+        //            var returnResult = CallAPI(this, documentPrototypeLink, Method.Get);
+        //            return JsonConvert.DeserializeObject<CreateDocumentObject>(returnResult.Result.ToString());
+        //        }
+        //        else
+        //        {
+        //            // document to be uploaded on a pathway
+
+        //            var patientPathwayReferencesLinks = GetPatientPreferences_ByCPR(CitizenCPR);
+        //            string documentPrototypeLink = dataHandler.GetDocumentPrototypeLink(patientPathwayReferencesLinks);
+
+        //            var returnResult = CallAPI(this, documentPrototypeLink, Method.Get);
+        //            return JsonConvert.DeserializeObject<CreateDocumentObject>(returnResult.Result.ToString());
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // document to be uploaded on a child pathway
+        //        var CitizenPathwayChildSelf_Links = GetCitizenPathwayChildSelf_Links(CitizenCPR, pathwayName, pathwayChildName);
+
+        //        string documentPrototypeLink = dataHandler.GetDocumentPrototypeLink(CitizenPathwayChildSelf_Links);
+
+        //        var returnResult = CallAPI(this, documentPrototypeLink, Method.Get);
+        //        return JsonConvert.DeserializeObject<CreateDocumentObject>(returnResult.Result.ToString());
+        //    }
+
+
+        //}
+
+        //public SortedDictionary<string, string> GetOrganizations()
+        //{
+        //    result.GetOrganizations(this);
+        //    return dataHandler.ArrayJsonStringToSortedDictionary(result.Result.ToString());
+        //}
 
         //}
 
@@ -627,7 +967,24 @@ namespace NexusAPIWrapper
             return dataHandler.ArrayJsonStringToSortedDictionary(result.Result.ToString());
         }
 
+<<<<<<< HEAD
         public SortedDictionary<string, string> GetSpecificOrganization(string organizationName)
+=======
+        //public SortedDictionary<string, string> GetSpecificOrganization(string organizationName)
+        //{
+        //    result.GetOrganizations(this);
+        //    var organizations = dataHandler.ArrayJsonStringToSortedDictionary(result.Result.ToString());
+        //    var organization = organizations[organizationName];
+        //    var organizationData = dataHandler.JsonStringToSortedDictionary(organization);
+        //    var organizationDataLinks = organizationData["_links"];
+        //    var organizationsDataLinksHref = dataHandler.GetHref(JObject.Parse(organizationDataLinks), true);
+
+        //    var org = result.CallAPI(this,organizationsDataLinksHref, Method.Get);
+        //    return dataHandler.JsonStringToSortedDictionary(org.Result.ToString());
+        //}
+
+        public OrganizationsSelf_Root GetSpecificOrganization(string organizationName)
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         {
             result.GetOrganizations(this);
             var organizations = dataHandler.ArrayJsonStringToSortedDictionary(result.Result.ToString());
@@ -636,11 +993,34 @@ namespace NexusAPIWrapper
             var organizationDataLinks = organizationData["_links"];
             var organizationsDataLinksHref = dataHandler.GetHref(JObject.Parse(organizationDataLinks), true);
 
+<<<<<<< HEAD
             var org = result.CallAPI(this,organizationsDataLinksHref, Method.Get);
             return dataHandler.JsonStringToSortedDictionary(org.Result.ToString());
         }
 
         public SortedDictionary<string, string> GetOrganizationLinks(string organizationName)
+=======
+            foreach (var org in organizations)
+            {
+                if (org.Name == organizationName)
+                {
+                    chosenOrganization = org;
+                    break;
+                }
+            }
+            return JsonConvert.DeserializeObject<OrganizationsSelf_Root>(CallAPI(this, chosenOrganization.Links.Self.Href, Method.Get).Result.ToString());  
+        }
+
+        //public SortedDictionary<string, string> GetOrganizationLinks(string organizationName)
+        //{
+        //    var organization = GetSpecificOrganization(organizationName);
+        //    var links = organization["_links"];
+
+        //    return dataHandler.JsonStringToSortedDictionary(links);
+        //}
+
+        public OrganizationsSelf_Links GetOrganizationLinks(string organizationName)
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         {
             var organization = GetSpecificOrganization(organizationName);
             var links = organization["_links"];
@@ -648,7 +1028,31 @@ namespace NexusAPIWrapper
             return dataHandler.JsonStringToSortedDictionary(links);
         }
 
+<<<<<<< HEAD
         public string GetSpecificOrganizationLink(string organizationName, string linkName)
+=======
+
+        //public string GetSpecificOrganizationLink(string organizationName, string linkName)
+        //{
+        //    var organizationLinks = GetOrganizationLinks(organizationName);
+        //    var specificLink = organizationLinks[linkName];
+
+        //    return dataHandler.GetHref(JObject.Parse(specificLink), false);
+        //}
+
+
+
+        //public SortedDictionary<string, string> GetOrganizationProfessionals(string organizationName)
+        //{
+        //    var link = GetSpecificOrganizationLink(organizationName, "professionals");
+        //    var org = GetSpecificOrganization(organizationName);
+        //    var link = org.Links.
+        //    var returnResult = result.CallAPI(this, link, Method.Get);
+        //    return dataHandler.ArrayJsonStringToSortedDictionary(returnResult.Result.ToString(), "fullName");
+        //}
+
+        public List<Professionals_Root> GetOrganizationProfessionals(string organizationName)
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         {
             var organizationLinks = GetOrganizationLinks(organizationName);
             var specificLink = organizationLinks[linkName];
@@ -656,7 +1060,25 @@ namespace NexusAPIWrapper
             return dataHandler.GetHref(JObject.Parse(specificLink),false);
         }
 
+<<<<<<< HEAD
         public SortedDictionary<string, string> GetOrganizationProfessionals(string organizationName)
+=======
+        //public SortedDictionary<string, string> GetOrganizationPatients(string organizationName)
+        //{
+        //    var link = GetSpecificOrganizationLink(organizationName, "patients");
+        //    var returnResult = result.CallAPI(this, link, Method.Get);
+        //    return dataHandler.ArrayJsonStringToSortedDictionary(returnResult.Result.ToString(),"fullName");
+        //}
+
+
+
+
+        /// <summary>
+        /// TAKES TIME - getting all patient details in a list of patients
+        /// </summary>
+        /// <returns></returns>
+        public List<PatientDetailsSearch_Patient> GetAllPatients()
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         {
             var link = GetSpecificOrganizationLink(organizationName, "professionals");
             var returnResult = result.CallAPI(this,link,Method.Get);
@@ -772,10 +1194,24 @@ namespace NexusAPIWrapper
         ///SHARED METHODS///
         ////////////////////
 
+<<<<<<< HEAD
         public NexusResult CallAPI(NexusAPI api, string endpointURL,Method callMethod)
         {
             NexusResult nexusResult = new NexusResult();
             return nexusResult.CallAPI(this, endpointURL, callMethod);
+=======
+        public NexusResult CallAPI(NexusAPI api, string endpointURL,Method callMethod, string JsonBody = null)
+        {
+            NexusResult nexusResult = new NexusResult();
+            if (JsonBody == null)
+            {
+                return nexusResult.CallAPI(this, endpointURL, callMethod);
+            }
+            else
+            {
+                return nexusResult.CallAPI(this, endpointURL, JsonBody, callMethod);
+            }
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         }
 
         private string GetElementDataFromSortedDict(SortedDictionary<string, SortedDictionary<string, string>> dict, string elementName)
