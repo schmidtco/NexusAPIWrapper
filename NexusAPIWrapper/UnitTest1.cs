@@ -18,8 +18,14 @@ namespace NexusAPITest
         //public void Setup()
         //{
         //}
+<<<<<<< HEAD
 
         string environment = "live";
+=======
+            
+        string environment = "live";
+        readonly string nancyBerggrenTestCPR = "251248-9996";
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         [Test]
         public void testAccess()
         {
@@ -37,7 +43,11 @@ namespace NexusAPITest
         [Test]
         public void testSearchPatientByCPR()
         {
+<<<<<<< HEAD
             string cpr = "xxxxxx-xxxx";
+=======
+            string cpr = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             NexusAPI _NexusAPI = new NexusAPI(environment);
             var details = _NexusAPI.GetPatientDetails(cpr);
             Assert.IsNotNull(details);
@@ -46,28 +56,44 @@ namespace NexusAPITest
         public void testGetPatientDetailsLinks()
         {
             NexusAPI _NexusAPI = new NexusAPI(environment);
+<<<<<<< HEAD
             var links = _NexusAPI.GetPatientDetailsLinks("xxxxxx-xxxx");
+=======
+            var links = _NexusAPI.GetPatientDetailsLinks(nancyBerggrenTestCPR);
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             Assert.IsNotNull(links);
         }
         [Test]
         public void testGetPatientPreferences()
         {
             NexusAPI _nexusAPI = new NexusAPI(environment);
+<<<<<<< HEAD
             var preferences = _nexusAPI.GetPatientPreferences("xxxxxx-xxxx");
+=======
+            var preferences = _nexusAPI.GetPatientPreferences(nancyBerggrenTestCPR);
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             Assert.IsNotNull(preferences);
         }
         [Test]
         public void testGetCitizenPathways()
         {
             NexusAPI _nexusAPI = new NexusAPI(environment);
+<<<<<<< HEAD
             var pathways = _nexusAPI.GetCitizenPathways("xxxxxx-xxxx");
+=======
+            var pathways = _nexusAPI.GetCitizenPathways(nancyBerggrenTestCPR);
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             Assert.IsNotNull(pathways);
         }
         [Test]
         public void testGetCitizenPathwayLink()
         {
             NexusAPI _nexusAPI = new NexusAPI(environment);
+<<<<<<< HEAD
             var pathwayLink = _nexusAPI.GetCitizenPathwayLink("xxxxxx-xxxx", "Dokumenttilknytning fra Vitae");
+=======
+            var pathwayLink = _nexusAPI.GetCitizenPathwayLink(nancyBerggrenTestCPR, "Dokumenttilknytning fra Vitae");
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             Assert.IsNotNull(pathwayLink);
         }
 
@@ -75,7 +101,11 @@ namespace NexusAPITest
         public void testGetDokumentTilknytningHref()
         {
             NexusAPI nexusAPI = new NexusAPI(environment);
+<<<<<<< HEAD
             string CitizenCPR = "xxxxxx-xxxx";
+=======
+            string CitizenCPR = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             string pathwayName = "Dokumenttilknytning fra Vitae";
             //var pathwayLink = nexusAPI.GetCitizenPathwayLink_ByCPR(CitizenCPR, pathwayName);
             var hrefLink = nexusAPI.GetCitizenPathwayLink(CitizenCPR, pathwayName);
@@ -84,6 +114,7 @@ namespace NexusAPITest
         }
 
         [Test]
+<<<<<<< HEAD
         public void Test()
         {
             NexusAPI nexusAPI = new NexusAPI("live");
@@ -106,12 +137,116 @@ namespace NexusAPITest
             Assert.IsNotNull(pathwayReferencesLink);
         }
 
+=======
+        public void GetPathwayReferencesLink()
+        {
+            NexusAPI nexusAPI = new NexusAPI("live");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+
+            var pathwayReferencesLink = nexusAPI.GetCitizenPathwayReferencesSelfLink(CitizenCPR, pathwayName);
+            Assert.IsNotNull(pathwayReferencesLink);
+        }
+
+
+        [Test]
+        public void GetCitizenPathwayChildren()
+        {
+            NexusAPI nexusAPI = new NexusAPI("live");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+
+            var pathwayChildren = nexusAPI.GetCitizenPathwayChildren(CitizenCPR, pathwayName);
+            Assert.IsNotNull(pathwayChildren);
+        }
+
+        [Test]
+        public void GetCitizenPathwayChildDictionaryWillReturnNullWithNancyBerggren()
+        {
+            NexusAPI nexusAPI = new NexusAPI("live");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+            string pathwayChildName = "Dokumenter fra Vitae";
+
+            var pathwayChild = nexusAPI.GetCitizenPathwayChild(CitizenCPR, pathwayName, pathwayChildName);
+            Assert.IsNull(pathwayChild);
+        }
+
+        [Test]
+        public void GetCitizenPathwayChildDocuments()
+        {
+            NexusAPI nexusAPI = new NexusAPI("review");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+            string pathwayChildName = "Dokumenter fra Vitae";
+
+            var pathwayChildDocuments = nexusAPI.GetCitizenPathwayChildDocuments(CitizenCPR, pathwayName, pathwayChildName);
+            Assert.IsNotNull(pathwayChildDocuments);
+        }
+
+        [Test]
+        public void GetCitizenPathwayChildDocumentsThatAreEmpty()
+        {
+            // This should return no child documents and therefore IS EMPTY
+            NexusAPI nexusAPI = new NexusAPI("review");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning - alt";
+            string pathwayChildName = "Udfører - Omsorg, pleje og træning m.v.";
+
+            //string pathwayName = "- Dokumenter - Træning og Sundhed";
+            //string pathwayChildName = "Udfører - Omsorg, pleje og træning m.v.";
+
+            var pathwayChildDocuments = nexusAPI.GetCitizenPathwayChildDocuments(CitizenCPR, pathwayName, pathwayChildName);
+            Assert.IsEmpty(pathwayChildDocuments);
+        }
+
+        [Test]
+        public void testGetCitizenPathwayDocumentPrototypelink()
+        {
+            NexusAPI nexusAPI = new NexusAPI("live");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+            //string pathwayChildName = "Dokumenter fra Vitae";
+
+            var CitizenPathwayReferencesSelf_Links = nexusAPI.GetCitizenPathwayReferencesSelf_Links(CitizenCPR, pathwayName);
+            string documentPrototypeLink = CitizenPathwayReferencesSelf_Links.DocumentPrototype.Href;
+
+            //string documentPrototypeLink = nexusAPI.dataHandler.GetDocumentPrototypeLink(CitizenPathwayReferencesSelf_Links);
+
+            Assert.IsNotNull(documentPrototypeLink);
+        }
+
+        [Test]
+        public void testGetCitizenPathwayChildDocumentPrototypelink()
+        {
+            NexusAPI nexusAPI = new NexusAPI("live");
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+            string pathwayChildName = "Dokumenter fra Vitae";
+
+            var CitizenPathwayChildSelf_Links = nexusAPI.GetCitizenPathwayChildSelf_Links(CitizenCPR, pathwayName, pathwayChildName);
+
+            string documentPrototypeLink = nexusAPI.dataHandler.GetDocumentPrototypeLink(CitizenPathwayChildSelf_Links);
+
+            Assert.IsNotNull(documentPrototypeLink);
+        }
+
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         [Test]
         public void GetCitizenPathwayObjects()
         {
             NexusAPI nexusAPI = new NexusAPI("review");
+<<<<<<< HEAD
             string CitizenCPR = "xxxxxx-xxxx";
             string pathwayName = "Dokumenttilknytning fra Vitae";
+=======
+            string CitizenCPR = nancyBerggrenTestCPR;
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+
+            var pathwayReferencesDocuments = nexusAPI.GetCitizenPathwayReferences(CitizenCPR, pathwayName);
+
+            Assert.IsNotNull(pathwayReferencesDocuments);
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
 
             var objects = nexusAPI.GetCitizenPathwayReferencesSelf(CitizenCPR, pathwayName);
             var links = objects["_links"];
@@ -217,7 +352,11 @@ namespace NexusAPITest
         public void GetCitizenPathwayReferencesDocuments()
         {
             NexusAPI nexusAPI = new NexusAPI("review");
+<<<<<<< HEAD
             string CitizenCPR = "xxxxxx-xxxx";
+=======
+            string CitizenCPR = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             string pathwayName = "Dokumenttilknytning fra Vitae";
 
             var pathwayReferencesDocuments = nexusAPI.GetCitizenPathwayReferencesDocuments(CitizenCPR, pathwayName);
@@ -229,7 +368,11 @@ namespace NexusAPITest
         public void GetCitizenPathwayDocuments()
         {
             NexusAPI nexusAPI = new NexusAPI("review");
+<<<<<<< HEAD
             string CitizenCPR = "xxxxxx-xxxx";
+=======
+            string CitizenCPR = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
             string pathwayName = "Dokumenttilknytning fra Vitae";
 
             var pathwayReferencesDocuments = nexusAPI.GetCitizenPathwayDocuments(CitizenCPR, pathwayName);
@@ -241,7 +384,11 @@ namespace NexusAPITest
         //public void GetDocumentObject()
         //{
         //    NexusAPI nexusAPI = new NexusAPI("review");
+<<<<<<< HEAD
         //    string CitizenCPR = "xxxxxx-xxxx";
+=======
+        //    string CitizenCPR = nancyBerggrenTestCPR;
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         //    string pathwayName = "Dokumenttilknytning fra Vitae";
         //    string pathwayChildName = "Dokumenter fra Vitae";
 
@@ -427,6 +574,18 @@ namespace NexusAPITest
             Assert.AreNotEqual(organizationName, professional.PrimaryOrganization);
         }
 
+<<<<<<< HEAD
+=======
+        [Test]
+        public void GetCitizenJournalNotes()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            string pathwayName = "Journalnotater fra Vitae";
+            string cpr = "";
+        }
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         [Test]
         public void GetCitizenJournalNotes()
         {
@@ -437,6 +596,20 @@ namespace NexusAPITest
             string cpr = "";
         }
         [Test]
+<<<<<<< HEAD
+=======
+        public void GetCitizenPathwayNew()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            string pathwayName = "Dokumenttilknytning fra Vitae";
+            string cpr = nancyBerggrenTestCPR;
+
+            var info = api.GetCitizenPathway(cpr, pathwayName);
+        }
+        [Test]
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
         public void GetALLCitizenDocumentObjectsOnSpecifiedPathwayName() 
         {
             NexusAPI_processes processes = new NexusAPI_processes("review");
@@ -555,5 +728,112 @@ namespace NexusAPITest
             var df = api.GetProfessionals("jette nielsen");
 
         }
+<<<<<<< HEAD
+=======
+
+        
+        [Test]
+        public void GetSpecifiedCitizenListFromHomeRessourcePreferences()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var preferencesLink = api.GetHomeRessourceLink("preferences");
+            NexusResult preferencesResult = api.CallAPI(api, preferencesLink,Method.Get);
+            Preferences_Root preferences = JsonConvert.DeserializeObject<Preferences_Root>(preferencesResult.Result.ToString());
+
+            var citizenList = preferences.CITIZENLIST;
+
+            Preferences_CITIZENLIST list = new Preferences_CITIZENLIST();
+            foreach (var item in citizenList)
+            {
+                if (item.Name == "Døde/inaktive borgere med aktive forløb i kommunen")
+                {
+                    list = item;
+                    break;
+                }
+            }
+
+            string listLink = list.Links.Self.Href;
+            var listResult = api.CallAPI(api, listLink, Method.Get);    
+            CITIZEN_LIST_Root chosenListObject = JsonConvert.DeserializeObject<CITIZEN_LIST_Root>(listResult.Result.ToString());
+            
+        }
+        [Test]
+        public void GetPatientGrants()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            var homeRessource = api.homeRessource;
+
+            var PatientGrantsLink = api.GetHomeRessourceLink("getPatientGrants");
+            //NexusResult PatientGrantsResult = api.CallAPI(api, PatientGrantsLink, Method.Get);
+            
+        }
+
+        [Test]
+        public void GetAllPatients()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            //This takes forever as there's 14.000+ patients
+            //var patients = api.GetAllPatients();
+        }
+
+        [Test]
+        public void GetPatientNancyBerggren()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var nancy = api.GetPatientDetails("251248-9996");
+            string preferencesLink = nancy.Links.PatientPreferences.Href;
+
+            var nancyPreferences = JsonConvert.DeserializeObject<PatientPreferences_Root>(api.CallAPI(api, preferencesLink, Method.Get).Result.ToString());
+
+            #region citizendata
+            PatientPreferences_CITIZENDATA nancyCitizenDataVitae = new PatientPreferences_CITIZENDATA();
+            foreach (var item in nancyPreferences.CITIZENDATA)
+            {
+                if (item.Name == "- Journalnotater fra Vitae")
+                {
+                    nancyCitizenDataVitae = item;
+                    break;
+                }
+            }
+            CitizenDataSelf_Root nancyVitaeJournalNotes = JsonConvert.DeserializeObject<CitizenDataSelf_Root>(api.CallAPI(api, nancyCitizenDataVitae.Links.Self.Href, Method.Get).Result.ToString());
+            #endregion citizendata
+
+
+            #region citizendashboard
+            PatientPreferences_CITIZENDASHBOARD nancyCitizenDashboard = new PatientPreferences_CITIZENDASHBOARD();
+            foreach (var item in nancyPreferences.CITIZENDASHBOARD)
+            {
+                if (item.Name == "Historiske data fra CSC Vitae")
+                {
+                    nancyCitizenDashboard = item;
+                    break;
+                }
+            }
+
+            CitizenDashboardSelf_Root nancyHistoricDataVitae = JsonConvert.DeserializeObject<CitizenDashboardSelf_Root>(api.CallAPI(api, nancyCitizenDashboard.Links.Self.Href, Method.Get).Result.ToString());
+            #endregion citizendashboard
+
+            #region citizenpathway
+            PatientPreferences_CITIZENPATHWAY nancyCitizenPathway = new PatientPreferences_CITIZENPATHWAY();
+            foreach (var item in nancyPreferences.CITIZENPATHWAY)
+            {
+                if (item.Name == "Dokumenttilknytning fra Vitae")
+                {
+                    nancyCitizenPathway = item;
+                    break;
+                }
+            }
+            var nancypathway = api.CallAPI(api, nancyCitizenPathway.Links.Self.Href, Method.Get);
+            //CitizenDashboardSelf_Root nancyHistoricDataVitae = JsonConvert.DeserializeObject<CitizenDashboardSelf_Root>(api.CallAPI(api, nancyCitizenDashboard.Links.Self.Href, Method.Get).Result.ToString());
+            #endregion citizenpathway
+        }
+>>>>>>> parent of 63bbae7 (Big clean up of the structure and location of classes, as well as addition of classes.)
     }
 }
