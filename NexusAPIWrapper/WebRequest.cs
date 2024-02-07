@@ -16,16 +16,16 @@ namespace NexusAPIWrapper
         public RestResponse response { get; set; }
         public string accessToken { get; set; }
         public RestSharp.Method method { get; set; }
-        
-        public WebRequest(string baseURL, string endpointURL, RestSharp.Method requestMethod) 
+
+        public WebRequest(string baseURL, string endpointURL, RestSharp.Method requestMethod)
         {
             //this requires access token to be set manually
             clientOptions = new RestClientOptions(baseURL);
             restClient = new RestClient(clientOptions);
             method = requestMethod;
-            
+
             request = new RestRequest(endpointURL);
-            
+
         }
         public WebRequest(string baseURL, string endpointURL, RestSharp.Method requestMethod, string accessToken)
         {
@@ -87,7 +87,11 @@ namespace NexusAPIWrapper
         {
             request.AddHeader("Content-Type", "application/json");
         }
-
+        public void AddAcceptTypeXML()
+        {
+            request.AddHeader("Accept", "application/xhtml+xml");
+            //request.RequestFormat = RestSharp.DataFormat.Xml;
+        }
 
 
     }

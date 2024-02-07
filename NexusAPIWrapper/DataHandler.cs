@@ -324,7 +324,7 @@ namespace NexusAPIWrapper
             var documentPrototypeDict = JsonStringToSortedDictionary(documentPrototypeObj);
             return GetHref(documentPrototypeDict, false);
         }
-        internal string GetDocumentPrototypeLink(PatientDetails_Links links)
+        internal string GetDocumentPrototypeLink(PatientDetailsSearch_Links links)
         {
             return links.DocumentPrototype.Href;
         }

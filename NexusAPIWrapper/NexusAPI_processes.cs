@@ -1,5 +1,6 @@
 ﻿using MimeKit;
 using Newtonsoft.Json;
+using NexusAPIWrapper.HomeRessource.Preferences.ACTIVITYLIST.ACTIVITYLIST_Content.Content.Pages.Links.Content._Root.Links.ReferencedObject._Root.Links.TransformedBody;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -17,16 +18,16 @@ namespace NexusAPIWrapper
     public class NexusAPI_processes
     {
         #region Properties
-        
+
         public NexusAPI api; // public so you can access all API methods from the processes
         private List<Professional_Root> _professionalsList;
-        
 
-        public List<Professional_Root>  professionalsList
-            {
-                get => _professionalsList;
-                //set => professionalsList = value;
-            }
+
+        public List<Professional_Root> professionalsList
+        {
+            get => _professionalsList;
+            //set => professionalsList = value;
+        }
 
 
         #endregion Properties
@@ -64,7 +65,70 @@ namespace NexusAPIWrapper
 
         #region Getting/Returning processes
 
-        
+        //public List<Content_Page> GetDeadOrInactiveCitizens()
+        //{
+        //    string listName = "Døde/inaktive borgere med aktive forløb i kommunen";
+        //    return GetCitizenList(listName);
+        //}
+        public List<Content_Page_Root> GetDeadOrInactiveCitizens()
+        {
+            string listName = "Døde/inaktive borgere med aktive forløb i kommunen";
+
+            List<Content_Page> citizenList = GetCitizenList(listName);
+            List<Content_Page_Root> fullList = new List<Content_Page_Root>();
+            foreach (var page in citizenList)
+            {
+                //Getting the endpoint to load the citizens on the X page
+                string endpoint = page.Links.PatientData.Href;
+                //Calling the API to aget a result
+                var webResult = api.CallAPI(api, endpoint, Method.Get);
+                //Converting the result into a class we can work on
+                var result = JsonConvert.DeserializeObject<List<Content_Page_Root>>(webResult.Result.ToString());
+                foreach (var item in result)
+                {
+                    fullList.Add(item);
+                }
+            }
+
+            return fullList;
+        }
+
+        /// <summary>
+        /// Get the content/citizens on the list specified. Run the api.GetPreferencesCitizenLists to get available lists
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns>List of content pages containing PatientData and PatientGrantInformation</returns>
+        public List<Content_Page> GetCitizenList(string listName)
+        {
+            var citizenlistSelf = api.GetPreferencesCitizenListSelf(listName);
+            var citizenlistContent = api.GetPreferencesCitizenListSelfContent(listName);
+
+            return citizenlistContent.Pages;
+        }
+
+        /// <summary>
+        /// Enrolls the patient/citizen to the specified program pathway (Grundforløb)
+        /// </summary>
+        /// <param name="citizenCPR"></param>
+        /// <param name="programPathway"></param>
+        public PatientEnrolled_Root EnrollPatientToProgramPathway(string citizenCPR, string programPathway)
+        {
+            var programPathwayEnrollmentLink = api.GetProgramPathwayEnrollmentLink(citizenCPR, programPathway);
+
+            if (programPathwayEnrollmentLink != null)
+            {
+                var result = api.CallAPI(api, programPathwayEnrollmentLink, Method.Put);
+                return JsonConvert.DeserializeObject<PatientEnrolled_Root>(result.Result.ToString());
+            }
+            else
+            {
+                throw new Exception("Program pathway is not a possible choice");
+            }
+
+        }
+
+
+
         /// <summary>
         /// Getting a list of document objects. From the list, the self link of each object can be used to get the complete object where a reference link can be used to download the file.
         /// </summary>
@@ -73,15 +137,15 @@ namespace NexusAPIWrapper
         /// <param name="returnAllDocuments"></param>
         /// <param name="childPathwayName"></param>
         /// <returns></returns>
-        public List<PatientPathwayReferences_Child> GetCitizenDocumentObjects(int id, string pathwayName, bool returnAllDocuments, string childPathwayName = null)
+        public List<PathwayReferences_Child> GetCitizenDocumentObjects(int id, string pathwayName, bool returnAllDocuments, string childPathwayName = null)
         {
             // NOT FINISHED
             var pathwayReferences = api.GetCitizenPathwayReferences(id, pathwayName);
 
 
             // Children contains elements/documents directly on the pathway ("documentReference"), AND childpathways that contain elements/documents ("patientPathwayReference")
-            var children = pathwayReferences.Children;
-            List<PatientPathwayReferences_Child> elementsList = new List<PatientPathwayReferences_Child>();
+            var children = pathwayReferences[0].Children;
+            List<PathwayReferences_Child> elementsList = new List<PathwayReferences_Child>();
 
             switch (childPathwayName)
             {
@@ -92,7 +156,7 @@ namespace NexusAPIWrapper
                     {
                         case true:
                             // We want to return all documents 
-                            foreach (var child in children) 
+                            foreach (var child in children)
                             {
                                 switch (child.Type)
                                 {
@@ -101,7 +165,7 @@ namespace NexusAPIWrapper
                                         elementsList.Add(child);
                                         break;
                                     case "patientPathwayReference":
-                                        api.GetPathwayChildrenElements(elementsList, child);
+                                        api.GetPathwayReferencesChildrenElements(elementsList, child);
                                         break;
                                 }
                             }
@@ -126,7 +190,7 @@ namespace NexusAPIWrapper
                 default:
                     // child pathway input given.
                     // We only work on that child, but can still return all documents from that child -> down the tree
-                    
+
                     foreach (var child in children)
                     {
                         if (child.Name == childPathwayName)
@@ -140,17 +204,17 @@ namespace NexusAPIWrapper
                                         elementsList.Add(subChild);
                                         break;
                                     case "patientPathwayReference":
-                                        api.GetPathwayChildrenElements(elementsList, subChild);
+                                        api.GetPathwayReferencesChildrenElements(elementsList, subChild);
                                         break;
                                 }
                             }
                             break;
                         }
                     }
-                    
+
                     break;
             }
-            
+
 
 
             return elementsList;
@@ -170,7 +234,7 @@ namespace NexusAPIWrapper
             return JsonConvert.DeserializeObject<Professional_Root>(professional.Result.ToString());
         }
 
-        
+
 
         /// <summary>
         /// Returning the professional object class
@@ -180,34 +244,22 @@ namespace NexusAPIWrapper
         public List<Professional_Root> GetProfessionals(string name, bool includeInactiveProfessionals)
         {
             List<Professional_Root> professionals = new List<Professional_Root>();
-            var professionalsList = api.GetProfessionals(name); 
+            var professionalsList = api.GetProfessionals(name);
 
             foreach (var professional in professionalsList)
             {
-                string professionalJsonStringObject = professional.Value;
-                var professionalObject = api.dataHandler.JsonStringToSortedDictionary(professionalJsonStringObject);
-                string linksString = professionalObject["_links"];
-                var linksDict = api.dataHandler.JsonStringToSortedDictionary(linksString);
 
-                // Call self link to get the full object of the professional
-                string selfLink = api.dataHandler.GetHref(linksDict, true);
-                var specificProfessional = api.CallAPI(api, selfLink, Method.Get);
-
-                // Deserialize the result into a professional class object
-                Professional_Root specificProfessionalObject = JsonConvert.DeserializeObject<Professional_Root>(specificProfessional.Result.ToString());
-
-                // Check for including inactive professionals
                 if (includeInactiveProfessionals == true)
                 {
                     // Add object to the list
-                    professionals.Add(specificProfessionalObject);
+                    professionals.Add(professional);
                 }
                 else
                 {
-                    if (specificProfessionalObject.Active == true)
+                    if (professional.Active == true)
                     {
                         // Add object to the list
-                        professionals.Add(specificProfessionalObject);
+                        professionals.Add(professional);
                     }
                 }
             }
@@ -229,49 +281,23 @@ namespace NexusAPIWrapper
 
         #region Professionals
 
-        
         public void ActivateInactiveSubstituteProfessionals()
         {
             var professionalsList = api.GetProfessionals("vik");
 
             foreach (var professional in professionalsList)
             {
-                if (professional.Key.Length>2) // Making sure that the key length is more than 2. Otherwise we can't check the first 3 chars.
+                if (professional.Initials.Length > 2)// Making sure that the key length is more than 2. Otherwise we can't check the first 3 chars.
                 {
-                    if (professional.Key.Substring(0, 3) == "vik") // then it's a substitute professional, and we activate if inactive
+                    if (professional.Initials.Substring(0, 3) == "vik")// then it's a substitute professional, and we activate if inactive
                     {
-                        string professionalJsonStringObject = professional.Value;
-                        var professionalObject = api.dataHandler.JsonStringToSortedDictionary(professionalJsonStringObject);
-                        string linksString = professionalObject["_links"];
-                        var linksDict = api.dataHandler.JsonStringToSortedDictionary(linksString);
-
-                        // Call self link to get the full object of the professional
-                        string selfLink = api.dataHandler.GetHref(linksDict, true);
-                        var specificProfessional = api.CallAPI(api, selfLink, Method.Get);
-
-                        // Deserialize the result into a professional class object
-                        Professional_Root specificProfessionalObject = JsonConvert.DeserializeObject<Professional_Root>(specificProfessional.Result.ToString());
-
-                        //var links = specificProfessionalObject.Links;
-
-                        // Check the active value
-                        if (!specificProfessionalObject.Active == true)
-                        {
-                            ActivateProfessional(specificProfessionalObject.Id);
-                            _professionalsList.Add(specificProfessionalObject);
-                        }   
-
+                        ActivateProfessional(professional.Id);
+                        _professionalsList.Add(professional);
                     }
                 }
-
             }
-            // Send email with list of activated professionals
-
-            // SMTP server
-            
-
-
         }
+       
 
         public void ActivateProfessional(int id)
         {
@@ -298,12 +324,12 @@ namespace NexusAPIWrapper
                     professionalObject.Active = true;
                     break;
                 case false:
-                    professionalObject.Active = false;  
+                    professionalObject.Active = false;
                     break;
                 default:
                     throw new ArgumentException("State not valid");
             }
-            
+
             // Convert back to JSON string
             string professionalJsonStringObject = JsonConvert.SerializeObject(professionalObject);
 
@@ -311,7 +337,7 @@ namespace NexusAPIWrapper
             string updateEndpoint = professionalObject.Links.Update.Href;
 
             // Call update professional api with PUT method
-            api.result.UpdateProfessional(api, updateEndpoint, professionalJsonStringObject,Method.Put);
+            api.result.UpdateProfessional(api, updateEndpoint, professionalJsonStringObject, Method.Put);
         }
 
         /// <summary>
@@ -319,16 +345,16 @@ namespace NexusAPIWrapper
         /// </summary>
         /// <param name="professionalId">The id number</param>
         /// <param name="professionalJobTitle">The job title as a string. Needs to be part of the available job titles.</param>
-        public void SetProfessionalJobTitle(int professionalId, string professionalJobTitle) 
+        public void SetProfessionalJobTitle(int professionalId, string professionalJobTitle)
         {
             var professionalObject = api.GetProfessionalConfiguration(professionalId);
             var professional = GetProfessional(professionalId);
             var professionalJobActive = JsonConvert.DeserializeObject<ProfessionalJobs_Root>(professionalObject.ProfessionalJob.ToString());
             //var professionalJobId = GetProfessionalJobId(professionalId,professionalJobTitle);
-            
+
             // Get the job that we want to update the professional to have
             var professionalJob = GetProfessionalJob(professionalId, professionalJobTitle);
-            
+
             // Set the professionalObject to have the new job object.
             professionalObject.ProfessionalJob = professionalJob;
 
@@ -353,7 +379,7 @@ namespace NexusAPIWrapper
 
             // Get primary organization
             var primaryOrganization = api.GetProfessionalPrimaryOrganization(professionalId);
-            
+
             // Set professionalObject primary organization to the organization object
             professionalObject.PrimaryOrganization = primaryOrganization;
 
@@ -378,7 +404,7 @@ namespace NexusAPIWrapper
             var professionalObject = api.GetProfessionalConfiguration(professionalId);
 
             // Get primary organization based on input
-            var primaryOrganization = api.GetProfessionalPrimaryOrganization(professionalId,organizationName);
+            var primaryOrganization = api.GetProfessionalPrimaryOrganization(professionalId, organizationName);
 
             // Set professionalObject primary organization to the organization object
             professionalObject.PrimaryOrganization = primaryOrganization;
@@ -394,25 +420,19 @@ namespace NexusAPIWrapper
         }
 
 
+
         /// <summary>
         /// Returns all the available jobs the professional can be assigned
         /// </summary>
         /// <param name="professionalId">the Id of the professional</param>
         /// <returns></returns>
-        public SortedDictionary<string,ProfessionalJobs_Root> GetPossibleProfessionalJobs(int professionalId)
+        public List<ProfessionalJobs_Root> GetPossibleProfessionalJobs(int professionalId)
         {
-            var professional = GetProfessional(professionalId);var currentRoles = api.CallAPI(api, professional.Links.Roles.Href, Method.Get);
+            var professional = GetProfessional(professionalId); var currentRoles = api.CallAPI(api, professional.Links.Roles.Href, Method.Get);
             var possibleProfessionalJobs = api.CallAPI(api, professional.Links.AvailableProfessionalJobs.Href, Method.Get);
 
-            var jobsDict = api.dataHandler.ArrayJsonStringToSortedDictionary(possibleProfessionalJobs.Result.ToString());
-            SortedDictionary<string, ProfessionalJobs_Root> jobs = new SortedDictionary<string, ProfessionalJobs_Root>();
+            return JsonConvert.DeserializeObject<List<ProfessionalJobs_Root>>(possibleProfessionalJobs.Result.ToString());
 
-            foreach (var job in jobsDict)
-            {
-                jobs.Add(job.Key, JsonConvert.DeserializeObject<ProfessionalJobs_Root>(job.Value));
-            }
-
-            return jobs;
         }
 
         public int GetProfessionalJobId(int professionalId, string professionalJobTitle)
@@ -426,7 +446,16 @@ namespace NexusAPIWrapper
         public ProfessionalJobs_Root GetProfessionalJob(int professionalId, string professionalJobTitle)
         {
             var jobs = GetPossibleProfessionalJobs(professionalId);
-            return jobs[professionalJobTitle];
+            ProfessionalJobs_Root chosenJob = new ProfessionalJobs_Root();
+            foreach (var job in jobs)
+            {
+                if (job.Name == professionalJobTitle)
+                {
+                    chosenJob = job;
+                    break;
+                }
+            }
+            return chosenJob;
         }
 
 
@@ -439,7 +468,7 @@ namespace NexusAPIWrapper
         /// <param name="removed">Ids to be removed</param>
         public void UpdateProfessional(string updateEndpoint, Method method, string added = null, string removed = null)
         {
-            api.result.UpdateProfessional(api,updateEndpoint, api.GetAddedRemovedRequestBody(added,removed), method);
+            api.result.UpdateProfessional(api, updateEndpoint, api.GetAddedRemovedRequestBody(added, removed), method);
         }
 
         /// <summary>
@@ -475,56 +504,6 @@ namespace NexusAPIWrapper
         #region Shared processes
 
 
-        /// <summary>
-        /// Returns all documentation for that specific citizen to be used in an "aktindsigt"
-        /// </summary>
-        /// <param name="cpr">Citizen CPR number</param>
-        /// <param name="folderPath">Path to where documentation should be saved. Can be left blank, and documentation will be saved in the default folder</param>
-        public void DocumentationAccess(string cpr, string folderPath =null)
-        {
-            // Set the folder path
-            switch (folderPath)
-            {
-                case null:
-                    folderPath = @"\\rkfil02\koncerncenter\rpa\aktindsigter";
-                    break;
-                default:
-                    break;
-            }
-
-            // Get citizen object
-            var citizen = api.GetPatientDetails(cpr);
-
-            // Get documents
-
-
-            // Get Journal notes
-
-
-            // Get 
-
-
-            // Get 
-
-
-            // Get 
-
-
-            // Get 
-
-
-            // Get 
-        }
-
-        /// <summary>
-        /// Returns all documentation for that specific citizen to be used in an "aktindsigt"
-        /// </summary>
-        /// <param name="cpr">Citizen CPR number</param>
-        /// <param name="folderPath">Path to where documentation should be saved. Can be left blank, and documentation will be saved in the default folder</param>
-        public void Aktindsigt(string cpr, string folderPath = null)
-        {
-            DocumentationAccess(cpr, folderPath);
-        }
 
         /// <summary>
         /// Sends an email through the specified SMTP relay server
@@ -533,9 +512,9 @@ namespace NexusAPIWrapper
         /// <param name="subject">Subject to be added</param>
         /// <param name="body">Body text of the e-mail</param>
         /// <param name="From">Left null will use the default "noreply" e-mail</param>
-        public void SendEmail(string To, string subject, string body, string FromEmail = null, string FromSenderName = null) 
+        public void SendEmail(string To, string subject, string body, string FromEmail = null, string FromSenderName = null)
         {
-            string SMTPRelayServer = "rkexc05.ringsted.int";
+            string SMTPRelayServer = "";
             var smtpClient = new SmtpClient(SMTPRelayServer);
             if (FromEmail == null)
             {
@@ -544,15 +523,33 @@ namespace NexusAPIWrapper
 
             if (FromSenderName == null)
             {
-                FromSenderName = FromEmail.Substring(1,FromEmail.IndexOf('@')-1);
+                FromSenderName = FromEmail.Substring(1, FromEmail.IndexOf('@') - 1);
             }
 
-            string From = FromSenderName + " " + FromEmail  ;
+            string From = FromSenderName + " " + FromEmail;
 
-            smtpClient.Send(From,To,subject,body);
+            smtpClient.Send(From, To, subject, body);
         }
 
-        
+        public TransformedBody_Root GetDischargeReportData(ReferencedObject_Base_Root baseObject) 
+        {
+            
+            string transformedBodyHTML = api.GetTransformedBodyHTML(baseObject);
+            TransformedBody_Root transformedBody = new TransformedBody_Root();
+            HtmlHandler handler = new HtmlHandler();
+
+            api.GetDischargeReportData_Relatives(transformedBody, handler, transformedBodyHTML);
+            api.GetDischargeReportData_CurrentAdmission(transformedBody, handler, transformedBodyHTML);
+            api.GetDischargeReportData_Diagnoses(transformedBody, handler, transformedBodyHTML);
+            api.GetDischargeReportData_FunctionalAbilitiesAtDischarge(transformedBody, handler, transformedBodyHTML);
+            api.GetDischargeReportData_NursingProfessionalProblemAreas(transformedBody, handler, transformedBodyHTML);
+            api.GetDischargeReportData_MostRecentMedicationAdministration(transformedBody, handler, transformedBodyHTML);
+            api.GetDischargeReportData_MedicationInformationRelatedToDischarge(transformedBody, handler, transformedBodyHTML);
+            api.GetDischargeReportData_AgreementsRegardingDietFirstDayAfterDischarge(transformedBody, handler, transformedBodyHTML);
+            api.GetDischargeReportData_FutureAgreements(transformedBody, handler, transformedBodyHTML);
+
+            return transformedBody;
+        }
 
         #endregion Shared processes
 

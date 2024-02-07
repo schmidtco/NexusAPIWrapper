@@ -16,15 +16,15 @@ namespace NexusAPIWrapper
         public SortedDictionary<string, string> dict { get; set; }
 
 
-       public NexusResult(HttpStatusCode statuscode, String statustext, Object result)
+        public NexusResult(HttpStatusCode statuscode, String statustext, Object result)
         {
-            httpStatusCode  = statuscode;
-            httpStatusText  = statustext;
-            Result          = result;
+            httpStatusCode = statuscode;
+            httpStatusText = statustext;
+            Result = result;
         }
         public NexusResult()
         {
-            
+
         }
 
         #region Shared methods
@@ -36,7 +36,7 @@ namespace NexusAPIWrapper
             WebRequest webRequest = new WebRequest(api.clientCredentials.Host, endpointURL, callMethod, api.tokenObject.AccessToken);
             webRequest.AddBearerToken();
             webRequest.Execute();
-            
+
             if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(webRequest.response.StatusDescription);
@@ -47,7 +47,27 @@ namespace NexusAPIWrapper
                     webRequest.response.StatusCode,
                     webRequest.response.StatusDescription,
                     webRequest.response.Content);
-               return result;
+                return result;
+            }
+        }
+        public NexusResult CallAPI(NexusAPI api, string endpointURL, string JsonBody, Method callMethod)
+        {
+            WebRequest webRequest = new WebRequest(api.clientCredentials.Host, endpointURL, callMethod, api.tokenObject.AccessToken);
+            webRequest.AddBearerToken();
+            webRequest.request.AddJsonBody(JsonBody);
+            webRequest.Execute();
+
+            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(webRequest.response.StatusDescription);
+            }
+            else
+            {
+                NexusResult result = new NexusResult(
+                    webRequest.response.StatusCode,
+                    webRequest.response.StatusDescription,
+                    webRequest.response.Content);
+                return result;
             }
         }
 
@@ -99,7 +119,7 @@ namespace NexusAPIWrapper
                     webRequest.response.StatusCode,
                     webRequest.response.StatusDescription,
                     webRequest.response.Content);
-                
+
                 api.result = result;
             }
 
@@ -199,8 +219,8 @@ namespace NexusAPIWrapper
 
         public void GetCitizenPathwayInfo(NexusAPI api, string CitizenCPR, string pathwayName)
         {
-            WebRequest webRequest = StandardWebRequest(api,api.GetCitizenPathwayLink(CitizenCPR,pathwayName),Method.Get);
-            
+            WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayLink(CitizenCPR, pathwayName), Method.Get);
+
             webRequest.Execute();
             if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -290,24 +310,7 @@ namespace NexusAPIWrapper
             }
         }
 
-        public void GetCitizenPathwayChildSelf(NexusAPI api, string CitizenCPR, string pathwayName, string pathwayChildName)
-        {
-            WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayChildSelfLink(CitizenCPR, pathwayName, pathwayChildName), Method.Get);
 
-            webRequest.Execute();
-            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception(webRequest.response.StatusDescription);
-            }
-            else
-            {
-                NexusResult result = new NexusResult(
-                    webRequest.response.StatusCode,
-                    webRequest.response.StatusDescription,
-                    webRequest.response.Content);
-                api.result = result;
-            }
-        }
 
         #endregion PatientDetailsSearch sub calls
 
@@ -319,7 +322,7 @@ namespace NexusAPIWrapper
         {
             WebRequest webRequest = StandardWebRequest(api, updateEndpoint, method);
             webRequest.AddContentTypeJson();
-            webRequest.request.AddJsonBody(requestBody); 
+            webRequest.request.AddJsonBody(requestBody);
             webRequest.Execute();
             if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -336,8 +339,29 @@ namespace NexusAPIWrapper
             }
         }
 
-       
+
 
         #endregion HomeRessource -> Professionals API calls
+
+        public NexusResult GetTransformedBodyOfMedcomMessage(NexusAPI api, string transformedBodyLink)
+        {
+            WebRequest webRequest = StandardWebRequest(api, transformedBodyLink, Method.Get);
+            webRequest.AddAcceptTypeXML();
+
+            webRequest.Execute();
+            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(webRequest.response.StatusDescription);
+            }
+            else
+            {
+                NexusResult result = new NexusResult(
+                    webRequest.response.StatusCode,
+                    webRequest.response.StatusDescription,
+                    webRequest.response.Content);
+                return result;
+            }
+
+        }
     }
 }
