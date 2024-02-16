@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic; 
 namespace NexusAPIWrapper{ 
 
-    public class Preferences_CROSSCITIZENDATum
+    public class Preferences_CROSSCITIZENDATA
     {
         [JsonProperty("id")]
         public int? Id;

@@ -90,7 +90,10 @@ namespace NexusAPIWrapper
         public void AddAcceptTypeXML()
         {
             request.AddHeader("Accept", "application/xhtml+xml");
-            //request.RequestFormat = RestSharp.DataFormat.Xml;
+        }
+        public void AddHeaderContentType(string contentType)
+        {
+            request.AddHeader("Content-Type", contentType);
         }
 
 

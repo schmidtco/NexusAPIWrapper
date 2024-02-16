@@ -4,6 +4,7 @@ using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using CsQuery;
 using Microsoft.SqlServer.Server;
+using MimeKit.Cryptography;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NexusAPIWrapper;
@@ -20,6 +21,7 @@ using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace NexusAPITest
 {
@@ -121,7 +123,7 @@ namespace NexusAPITest
 
             try
             {
-                var CitizenPathwayReferencesSelf_Links = nexusAPI.GetCitizenPathwayReferencesSelf_Links(citizenCPR, pathwayName);
+                var CitizenPathwayReferencesSelf_Links = nexusAPI.GetCitizenPathwayReferencesSelf_Links(citizenCPR, pathwayName, pathwayReferenceName);
                 string documentPrototypeLink = CitizenPathwayReferencesSelf_Links.DocumentPrototype.Href;
                 Assert.IsNotNull(documentPrototypeLink);
             }
@@ -863,6 +865,7 @@ namespace NexusAPITest
                 }
 
                 //Do what needs to be done to be able to deactivate/close the citizen in Nexus
+                //Process to do so needs to be agreed upon with stakeholders
 
                 var patientPreferences = api.GetPatientPreferences(citizen.PatientIdentifier.Identifier);
             }
@@ -901,8 +904,82 @@ namespace NexusAPITest
                     break;
                 }
             }
-            Assert.IsNotNull(transformedBody);
+            Assert.IsNotNull(transformedBody.CurrentAdmission);
         }
+
+        [Test]
+        public void HomeRessourcePreferencesTest()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
+            var api = processes.api;
+
+            var preferences = api.GetPreferences();
+            Assert.IsNotNull(preferences);
+        }
+
+        [Test]
+        public void ChangeStatusOnCitizenFailsBecauseTheStatusNameIsNotAnOption()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(reviewEnvironment);
+            var api = processes.api;
+            var patient = api.GetPatientDetails(nancyBerggrenTestCPR);
+            string statusName = "Aktiv - 73 timers regel";
+
+            //var patientStates = api.GetAvailablePatientStates(patient.Links.AvailablePatientStates.Href);
+            //var updatedPatient1 = processes.ChangeStatusOnCitizen(nancyBerggrenTestCPR, "Aktiv");
+            var updatedPatient2 = processes.ChangeStatusOnCitizen(patient, statusName);
+
+            Assert.AreNotEqual(statusName,updatedPatient2.PatientState.Name);
+        }
+        [Test]
+        public void ChangeStatusOnCitizenWorks()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(reviewEnvironment);
+            var api = processes.api;
+            var patient = api.GetPatientDetails(nancyBerggrenTestCPR);
+            string statusName = "Aktiv - 72 timers regel";
+
+            //var patientStates = api.GetAvailablePatientStates(patient.Links.AvailablePatientStates.Href);
+            //var updatedPatient1 = processes.ChangeStatusOnCitizen(nancyBerggrenTestCPR, "Aktiv");
+            var updatedPatient2 = processes.ChangeStatusOnCitizen(patient, statusName);
+
+            Assert.AreEqual(statusName, updatedPatient2.PatientState.Name);
+        }
+
+        [Test]
+        public void UploadDocumentToNexusDirectlyOnPatient()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(reviewEnvironment);
+            var api = processes.api;
+            string filePath = "C:\\users\\msch\\desktop\\Docs der sendes\\testTextFile.txt";
+            var patient = api.GetPatientDetails(nancyBerggrenTestCPR);
+            Patient_DocumentPrototype_Root documentPrototype = api.CreatePatientDocumentPrototype(patient,filePath);
+            Patient_DocumentPrototype_Create_Root createdDocumentObject = api.UploadPatientDocumentPrototype(documentPrototype);
+
+
+            WebRequest  request = api.UploadPatientDocumentToNexus(createdDocumentObject, filePath);
+            var response = request.response;
+        }
+        [Test]
+        public void UploadDocumentToNexusOnPathway()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(reviewEnvironment);
+            var api = processes.api;
+            string filePath = "C:\\users\\xxx\\desktop\\testTextFile2.txt";
+
+            var uploadedDocObject = processes.UploadPatientPathwayDocumentToNexus(
+                nancyBerggrenTestCPR, 
+                "Dokumenttilknytning - alt", //Pathway
+                "Sundhedsfagligt Grundforløb", //Pathway reference
+                filePath,
+                31); // Here we need to specify the pathway reference Id, as there's more than one pathway reference with the same name
+
+            
+            Assert.IsTrue(uploadedDocObject.response.IsSuccessStatusCode);
+        }
+
+
+        
 
     }
 } 

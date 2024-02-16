@@ -11,7 +11,7 @@ namespace NexusAPIWrapper{
         public List<object> HCLORDER;
 
         [JsonProperty("CROSS_CITIZEN_DATA")]
-        public List<Preferences_CROSSCITIZENDATum> CROSSCITIZENDATA;
+        public List<Preferences_CROSSCITIZENDATA> CROSSCITIZENDATA;
 
         [JsonProperty("MEDCOM_LIST")]
         public List<object> MEDCOMLIST;

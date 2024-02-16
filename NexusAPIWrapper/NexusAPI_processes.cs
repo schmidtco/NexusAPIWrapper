@@ -550,6 +550,47 @@ namespace NexusAPIWrapper
 
             return transformedBody;
         }
+        public PatientDetailsSearch_Patient ChangeStatusOnCitizen(string citizenCPR, string statusName)
+        {
+            var patient = api.GetPatientDetails(citizenCPR);
+
+            List<PatientDetailsSearch_PatientState> availablePatientStates = api.GetAvailablePatientStates(patient);
+
+            PatientDetailsSearch_PatientState chosenState = api.ChoosePatientState(availablePatientStates, statusName);
+            
+            patient.PatientState = chosenState;
+            string serializedObject = JsonConvert.SerializeObject(patient);
+
+            return api.UpdatePatient(patient.Links.Update.Href,serializedObject);
+        }
+        public PatientDetailsSearch_Patient ChangeStatusOnCitizen(PatientDetailsSearch_Patient patient, string statusName)
+        {
+            List<PatientDetailsSearch_PatientState> availablePatientStates = api.GetAvailablePatientStates(patient);
+
+            PatientDetailsSearch_PatientState chosenState = api.ChoosePatientState(availablePatientStates, statusName);
+
+            patient.PatientState = chosenState;
+            string serializedObject = JsonConvert.SerializeObject(patient);
+
+            return api.UpdatePatient(patient.Links.Update.Href, serializedObject);
+        }
+
+        public WebRequest UploadPatientPathwayDocumentToNexus(string citizenCPR, string pathwayName, string pathwayReference,  string fullFilePath, string name = null, string originalFileName = null)
+        {
+
+            var prototypeDocument = api.GetGetCitizenPathwayReferencesSelf_DocumentPrototype(citizenCPR, pathwayName,pathwayReference);
+            var prototypeCreatedDocument = api.CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(prototypeDocument, fullFilePath);
+            var prototypeUploadedDocument = api.UploadPatientPathwayDocumentPrototype(prototypeCreatedDocument);
+            return api.UploadPatientPathwayDocumentToNexus(prototypeUploadedDocument, fullFilePath);
+        }
+        public WebRequest UploadPatientPathwayDocumentToNexus(string citizenCPR, string pathwayName, string pathwayReference, string fullFilePath, int pathwayReferenceId, string name = null, string originalFileName = null)
+        {
+
+            var prototypeDocument = api.GetGetCitizenPathwayReferencesSelf_DocumentPrototype(citizenCPR, pathwayName, pathwayReference,pathwayReferenceId);
+            var prototypeCreatedDocument = api.CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(prototypeDocument, fullFilePath);
+            var prototypeUploadedDocument = api.UploadPatientPathwayDocumentPrototype(prototypeCreatedDocument);
+            return api.UploadPatientPathwayDocumentToNexus(prototypeUploadedDocument, fullFilePath);
+        }
 
         #endregion Shared processes
 

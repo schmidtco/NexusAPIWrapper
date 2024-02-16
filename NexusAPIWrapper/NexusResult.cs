@@ -71,8 +71,9 @@ namespace NexusAPIWrapper
             }
         }
 
+
         /// <summary>
-        /// Standard webrequest that only has the bearer token added.
+        /// Standard webrequest that only has the bearer token added. From here you can add different headers etc. before calling the execute
         /// </summary>
         /// <param name="api"></param>
         /// <param name="endpointURL"></param>
@@ -85,8 +86,22 @@ namespace NexusAPIWrapper
 
             return webRequest;
         }
+        /// <summary>
+        /// Standard webrequest that only has the bearer token and json body added. From here you can add different headers etc. before calling the execute
+        /// </summary>
+        /// <param name="api"></param>
+        /// <param name="endpointURL"></param>
+        /// <param name="JsonBody"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public WebRequest StandardWebRequest(NexusAPI api, string endpointURL, string JsonBody, Method method)
+        {
+            WebRequest webRequest = new WebRequest(api.clientCredentials.Host, endpointURL, method, api.tokenObject.AccessToken);
+            webRequest.request.AddJsonBody(JsonBody);
+            webRequest.AddBearerToken();
 
-
+            return webRequest;
+        }
 
 
         #endregion Shared methods
@@ -291,9 +306,27 @@ namespace NexusAPIWrapper
             }
         }
 
-        public void GetCitizenPathwayReferencesSelf(NexusAPI api, string CitizenCPR, string pathwayName)
+        public void GetCitizenPathwayReferencesSelf(NexusAPI api, string CitizenCPR, string pathwayName, string pathwayReferenceName)
         {
-            WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayReferencesSelfLink(CitizenCPR, pathwayName), Method.Get);
+            WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayReferencesSelfLink(CitizenCPR, pathwayName,pathwayReferenceName), Method.Get);
+
+            webRequest.Execute();
+            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(webRequest.response.StatusDescription);
+            }
+            else
+            {
+                NexusResult result = new NexusResult(
+                    webRequest.response.StatusCode,
+                    webRequest.response.StatusDescription,
+                    webRequest.response.Content);
+                api.result = result;
+            }
+        }
+        public void GetCitizenPathwayReferencesSelf(NexusAPI api, string CitizenCPR, string pathwayName, int pathwayReferenceId)
+        {
+            WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayReferencesSelfLink(CitizenCPR, pathwayName, pathwayReferenceId), Method.Get);
 
             webRequest.Execute();
             if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)

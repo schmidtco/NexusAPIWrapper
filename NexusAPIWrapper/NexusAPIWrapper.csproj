@@ -230,6 +230,48 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_SelfReference.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_Type.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_Update.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_Audit.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_AvailablePathwayAssociation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_AvailableRootProgramPathways.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_AvailableTags.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_Delete.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_DocumentMessagePrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_PathwayAssociation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_Update.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_Upload.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_AvailablePathwayAssociation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_AvailableRootProgramPathways.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_AvailableTags.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_Create.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_PathwayAssociation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\Audit.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_AvailablePathwayAssociation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_AvailableRootProgramPathways.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_AvailableTags.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_Delete.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_DocumentMessagePrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_PathwayAssociation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_PatientPathway.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_Placement.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_Update.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_Upload.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_AvailablePathwayAssociation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_AvailableRootProgramPathways.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_AvailableTags.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_Create.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_PathwayAssociation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_PatientPathway.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_Placement.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_Root.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_ActivePrograms.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_ActivityLinks.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_AddressIndicatorValueSchedule.cs" />
@@ -597,7 +639,7 @@
     <Compile Include="HomeRessource\Preferences\_Root\Preferences_CITIZENLIST.cs" />
     <Compile Include="HomeRessource\Preferences\_Root\Preferences_CROSSCITIZENCALENDAR.cs" />
     <Compile Include="HomeRessource\Preferences\_Root\Preferences_CROSSCITIZENDASHBOARD.cs" />
-    <Compile Include="HomeRessource\Preferences\_Root\Preferences_CROSSCITIZENDATum.cs" />
+    <Compile Include="HomeRessource\Preferences\_Root\Preferences_CROSSCITIZENDATA.cs" />
     <Compile Include="HomeRessource\Preferences\_Root\Preferences_Links.cs" />
     <Compile Include="HomeRessource\Preferences\_Root\Preferences_MOBILEPROFILE.cs" />
     <Compile Include="HomeRessource\Preferences\_Root\Preferences_Organization.cs" />
@@ -800,7 +842,9 @@
     <Content Include="HomeRessource\Preferences\ACTIVITYLIST\ACTIVITYLIST_Content\Content\Pages\Links\Content\_Root\Links\ReferencedObject\_Root\Links\TransformedBody\_ReadMe.txt" />
     <Content Include="HomeRessource\Preferences\ACTIVITYLIST\ACTIVITYLIST_Content\Content\Pages\Links\Content\_Root\Links\ReferencedObject\_Root\_ReadMe.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\Upload\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
