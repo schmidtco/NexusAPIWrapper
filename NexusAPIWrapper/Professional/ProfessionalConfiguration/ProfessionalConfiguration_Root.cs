@@ -53,7 +53,7 @@ namespace NexusAPIWrapper{
         public object PrimaryOrganization;
 
         [JsonProperty("defaultMedcomSenderOrganizationId")]
-        public int DefaultMedcomSenderOrganizationId;
+        public int? DefaultMedcomSenderOrganizationId;
 
         [JsonProperty("replyToDefaultMedcomSenderOrganization")]
         public bool ReplyToDefaultMedcomSenderOrganization;

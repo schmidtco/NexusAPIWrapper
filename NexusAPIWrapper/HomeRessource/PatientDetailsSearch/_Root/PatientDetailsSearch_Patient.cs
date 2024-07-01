@@ -154,6 +154,10 @@ namespace NexusAPIWrapper{
 
         [JsonProperty("_links")]
         public PatientDetailsSearch_Links Links;
+
+        //property can be set by the method "GetPatientDetails" if the HTTP code = NotFound
+        public bool PatientFound;
+
     }
 
 }

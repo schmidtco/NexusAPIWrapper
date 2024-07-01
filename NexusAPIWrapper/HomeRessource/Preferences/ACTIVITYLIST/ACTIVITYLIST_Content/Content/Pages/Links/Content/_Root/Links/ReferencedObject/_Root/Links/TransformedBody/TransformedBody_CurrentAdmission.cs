@@ -1,4 +1,7 @@
-﻿namespace NexusAPIWrapper.HomeRessource.Preferences.ACTIVITYLIST.ACTIVITYLIST_Content.Content.Pages.Links.Content._Root.Links.ReferencedObject._Root.Links.TransformedBody
+﻿using AngleSharp.Text;
+using System;
+
+namespace NexusAPIWrapper.HomeRessource.Preferences.ACTIVITYLIST.ACTIVITYLIST_Content.Content.Pages.Links.Content._Root.Links.ReferencedObject._Root.Links.TransformedBody
 {
     public class TransformedBody_CurrentAdmission
     {
@@ -26,5 +29,8 @@
         /// Smitterisko
         /// </summary>
         public string InfectionRisk { get; set; }
+
+
+        
     }
 }

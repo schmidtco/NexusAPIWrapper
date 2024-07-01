@@ -19,7 +19,7 @@ namespace NexusAPIWrapper{
         public CitPathwSelfDocPrototypeCreate_AvailableTags AvailableTags;
 
         [JsonProperty("audit")]
-        public Audit Audit;
+        public PatientGrantById_Audit Audit;
 
         [JsonProperty("update")]
         public CitPathwSelfDocPrototypeCreate_Update Update;

@@ -17,6 +17,7 @@ namespace NexusAPIWrapper{
 
         [JsonProperty("_links")]
         public PatientDetailsSearch_Links Links;
+
     }
 
 }

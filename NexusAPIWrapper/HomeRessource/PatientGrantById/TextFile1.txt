@@ -1,0 +1,2 @@
+﻿Provide a PatientGrantId to the endpoint  - api/patientGrantById + "/" + id
+Id can be the acitivtyIdentifier.ActivityId

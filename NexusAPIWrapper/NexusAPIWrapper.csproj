@@ -74,7 +74,61 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CharCodeComparer.cs" />
+    <Compile Include="Custom classes\BB Journal\dagbogsnoter-dokumenter\BB_Note_Doc_Dokument.cs" />
+    <Compile Include="Custom classes\BB Journal\dagbogsnoter-dokumenter\BB_Note_Doc_Dokumenter.cs" />
+    <Compile Include="Custom classes\BB Journal\dagbogsnoter-dokumenter\BB_Note_Doc_Root.cs" />
+    <Compile Include="Custom classes\BB Journal\dagbogsnoter-dokumenter\BB_Note_Doc_Xml.cs" />
+    <Compile Include="Custom classes\BB Journal\Dagbogsnoter\BB_Dagbogsnote.cs" />
+    <Compile Include="Custom classes\BB Journal\Dagbogsnoter\BB_Dagbogsnoter.cs" />
+    <Compile Include="Custom classes\BB Journal\Dagbogsnoter\BB_Root.cs" />
+    <Compile Include="Custom classes\BB Journal\Dagbogsnoter\BB_Xml.cs" />
     <Compile Include="ClientCredentials.cs" />
+    <Compile Include="Custom classes\BB Journal\dokumenter\BB_Doc_Document.cs" />
+    <Compile Include="Custom classes\BB Journal\dokumenter\BB_Doc_Dokumenter.cs" />
+    <Compile Include="Custom classes\BB Journal\dokumenter\BB_Doc_Root.cs" />
+    <Compile Include="Custom classes\BB Journal\dokumenter\BB_Doc_Xml.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_AvailablePathwayAssociation.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_AvailableRootProgramPathways.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_AvailableTags.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_Create.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_Links.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_PathwayAssociation.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_PatientPathway.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_Placement.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\DocumentPrototype\PathwayReferencesChildSelf_DocumentPrototype_Root.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_ActivePrograms.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_ActivityIdentifier.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AddEventsToPathway.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailableAssociationGroupDefinitions.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailableEvents.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailableEventTypes.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailableFormDefinitions.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailableLetterTemplates.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailableNestedProgramPathways.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailableOrganisations.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailablePathwayDistributions.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_AvailableProfessionals.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_CitizenAccountPrototype.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_Close.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_CopyPrototype.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_DocumentPrototype.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_DynamicTemplate.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_EopFfbActivities.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_EopFfbFollowUpPrototype.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_EopFfbProblemPrototypeClassifications.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_EopFfbProblemPrototypes.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_EopFfbVisitationPrototype.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_EopFfbVisitationsForCreatingProblem.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_EventPrototype.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_Links.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_PatientNetworkContactPrototype.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_PatientPathway.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_Root.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_Self.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_UnclosableReferences.cs" />
+    <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_WithdrawPatient.cs" />
+    <Compile Include="Custom classes\PatientWith72HourTreatmentGuarantee.cs" />
     <Compile Include="Document Object\Create\AvailablePathwayAssociation.cs" />
     <Compile Include="Document Object\Create\AvailableRootProgramPathways.cs" />
     <Compile Include="Document Object\Create\AvailableTags.cs" />
@@ -85,6 +139,77 @@
     <Compile Include="Document Object\Create\Placement.cs" />
     <Compile Include="Document Object\Create\CreateDocumentObject.cs" />
     <Compile Include="DataHandler.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableActions\FormDataPrototype_AvailableActions_CreateFormData.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableActions\FormDataPrototype_AvailableActions_Links.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableActions\FormDataPrototype_AvailableActions_ResultWith.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableActions\FormDataPrototype_AvailableActions_Root.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableActions\FormDataPrototype_AvailableActions_ShareAsClinicalEmail.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableTags\FormDataPrototype_AvailableTags_Grouping.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableTags\FormDataPrototype_AvailableTags_Links.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableTags\FormDataPrototype_AvailableTags_Root.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableTags\FormDataPrototype_AvailableTags_Self.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_AvailableActions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_AvailablePathwayAssociation.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_AvailablePathwayPlacements.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_AvailableRootProgramPathways.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_AvailableTags.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_FormDefinition.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_Item.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_Links.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_MeasurementData.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_ModifiableTags.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_PathwayAssociation.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_Patient.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_PatientConditions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_PatientOverview.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_PatientState.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_Placement.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_Preview.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_Root.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_Self.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\FormDataPrototype_Type.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_ActivePrograms.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AddEventsToPathway.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailableAssociationGroupDefinitions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailableEvents.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailableEventTypes.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailableFormDefinitions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailableLetterTemplates.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailableNestedProgramPathways.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailableOrganisations.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailablePathwayDistributions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_AvailableProfessionals.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_CitizenAccountPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_Close.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_CopyPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_DocumentPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_DynamicTemplate.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_EopFfbActivities.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_EopFfbFollowUpPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_EopFfbProblemPrototypeClassifications.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_EopFfbProblemPrototypes.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_EopFfbVisitationPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_EopFfbVisitationsForCreatingProblem.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_EventPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_Links.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_PatientNetworkContactPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_PatientPathway.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_Root.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_Self.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_UnclosableReferences.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\PathwayReferencedChildSelf\_Root_BB\PathwayReferencedChildSelf_Root_BB_WithdrawPatient.cs" />
     <Compile Include="HomeRessource\Organizations\Organizations_Links.cs" />
     <Compile Include="HomeRessource\Organizations\Organizations_Root.cs" />
     <Compile Include="HomeRessource\Organizations\Organizations_Self.cs" />
@@ -230,6 +355,10 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_SelfReference.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_Type.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_Update.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Available Tags\Patient_DocumentPrototype_AvailableTags_Grouping.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Available Tags\Patient_DocumentPrototype_AvailableTags_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Available Tags\Patient_DocumentPrototype_AvailableTags_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Available Tags\Patient_DocumentPrototype_AvailableTags_Self.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_Audit.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_AvailablePathwayAssociation.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\_Root\Patient_DocumentPrototype_Create_AvailableRootProgramPathways.cs" />
@@ -249,7 +378,18 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_Links.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_PathwayAssociation.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_Root.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\Audit.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Organization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_RemoveFromPatient.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_StsOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Update.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\AvailableTags\CitPathwSelfDocPrototype_AvailableTags_.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\AvailableTags\CitPathwSelfDocPrototype_AvailableTags_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\AvailableTags\CitPathwSelfDocPrototype_AvailableTags_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\AvailableTags\CitPathwSelfDocPrototype_AvailableTags_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_Audit.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_AvailablePathwayAssociation.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_AvailableRootProgramPathways.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\Create\CitPathwSelfDocPrototypeCreate_AvailableTags.cs" />
@@ -272,6 +412,82 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_PatientPathway.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_Placement.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\_Root\CitPathwSelfDocPrototype_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_AdditionalInfo.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_CopyPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_Delete.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_Print.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_ReferenceObject.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\PwayRefChildSelf_JournalNote_WorkflowState.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_ActiveAssignments.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Assignments.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Audit.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AutoAssignmentsPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AvailableActions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AvailableAssignmentTypes.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AvailablePathwayAssociation.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AvailablePathwayAssociations.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AvailablePathwayPlacements.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AvailableRootProgramPathways.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_AvailableTags.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_CopyLinks.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_CopyPrototype.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Delete.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_FormDefinition.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Grouping.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Item.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Links.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_MeasurementData.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_ModifiableTags.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_PathwayAssociation.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Patient.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_PatientConditions.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_PatientOverview.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_PatientState.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Placement.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Preview.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Print.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_RelatedActivitiesWithHistory.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Root.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Self.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_ShareAsClinicalEmail.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Tag.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_Type.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_UpdatePlacement.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_UpdateTags.cs" />
+    <Compile Include="HomeRessource\Nested folders due to limitations - 1\JournalNotes\ReferencedObject\PwayRefChildSelf_JournalNote_RefObj_WorkflowState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\_Root\PathwayReferencesChildSelf_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\_Root\PathwayReferencesChildSelf_AvailableActions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\_Root\PathwayReferencesChildSelf_GrantIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\_Root\PathwayReferencesChildSelf_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\_Root\PathwayReferencesChildSelf_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\_Root\PathwayReferencesChildSelf_WorkflowState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableFormDefinitions\FrmDef_FormDataPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableFormDefinitions\FrmDef_CreateFormDefinitionReference.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableFormDefinitions\FrmDef_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableFormDefinitions\FrmDef_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableNestedProgramPathways\AvNestPrgPways_ActionFacet.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableNestedProgramPathways\AvNestPrgPways_Enroll.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableNestedProgramPathways\AvNestPrgPways_KleNumber.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableNestedProgramPathways\AvNestPrgPways_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableNestedProgramPathways\AvNestPrgPways_PathwayType.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableNestedProgramPathways\AvNestPrgPways_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableNestedProgramPathways\AvNestPrgPways_Self.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_ActivePrograms.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_ActivityLinks.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_AddressIndicatorValueSchedule.cs" />
@@ -496,6 +712,145 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\_Root\PathwayReferences_Links.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\_Root\PathwayReferences_Root.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\_Root\PathwayReferences_Self.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_AuditEntry.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_Change.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_Configuration.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_CreateComment.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_DefaultSenderOrganization.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_DefaultSenderOrganizationForReply.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_Links.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_Professional.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_Root.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_Self.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_TabletAppConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Audit\PatientGrantByIdAudit_Translation.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\AvailableSuppliers\PatientGrantByIdCurWkFlTrPrepEdtAvSuppl_Links.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\AvailableSuppliers\PatientGrantByIdCurWkFlTrPrepEdtAvSuppl_Root.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\AvailableSuppliers\PatientGrantByIdCurWkFlTrPrepEdtAvSuppl_Self.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_ActionFacet.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_AvailableActionFacets.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_AvailableBaskets.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_AvailableKleNumbers.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_AvailableKLMappings.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_AvailableParagraphs.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_AvailableSuppliers.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Element.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_GrantCatalog.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Group.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_KleNumber.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Links.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Metadata.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_MunicipalityList.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Paragraph.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_PatientGrantIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_RefreshOnChange.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Root.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Save.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Self.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_Supplier.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_ValidateElements.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_VersionLookup.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_VisitationType.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_WorkflowDefinitionResource.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\CurrentWorkflowTransition\Links\PrepareEdit\PatientGrantByIdCurWkFlTrPrepEdt_WorkflowResultState.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_ActionFacet.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_ActiveAssignments.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Assignments.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Audit.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableActionFacets.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableAssignmentTypes.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableBaskets.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableHousingResources.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableKleNumbers.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableKLMappings.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableParagraphs.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_AvailableSuppliers.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_CurrentElement.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_CurrentOrderedGrant.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_CurrentWorkflowTransition.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Group.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Identifier.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_KleNumber.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Links.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Metadata.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_MunicipalityList.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_OrderGrantEditList.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Paragraph.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Patient.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_PrepareEdit.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_RefreshOnChange.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_RelatedActivitiesWithHistory.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_ResultWith.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Root.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Self.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Supplier.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_Type.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_VisitationType.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\PatientGrantById_WorkflowState.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_ActionFacet.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_ActiveAssignments.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Assignments.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Audit.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableActionFacets.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableAssignmentTypes.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableBaskets.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableHousingResources.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableKleNumbers.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableKLMappings.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableParagraphs.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_AvailableSuppliers.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_CurrentElement.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_CurrentOrderedGrant.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_CurrentWorkflowTransition.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Group.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Identifier.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_KleNumber.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Links.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Metadata.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_MunicipalityList.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_OrderGrantEditList.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Paragraph.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Patient.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_PrepareEdit.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_RefreshOnChange.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_RelatedActivitiesWithHistory.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_ResultWith.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Root.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Self.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Supplier.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_Type.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_VisitationType.cs" />
+    <Compile Include="HomeRessource\PatientGrantById\_Root\Self\PatientGrantByIdSelf_WorkflowState.cs" />
     <Compile Include="HomeRessource\Preferences\ACTIVITYLIST\ACTIVITYLIST_Content\Content\Pages\Links\Content\_Root\ACTIVITYLIST_Pages_Content_ActivityLinksPrototypes.cs" />
     <Compile Include="HomeRessource\Preferences\ACTIVITYLIST\ACTIVITYLIST_Content\Content\Pages\Links\Content\_Root\ACTIVITYLIST_Pages_Content_ArchiveMedcom.cs" />
     <Compile Include="HomeRessource\Preferences\ACTIVITYLIST\ACTIVITYLIST_Content\Content\Pages\Links\Content\_Root\ACTIVITYLIST_Pages_Content_AvailableCountries.cs" />
@@ -648,8 +1003,11 @@
     <Compile Include="HomeRessource\Preferences\_Root\Preferences_Self.cs" />
     <Compile Include="HomeRessource\Preferences\_Root\Preferences_StsOrganization.cs" />
     <Compile Include="HtmlHandler.cs" />
+    <Compile Include="MethodAttributes.cs" />
     <Compile Include="NexusAPI_processes.cs" />
+    <Compile Include="NexusAPI_simple_review.cs" />
     <Compile Include="NexusHomeRessource.cs" />
+    <Compile Include="NexusTokenObject - old code.cs" />
     <Compile Include="NexusTokenObject.cs" />
     <Compile Include="NexusAPI.cs" />
     <Compile Include="NexusResult.cs" />
@@ -753,8 +1111,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>RKSQLRPA01DataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="StringComparer.cs" />
+    <Compile Include="UnitTest1 - merudgifter.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="WebRequest.cs" />
+    <Compile Include="XmlHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AngleSharp, Version=1.1.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
@@ -766,6 +1127,9 @@
     <Reference Include="CsQuery, Version=1.3.3.249, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CsQuery.1.3.4\lib\net40\CsQuery.dll</HintPath>
     </Reference>
+    <Reference Include="DiffPlex, Version=1.7.2.0, Culture=neutral, PublicKeyToken=1d35e91d1bd7bc0f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiffPlex.1.7.2\lib\net40\DiffPlex.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit, Version=4.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.4.1.0\lib\net47\MailKit.dll</HintPath>
     </Reference>
@@ -773,6 +1137,27 @@
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.5.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Http, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Http.5.0.0\lib\net461\Microsoft.Extensions.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.5.0.0\lib\net461\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.5.0.0\lib\net461\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="MimeKit, Version=4.1.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
       <HintPath>..\packages\MimeKit.4.1.0\lib\net47\MimeKit.dll</HintPath>
     </Reference>
@@ -791,6 +1176,9 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.5.0.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
     <Reference Include="System.Formats.Asn1, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Formats.Asn1.7.0.0\lib\net462\System.Formats.Asn1.dll</HintPath>
     </Reference>
@@ -824,6 +1212,7 @@
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -839,6 +1228,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Widget\Links\PathwayReferences\_Root\ReadMe.txt" />
+    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\ReferencedObject\ReadMe.txt" />
+    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\_Root_BB\ReadMe.txt" />
+    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableFormDefinitions\FormDataPrototype\ReadMe.txt" />
+    <Content Include="HomeRessource\PatientGrantById\TextFile1.txt" />
     <Content Include="HomeRessource\Preferences\ACTIVITYLIST\ACTIVITYLIST_Content\Content\Pages\Links\Content\_Root\Links\ReferencedObject\_Root\Links\TransformedBody\_ReadMe.txt" />
     <Content Include="HomeRessource\Preferences\ACTIVITYLIST\ACTIVITYLIST_Content\Content\Pages\Links\Content\_Root\Links\ReferencedObject\_Root\_ReadMe.txt" />
   </ItemGroup>

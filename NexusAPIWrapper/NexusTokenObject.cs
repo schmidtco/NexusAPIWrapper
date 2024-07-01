@@ -68,15 +68,15 @@ namespace NexusAPIWrapper
             private set => _session_state = value;
         }
         public string url { get => string.IsNullOrEmpty(_url) ? throw new Exception("_Url") : _url; private set => _url = value; }
-        public string clientID 
+        public string clientID
         {
-            get => string.IsNullOrEmpty(_clientID) ? throw new Exception("_clientID") : _clientID; 
-            private set => _clientID = value; 
+            get => string.IsNullOrEmpty(_clientID) ? throw new Exception("_clientID") : _clientID;
+            private set => _clientID = value;
         }
-        public string clientSecret 
-        { 
-            get => string.IsNullOrEmpty(_clientSecret) ? throw new Exception("_clientSecret") : _clientSecret; 
-            private set => _clientSecret = value; 
+        public string clientSecret
+        {
+            get => string.IsNullOrEmpty(_clientSecret) ? throw new Exception("_clientSecret") : _clientSecret;
+            private set => _clientSecret = value;
         }
 
         #endregion
@@ -108,7 +108,7 @@ namespace NexusAPIWrapper
         }
         private void SetProperties(string response)
         {
-            
+
             dynamic result = JObject.Parse(response);
             this.AccessToken = Convert.ToString(result["access_token"]);
             this.ExpiresIn = Convert.ToInt32(result["expires_in"]);
@@ -151,13 +151,18 @@ namespace NexusAPIWrapper
 
         private void SetTimer()
         {
-            refreshTokenTimer = new Timer(new TimerCallback(_RefreshToken));
-            refreshTokenTimer.Change(this.ExpiresIn * 1000, 0);
+            refreshTokenTimer = new Timer(_ => RefreshAccessToken(), null, this.ExpiresIn * 900, Timeout.Infinite);
+            
+            //refreshTokenTimer.Change(this.ExpiresIn * 1000, 0);
+
+            //refreshTokenTimer = new Timer(new TimerCallback(_RefreshToken));
+            //refreshTokenTimer.Change(this.ExpiresIn * 1000, 0);
         }
 
         private void _RefreshToken(object state)
         {
             refreshTokenTimer.Dispose();
+            //GetAccessTokenFromNexus();
             RefreshAccessToken();
         }
         void GetAccessTokenFromNexus()

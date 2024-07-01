@@ -117,12 +117,21 @@ namespace NexusAPIWrapper
         {
             if (h5HeaderEnd == null)
             {
-                string JQuerySelectorString = GetJQuerySelectorStringForTransformedBodyHtml(h5HeaderStart);
-                var htmlFromJQuerySelector = GetHtmlBasedOnJQuerySelectorString(html, JQuerySelectorString);
-                var node = htmlFromJQuerySelector.Elements.First().OuterHTML;
+                try
+                {
+                    string JQuerySelectorString = GetJQuerySelectorStringForTransformedBodyHtml(h5HeaderStart);
+                    var htmlFromJQuerySelector = GetHtmlBasedOnJQuerySelectorString(html, JQuerySelectorString);
+                    var node = htmlFromJQuerySelector.Elements.First().OuterHTML;
                 
-                return DecodeHTML(node);
-                //return htmlFromJQuerySelector.Elements.First().FirstChild.NodeValue;
+                    return DecodeHTML(node);
+                    //return htmlFromJQuerySelector.Elements.First().FirstChild.NodeValue;
+                }
+                catch (Exception)
+                {
+
+                    return null;
+                }
+                
             }
             else
             {

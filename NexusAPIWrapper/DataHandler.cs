@@ -1,11 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using CsQuery.Engine.PseudoClassSelectors;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NexusAPIWrapper.Custom_classes;
+using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace NexusAPIWrapper
 {
@@ -24,6 +30,25 @@ namespace NexusAPIWrapper
             unknown
         }
 
+        internal int GetDatePosition(string input)
+        {
+            string pattern = @"(((0[1-9])|([12][0-9])|(3[01]))-((0[0-9])|(1[012]))-((20[012]\d|19\d\d)|(1\d|2[0123])))";
+
+            Regex regex = new Regex(pattern);
+            var match = regex.Match(input);
+
+            return match.Index;
+        }
+        /// <summary>
+        /// Will split a string by the string input - default will be backslash
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="splitBy"></param>
+        /// <returns></returns>
+        internal string[] SplitStringByString(string input, string splitBy = "\\")
+        {
+            return input.Split(new string[] { splitBy }, StringSplitOptions.None);
+        }
         internal void AddResource(SortedDictionary<string, string> dict, string strName, string strValue)
         {
             if (dict.ContainsKey(strName))
@@ -341,6 +366,97 @@ namespace NexusAPIWrapper
                 result.Add(link.Key, link.Value);
             }
             return JsonConvert.SerializeObject(result);
+        }
+
+        internal DateTime GetDate(string TimeOfX)
+        {
+            int day = Convert.ToInt32(TimeOfX.Substring(0, 2));
+            int month = Convert.ToInt32(TimeOfX.Substring(3, 2));
+            int year = Convert.ToInt32(TimeOfX.Substring(6, 4));
+            DateTime date = new DateTime(year, month, day);
+            return date;
+        }
+        internal DateTime GetDateAndTime(string TimeOfX)
+        {
+            int day = Convert.ToInt32(TimeOfX.Substring(0, 2));
+            int month = Convert.ToInt32(TimeOfX.Substring(3, 2));
+            int year = Convert.ToInt32(TimeOfX.Substring(6, 4));
+            string time = GetTime(TimeOfX);
+            int hour = Convert.ToInt32(time.Substring(0, 2));
+            int minutes = Convert.ToInt32(time.Substring(3, 2));
+            DateTime date = new DateTime(year, month, day,hour,minutes,0);
+            return date;
+        }
+        internal string GetTime(string TimeOfX)
+        {
+            return TimeOfX.Substring(TimeOfX.Length - 5, 5);
+        }
+        internal PatientWith72HourTreatmentGuarantee GetPatientWith72HoursTreatmentGuarantee(int patientId)
+        {
+            string queryString = "SELECT * from PatientsWithCurrent72HourTreatmentGuarantee WHERE PatientId = " + patientId.ToString();
+            return Run72HourSQLQuery(queryString);
+        }
+        internal PatientWith72HourTreatmentGuarantee Run72HourSQLQuery(string queryString)
+        {
+            PatientWith72HourTreatmentGuarantee patient = null;
+            string connectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(queryString, sqlConnection);
+            using (sqlConnection)
+            {
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    patient = new PatientWith72HourTreatmentGuarantee();
+                    patient.Id = Convert.ToInt32(reader["Id"].ToString());
+                    patient.PatientId = Convert.ToInt32(reader["PatientId"].ToString());
+                    patient.PatientName = reader["PatientName"].ToString();
+                    patient.TimeOfDischarge = Convert.ToDateTime(reader["TimeOfDischarge"].ToString());
+                }
+                return patient;
+            }
+        }
+        internal void RunSQLWithoutReturnResult(string queryString)
+        {
+            string connectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(queryString, sqlConnection);
+            using (sqlConnection)
+            {
+                command.Connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+        internal string ConvertDateTmeToDbFormat(DateTime date)
+        {
+            string day = date.Day.ToString();
+            string month = date.Month.ToString();
+            string year = date.Year.ToString();
+
+            string hour = date.Hour.ToString();
+            string minute = date.Minute.ToString();
+            string second = date.Second.ToString();
+
+            return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        }
+
+        internal string ConvertXmlToJsonString(string xmlFilePath)
+        {
+            string xmlString = System.IO.File.ReadAllText(xmlFilePath);
+            var xmlStringBytes = System.IO.File.ReadAllBytes(xmlFilePath);
+
+            var inputEncoding = Encoding.GetEncoding("iso-8859-1");
+            var text = inputEncoding.GetString(xmlStringBytes);
+            var output = Encoding.UTF8.GetBytes(text);
+            var UTF8Output = Encoding.UTF8.GetString(output);
+
+
+            XmlDocument notes = new XmlDocument();
+            notes.LoadXml(UTF8Output);
+
+            return JsonConvert.SerializeXmlNode(notes);
         }
 
         

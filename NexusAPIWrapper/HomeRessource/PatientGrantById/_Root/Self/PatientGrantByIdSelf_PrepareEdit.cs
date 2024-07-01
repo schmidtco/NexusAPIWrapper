@@ -1,7 +1,7 @@
 using Newtonsoft.Json; 
 namespace NexusAPIWrapper{ 
 
-    public class Audit
+    public class PatientGrantByIdSelf_PrepareEdit
     {
         [JsonProperty("href")]
         public string Href;

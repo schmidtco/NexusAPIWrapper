@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -11,10 +12,12 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CsQuery;
 using CsQuery.Engine.PseudoClassSelectors;
+using MailKit.Net.Smtp;
 using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NexusAPIWrapper.HomeRessource.Preferences.ACTIVITYLIST.ACTIVITYLIST_Content.Content.Pages.Links.Content._Root.Links.ReferencedObject._Root.Links.TransformedBody;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RestSharp;
 
 namespace NexusAPIWrapper
@@ -69,6 +72,10 @@ namespace NexusAPIWrapper
         #endregion Properties
 
         #region Constructors
+        public NexusAPI() : this("review")
+        {
+            
+        }
         public NexusAPI(string environment)
         {
             clientCredentials = new ClientCredentials(environment);
@@ -117,12 +124,12 @@ namespace NexusAPIWrapper
         }
         #region HomeRessource -> Links
         // specific methods for returning home ressource links
-        public string GetPatientDetailsSearchLink()
+        public string GetPatientDetailsSearchHomeRessourceLink()
         {
             return GetHomeRessourceLink("patientDetailsSearch");
         }
 
-        public string GetProfessionalsLink()
+        public string GetProfessionalsHomeRessourceLink()
         {
             return GetHomeRessourceLink("professionals");
         }
@@ -131,15 +138,28 @@ namespace NexusAPIWrapper
         /// This link should be used with /id of the patient pathway to be worked with
         /// </summary>
         /// <returns></returns>
-        public string GetPatientPathwaysLink()
+        public string GetPatientPathwaysHomeRessourceLink()
         {
             return GetHomeRessourceLink("patientPathways");
         }
 
-        public string GetPreferencesLink()
+        public string GetPreferencesHomeRessourceLink()
         {
             return GetHomeRessourceLink("preferences");
         }
+
+        public string GetPatientGrantByIdHomeRessourceLink()
+        {
+            return GetHomeRessourceLink("patientGrantById");
+        }
+
+        #region hard coded links
+
+        public string GetAvailabeTagsForDocumentsLink_Review()
+        {
+            return "https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/tags/UI/documentTags";
+        }
+        #endregion hard coded links
 
         #endregion HomeRessource -> Links
 
@@ -147,14 +167,32 @@ namespace NexusAPIWrapper
         public PatientDetailsSearch_Patient GetPatientDetails(string citizenCPR)
         {
             result.GetPatientDetails(this, citizenCPR);
-            PatientDetailsSearch_Root patientDetailsSearch = JsonConvert.DeserializeObject<PatientDetailsSearch_Root>(result.Result.ToString());
+            PatientDetailsSearch_Root patientDetailsSearch = new PatientDetailsSearch_Root();
+            if (result.Result != null)
+            {
+                patientDetailsSearch = JsonConvert.DeserializeObject<PatientDetailsSearch_Root>(result.Result.ToString());
+                if (patientDetailsSearch.Patient != null)
+                {
+                    patientDetailsSearch.Patient.PatientFound = true;
+                }
+                else
+                {
+                    patientDetailsSearch.Patient = new PatientDetailsSearch_Patient();
+                    patientDetailsSearch.Patient.PatientFound = false;
+                }
+            }
+            else
+            {
+                patientDetailsSearch.Patient = new PatientDetailsSearch_Patient();
+                patientDetailsSearch.Patient.PatientFound=false;
+            }
 
             return patientDetailsSearch.Patient;
         }
 
         public PatientDetailsSearch_Patient GetPatientDetails(int id)
         {
-            string patientDetailsSearchEndpoint = GetPatientDetailsSearchLink();
+            string patientDetailsSearchEndpoint = GetPatientDetailsSearchHomeRessourceLink();
             string patientDetailsSearchEndpointSubstring = patientDetailsSearchEndpoint.Substring(0, patientDetailsSearchEndpoint.Length - 6);
 
             var result = CallAPI(this, patientDetailsSearchEndpointSubstring + id, Method.Get);
@@ -240,7 +278,7 @@ namespace NexusAPIWrapper
         }
         public Preferences_Root GetPreferences()
         {
-            string referencesLink = GetPreferencesLink();
+            string referencesLink = GetPreferencesHomeRessourceLink();
             var result = CallAPI(this, referencesLink, Method.Get);
             return JsonConvert.DeserializeObject<Preferences_Root>(result.Result.ToString());
         }
@@ -263,6 +301,12 @@ namespace NexusAPIWrapper
         }
         public string ConvertDateToUrlParameter(int day, int month, int year, bool startDate)
         {
+            //DateTime date = new DateTime(year, month, day);
+            //if (startDate)
+            //{
+            //    date = date.AddDays(-1);
+            //    day = date.Day;
+            //}
             string urlAdditionStartDate = "T00:00:00.000Z";
             string urlAdditionEndDate = "T23:59:59.999Z";
 
@@ -342,10 +386,18 @@ namespace NexusAPIWrapper
             return JsonConvert.DeserializeObject<Content_Root>(result.Result.ToString());
         }
 
+        public PatientDetailsSearch_Links GetPatientDetailsLinks(PatientDetailsSearch_Patient patient)
+        {
+            var links = patient.Links;
+            //var links = GetNestedData(patientDetails, "_links");
+            //Here we need to convert the numbered dictionary to a real key/value pair dictionary.
+            return links;
+            //return ConvertArrayDictionaryToKeyValueDictionary(links);
+        }
         public PatientDetailsSearch_Links GetPatientDetailsLinks(string citizenCPR)
         {
-            var patientDetails = GetPatientDetails(citizenCPR);
-            var links = patientDetails.Links;
+            var patient = GetPatientDetails(citizenCPR);
+            var links = patient.Links;
             //var links = GetNestedData(patientDetails, "_links");
             //Here we need to convert the numbered dictionary to a real key/value pair dictionary.
             return links;
@@ -353,8 +405,8 @@ namespace NexusAPIWrapper
         }
         public PatientDetailsSearch_Links GetPatientDetailsLinks(int id)
         {
-            var patientDetails = GetPatientDetails(id);
-            var links = patientDetails.Links;
+            var patient = GetPatientDetails(id);
+            var links = patient.Links;
             //var links = GetNestedData(patientDetails, "_links");
             //Here we need to convert the numbered dictionary to a real key/value pair dictionary.
             return links;
@@ -455,7 +507,37 @@ namespace NexusAPIWrapper
                 return chosenPathwayEnrollmentLink;
             }
         }
+        public string GetProgramPathwayEnrollmentLink(PatientDetailsSearch_Patient patient, string programPathwayName)
+        {
 
+            var availableProgramPathways = GetPatientAvailableProgramPathways(patient);
+            AvailableProgramPathways_Root chosenProgramPathway = new AvailableProgramPathways_Root();
+            string chosenPathwayEnrollmentLink = string.Empty;
+
+            foreach (var programPathway in availableProgramPathways)
+            {
+                if (programPathway.Name.ToLower() == programPathwayName.ToLower())
+                {
+                    chosenProgramPathway = programPathway;
+                    break;
+                }
+            }
+            if (chosenProgramPathway.Id != null)
+            {
+                chosenPathwayEnrollmentLink = chosenProgramPathway.Links.Enroll.Href;
+            }
+
+            if (chosenPathwayEnrollmentLink == string.Empty)
+            {
+                return null;
+            }
+            else
+            {
+                return chosenPathwayEnrollmentLink;
+            }
+        }
+
+        
         /// <summary>
         /// can return more than 1 pathway association, as multiple of the same type can be created/enrolled in
         /// </summary>
@@ -479,12 +561,37 @@ namespace NexusAPIWrapper
             return chosenPathwayAssociationList;
         }
 
+        public List<AvNestPrgPways_Root> HentMuligeUnderforloeb(string citizenCPR, string borgerforloeb, string grundforloeb)
+        {
+            return GetAvailableNestedProgramPathways(citizenCPR, borgerforloeb, grundforloeb);
+        }
+        public List<AvNestPrgPways_Root> GetAvailableNestedProgramPathways(string citizenCPR, string pathwayName, string pathwayReferenceName)
+        {
+            var grundforloeb = HentAabneGrundforloeb(citizenCPR);
+
+            var chosenGrundforloeb = grundforloeb.FirstOrDefault(x => x.Name == pathwayReferenceName);
+            var pathwayReferencesSelf = GetCitizenPathwayReferencesSelf(citizenCPR, pathwayName, pathwayReferenceName);
+            var chosenPathwayReferenceSelf = pathwayReferencesSelf.FirstOrDefault(x => x.Name == pathwayReferenceName);
+
+            var availableNestedProgramPathwaysLink = chosenPathwayReferenceSelf.Links.AvailableNestedProgramPathways.Href;
+            var webResultNested = CallAPI(this, availableNestedProgramPathwaysLink, Method.Get);
+
+            return JsonConvert.DeserializeObject<List<AvNestPrgPways_Root>>(webResultNested.Result.ToString());
+        }
 
         /// <summary>
         /// Returns all the open pathway associations (Grundforløb) for the specified patient/citizen
         /// </summary>
         /// <param name="citizenCPR"></param>
-        public List<AvailablePathwayAssociations_Root> GetPatientAvailablePathwayAssociations(string citizenCPR) //Henter alle åbne grundforløb på en borger
+        public List<AvailablePathwayAssociations_Root> HentAabneGrundforloeb(string citizenCPR)
+        {
+            return GetPatientAvailablePathwayAssociations(citizenCPR);
+        }
+        /// <summary>
+        /// Returns all the open pathway associations (Grundforløb) for the specified patient/citizen
+        /// </summary>
+        /// <param name="citizenCPR"></param>
+        public List<AvailablePathwayAssociations_Root> GetPatientAvailablePathwayAssociations(string citizenCPR) 
         {
             var patient = GetPatientDetails(citizenCPR);
 
@@ -510,6 +617,25 @@ namespace NexusAPIWrapper
             var availableProgramPathwaysResult = CallAPI(this, availableProgramPathwaysLink, Method.Get);
             return JsonConvert.DeserializeObject<List<AvailableProgramPathways_Root>>(availableProgramPathwaysResult.Result.ToString());
         }
+        /// <summary>
+        /// Returns all program pathways (Grundforløb) available for that specific citizen
+        /// </summary>
+        /// <param name="citizenCPR"></param>
+        /// <returns></returns>
+        public List<AvailableProgramPathways_Root> GetPatientAvailableProgramPathways(PatientDetailsSearch_Patient patient)
+        {
+            var links = patient.Links;
+            var availableProgramPathwaysLink = links.AvailableProgramPathways.Href;
+
+            var availableProgramPathwaysResult = CallAPI(this, availableProgramPathwaysLink, Method.Get);
+            return JsonConvert.DeserializeObject<List<AvailableProgramPathways_Root>>(availableProgramPathwaysResult.Result.ToString());
+        }
+        public string GetPatientPreferencesLink(PatientDetailsSearch_Patient patient)
+        {
+            var links = GetPatientDetailsLinks(patient);
+
+            return links.PatientPreferences.Href;
+        }
         public string GetPatientPreferencesLink(string citizenCPR)
         {
             var links = GetPatientDetailsLinks(citizenCPR);
@@ -525,6 +651,11 @@ namespace NexusAPIWrapper
         }
 
 
+        public PatientPreferences_Root GetPatientPreferences(PatientDetailsSearch_Patient patient)
+        {
+            result.GetPatientPreferences(this, patient);
+            return JsonConvert.DeserializeObject<PatientPreferences_Root>((string)result.Result);
+        }
         public PatientPreferences_Root GetPatientPreferences(string citizenCPR)
         {
             result.GetPatientPreferences(this, citizenCPR);
@@ -677,6 +808,10 @@ namespace NexusAPIWrapper
             return GetPatientPreferences(id).CITIZENDATA;
         }
 
+        public List<PatientPreferences_CITIZENPATHWAY> GetCitizenPathways(PatientDetailsSearch_Patient patient)
+        {
+            return GetPatientPreferences(patient).CITIZENPATHWAY;
+        }
         public List<PatientPreferences_CITIZENPATHWAY> GetCitizenPathways(string citizenCPR)
         {
             return GetPatientPreferences(citizenCPR).CITIZENPATHWAY;
@@ -685,11 +820,8 @@ namespace NexusAPIWrapper
         public List<PatientPreferences_CITIZENPATHWAY> GetCitizenPathways(int id)
         {
             return GetPatientPreferences(id).CITIZENPATHWAY;
-
         }
 
-
-        
         public string GetCitizenPathwayLink(string citizenCPR, string pathwayName)
         {
             var pathways = GetCitizenPathways(citizenCPR);
@@ -716,7 +848,7 @@ namespace NexusAPIWrapper
             return result;
         }
 
-
+        
 
         public CitizenPathwaySelf_Root GetCitizenPathway(string citizenCPR, string pathwayName)
         {
@@ -725,7 +857,11 @@ namespace NexusAPIWrapper
 
             foreach (var pathway in pathways)
             {
-                if (pathway.Name.ToLower() == pathwayName.ToLower())
+                
+                string pathwayNameLower = pathway.Name.ToLower();
+                string chosenPathwayNameLower = pathwayName.ToLower();
+
+                if (pathwayNameLower == chosenPathwayNameLower)
                 {
                     chosenPathway = pathway;
                     break;
@@ -735,7 +871,8 @@ namespace NexusAPIWrapper
             //Then the below will fail
             string chosenPathwaySelfLink = chosenPathway.Links.Self.Href;
 
-            return JsonConvert.DeserializeObject<CitizenPathwaySelf_Root>(CallAPI(this, chosenPathwaySelfLink, Method.Get).Result.ToString());
+            var webResult = CallAPI(this, chosenPathwaySelfLink, Method.Get);
+            return JsonConvert.DeserializeObject<CitizenPathwaySelf_Root>(webResult.Result.ToString());
 
         }
         public CitizenPathwaySelf_Root GetCitizenPathway(int id, string pathwayName)
@@ -821,15 +958,27 @@ namespace NexusAPIWrapper
             }
             return list;
         }
-
-        public List<PathwayReferences_Child> GetCitizenPathwayDocuments(string citizenCPR, string pathwayName)
+        /// <summary>
+        /// Returns all documents including documents on pathway reference children
+        /// </summary>
+        /// <param name="citizenCPR"></param>
+        /// <param name="pathwayName"></param>
+        /// <param name="includeDeletedDocuments"></param>
+        /// <returns></returns>
+        public List<PathwayReferences_Child> GetAllCitizenPathwayDocuments(string citizenCPR, string pathwayName, bool includeDeletedDocuments = false)
         {
             // As it could be misleading to have to call the pathway references documents, this method has been made to make more sense.
             // Here you just get the pathway documents.
-            return GetCitizenPathwayReferencesDocuments(citizenCPR, pathwayName);
+            return GetCitizenPathwayReferencesDocuments(citizenCPR, pathwayName, true, includeDeletedDocuments);
+        }
+        public List<PathwayReferences_Child> GetCitizenPathwayDocuments(string citizenCPR, string pathwayName, bool includeDeletedDocuments = false)
+        {
+            // As it could be misleading to have to call the pathway references documents, this method has been made to make more sense.
+            // Here you just get the pathway documents.
+            return GetCitizenPathwayReferencesDocuments(citizenCPR, pathwayName,false, includeDeletedDocuments);
         }
 
-        public List<PathwayReferences_Child> GetCitizenPathwayReferencesDocuments(string citizenCPR, string pathwayName, bool getNestedElements = false)
+        public List<PathwayReferences_Child> GetCitizenPathwayReferencesDocuments(string citizenCPR, string pathwayName, bool getNestedElements = false, bool includeDeleteDocuments = false)
         {
             result.GetCitizenPathwayReferences(this, citizenCPR, pathwayName);
             var pathwayReferences = JsonConvert.DeserializeObject<List<PathwayReferences_Root>>(result.Result.ToString());
@@ -856,8 +1005,19 @@ namespace NexusAPIWrapper
                             //We don't add to dictionary as it is not a direct document reference
                             break;
                         case "documentReference":
-                            //We add to the Documents dictionary
-                            Documents.Add(item);
+                            //We add to the Documents dictionary if the document is NOT deleted
+                            if (includeDeleteDocuments)
+                            {
+                                Documents.Add(item);
+                            }
+                            else
+                            {
+                                if (item.Status != "DELETED")
+                                {
+                                    Documents.Add(item);
+                                }
+                            }
+                            
                             break;
                         default:
                             break;
@@ -868,19 +1028,77 @@ namespace NexusAPIWrapper
 
             return Documents;
         }
+        public List<PathwayReferences_Child> GetCitizenPathwayReferencesChildDocuments(string citizenCPR, string pathwayName, string pathwayReferenceName, string pathwayReferenceChildName, bool getNestedElements = false, bool includeDeleteDocuments = false)
+        {
+            result.GetCitizenPathwayReferences(this, citizenCPR, pathwayName);
+            var pathwayReferences = JsonConvert.DeserializeObject<List<PathwayReferences_Root>>(result.Result.ToString());
+            // In pathway references the children will be either child pathways (type :	patientPathwayReference)
+            // or documents (type : documentReference).
+            // In order to get the documents, we loop through everything, locating elements with the type we want
+            // and put them in a list of elements
+
+            List<PathwayReferences_Child> Documents = new List<PathwayReferences_Child>();
+            var chosenPathwayReference = pathwayReferences.FirstOrDefault(x => x.Name == pathwayReferenceName);
+            var chosenPathwayRefernceChild = chosenPathwayReference.Children.FirstOrDefault(x => x.Name == pathwayReferenceChildName);
+            
+                foreach (var item in chosenPathwayRefernceChild.Children)
+                {
+
+
+                    var elementType = item.Type;
+
+                    switch (elementType)
+                    {
+                        case "patientPathwayReference":
+                            //We don't add to dictionary as it is not a direct document reference
+                            break;
+                        case "documentReference":
+                            //We add to the Documents dictionary if the document is NOT deleted
+                            if (includeDeleteDocuments)
+                            {
+                                Documents.Add(item);
+                            }
+                            else
+                            {
+                                if (item.Status != "DELETED")
+                                {
+                                    Documents.Add(item);
+                                }
+                            }
+
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+            
+
+            return Documents;
+        }
 
         public string GetCitizenPathwayReferencesSelfLink(string citizenCPR, string pathwayName, int pathwayReferenceId)
         {
             var pathwayReferences = GetCitizenPathwayReferences(citizenCPR, pathwayName);
             return pathwayReferences.FirstOrDefault(x => x.PatientPathwayId.ToString() == pathwayReferenceId.ToString()).Links.Self.Href;
         }
+
+        public string GetCitizenPathwayReferencesChildSelfLink(string citizenCPR, string pathwayName, string pathwayReferenceName, string pathwayReferenceChildName)
+        {
+            //var pathwayReferences = GetCitizenPathwayReferences(citizenCPR, pathwayName);
+            var pathwayReferencesChildren = GetCitizenPathwayReferencesChildren(citizenCPR, pathwayName, pathwayReferenceName);
+            var chosenChild = pathwayReferencesChildren.FirstOrDefault(x => x.Name == pathwayReferenceChildName);
+            
+            return chosenChild.Links.Self.Href;
+        }
+
         public string GetCitizenPathwayReferencesSelfLink(string citizenCPR, string pathwayName, string pathwayReferenceName)
         {
             var pathwayReferences = GetCitizenPathwayReferences(citizenCPR, pathwayName);
             List<PathwayReferences_Root> referencesList= new List<PathwayReferences_Root>();
             foreach (var reference in pathwayReferences)
             {
-                if (reference.Name == pathwayReferenceName)
+                if (reference.Name.ToLower() == pathwayReferenceName.ToLower())
                 {
                     referencesList.Add(reference);
                 }
@@ -922,6 +1140,16 @@ namespace NexusAPIWrapper
         {
             string fullFileName = System.IO.Path.GetFileName(filePath);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            string fileExtension = System.IO.Path.GetExtension(filePath);
+
+            #region reducing file name length to maximum 100 characters
+            // If the file name is too long, the upload to Nexus will fail. Therefore we reduce the length to 100 characters and add the fulle file name to the notes (Beskrivelse)
+            if (fileName.Length > 100)
+            {
+                docPrototype.Notes = fileName;
+                fileName = fileName.Substring(0, 100);
+            }
+            #endregion reducing file name length to maximum 100 characters
             docPrototype.Name = fileName;
             docPrototype.OriginalFileName = fullFileName;
 
@@ -941,6 +1169,25 @@ namespace NexusAPIWrapper
 
             return docPrototype;
         }
+        public CitPathwSelfDocPrototype_Root CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(CitPathwSelfDocPrototype_Root docPrototype, string folderPath, string name, string originalFileName)
+        {
+            //string fullFileName = System.IO.Path.GetFileName(folderPath + name);
+            string fileName = System.IO.Path.GetFileNameWithoutExtension(folderPath + "\\" + name);
+            docPrototype.Name = fileName;
+            docPrototype.OriginalFileName = name;
+
+            return docPrototype;
+        }
+
+        public CitPathwSelfDocPrototype_Root GetGetCitizenPathwayReferencesChildSelf_DocumentPrototype(string citizenCPR, string pathwayName, string pathwayReferenceName, string pathwaryReferenceChildName)
+        {
+            string pathwaySelfDocumentPrototypeLink = string.Empty;
+            
+            pathwaySelfDocumentPrototypeLink = GetGetCitizenPathwayReferencesChildSelf_DocumentPrototypeLink(citizenCPR, pathwayName, pathwayReferenceName, pathwaryReferenceChildName);
+            var webResult = CallAPI(this, pathwaySelfDocumentPrototypeLink, Method.Get);
+            return JsonConvert.DeserializeObject<CitPathwSelfDocPrototype_Root>(webResult.Result.ToString());
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -979,6 +1226,18 @@ namespace NexusAPIWrapper
             var pathwayRefSelf = GetCitizenPathwayReferencesSelf(citizenCPR, pathwayName, pathwayReferenceId);
             return pathwayRefSelf.Links.DocumentPrototype.Href;
         }
+        public string GetGetCitizenPathwayReferencesChildSelf_DocumentPrototypeLink(string citizenCPR, string pathwayName, string pathwayReferenceName, string pathwayReferenceChildName)
+        {
+            var pathwayRefSelf = GetCitizenPathwayReferencesChildSelf(citizenCPR, pathwayName, pathwayReferenceName, pathwayReferenceChildName);
+            if (pathwayRefSelf.Count == 1)
+            {
+                return pathwayRefSelf[0].Links.DocumentPrototype.Href; ;
+            }
+            else
+            {
+                throw new Exception("No single pathway reference exist. Call the GetCitizenPathwayReferencesSelf method to se all references with the name \"" + pathwayReferenceName + "\"");
+            }
+        }
         public string GetGetCitizenPathwayReferencesSelf_DocumentPrototypeLink(string citizenCPR, string pathwayName, string pathwayReferenceName)
         {
             var pathwayRefSelf = GetCitizenPathwayReferencesSelf(citizenCPR,pathwayName,pathwayReferenceName);
@@ -991,10 +1250,37 @@ namespace NexusAPIWrapper
                 throw new Exception("No single pathway reference exist. Call the GetCitizenPathwayReferencesSelf method to se all references with the name \"" + pathwayReferenceName + "\"");
             }
         }
+        public List<PathwayReferencesSelf_Root> GetCitizenPathwayReferencesChildSelf(string citizenCPR, string pathwayName, string pathwayReferenceName, string pathwayReferenceChildName)
+        {
+            result.GetCitizenPathwayReferencesChildSelf(this, citizenCPR, pathwayName, pathwayReferenceName, pathwayReferenceChildName);
+            List<PathwayReferencesSelf_Root> pWayRefSelfRottList = new List<PathwayReferencesSelf_Root>();
+            try
+            {
+                return JsonConvert.DeserializeObject<List<PathwayReferencesSelf_Root>>(result.Result.ToString());
+            }
+            catch (Exception)
+            {
+                PathwayReferencesSelf_Root pWayRefSelfRoot = new PathwayReferencesSelf_Root();
+                pWayRefSelfRoot = JsonConvert.DeserializeObject<PathwayReferencesSelf_Root>(result.Result.ToString());
+                pWayRefSelfRottList.Add(pWayRefSelfRoot);
+            }
+            return pWayRefSelfRottList;
+        }
         public List<PathwayReferencesSelf_Root> GetCitizenPathwayReferencesSelf(string citizenCPR, string pathwayName, string pathwayReferenceName)
         {
             result.GetCitizenPathwayReferencesSelf(this, citizenCPR, pathwayName, pathwayReferenceName);
-            return JsonConvert.DeserializeObject<List<PathwayReferencesSelf_Root>>(result.Result.ToString());
+            List < PathwayReferencesSelf_Root > pWayRefSelfRottList = new List<PathwayReferencesSelf_Root> ();
+            try
+            {
+                return JsonConvert.DeserializeObject<List<PathwayReferencesSelf_Root>>(result.Result.ToString());
+            }
+            catch (Exception)
+            {
+                PathwayReferencesSelf_Root pWayRefSelfRoot = new PathwayReferencesSelf_Root();
+                pWayRefSelfRoot = JsonConvert.DeserializeObject<PathwayReferencesSelf_Root>(result.Result.ToString());
+                pWayRefSelfRottList.Add(pWayRefSelfRoot);
+            }
+            return pWayRefSelfRottList;
         }
         public PathwayReferencesSelf_Root GetCitizenPathwayReferencesSelf(string citizenCPR, string pathwayName, int pathwayReferenceId)
         {
@@ -1038,7 +1324,7 @@ namespace NexusAPIWrapper
                         }
                         else
                         {
-                            children = null;
+                            //children = null;
                         }
                     }
                 }
@@ -1089,7 +1375,10 @@ namespace NexusAPIWrapper
             return JsonConvert.DeserializeObject<List<Professionals_Root>>(CallAPI(this, link, Method.Get).Result.ToString());
         }
 
-
+        public List<Organizations_Root> GetAllOrganizations()
+        {
+            return GetOrganizations();
+        }
         /// <summary>
         /// TAKES TIME - getting all patient details in a list of patients
         /// </summary>
@@ -1142,12 +1431,12 @@ namespace NexusAPIWrapper
         /// <returns></returns>
         public List<Professional_Root> GetProfessionals(string queryString)
         {
-            return JsonConvert.DeserializeObject<List<Professional_Root>>(CallAPI(this, GetProfessionalsLink() + "?query=" + queryString, Method.Get).Result.ToString());
+            return JsonConvert.DeserializeObject<List<Professional_Root>>(CallAPI(this, GetProfessionalsHomeRessourceLink() + "?query=" + queryString, Method.Get).Result.ToString());
         }
 
         public Professional_Root GetProfessional(int id)
         {
-            var professional = CallAPI(this, GetProfessionalsLink() + "/" + id, Method.Get);
+            var professional = CallAPI(this, GetProfessionalsHomeRessourceLink() + "/" + id, Method.Get);
 
             Professional_Root professionalObject = new Professional_Root();
             professionalObject = JsonConvert.DeserializeObject<Professional_Root>(professional.Result.ToString());
@@ -1183,6 +1472,33 @@ namespace NexusAPIWrapper
                 }
             }
 
+        }
+        public AvailablePathwayAssociations_Self_Root GetPathwayAssociation_Self(AvailablePathwayAssociations_Root pathwayAssociation, int parentPathwayId = 0)
+        {
+            var webResult = CallAPI(this, pathwayAssociation.Links.Self.Href, Method.Get);
+            return JsonConvert.DeserializeObject<AvailablePathwayAssociations_Self_Root>(webResult.Result.ToString());
+        }
+        public AvailablePathwayAssociations_Self_Root GetPathwayAssociation_Self(string citizenCPR, string pathwayAssociationName, int parentPathwayId = 0)
+        {
+            // this returns a list of pathway associations. Mostly only 1, but can be several.
+            var patientPathwayAssociationsRootList = GetPatientPathwayAssociation(citizenCPR, pathwayAssociationName);
+            AvailablePathwayAssociations_Root chosenPathway = new AvailablePathwayAssociations_Root();
+            if (patientPathwayAssociationsRootList.Count > 1)
+            {
+                if (parentPathwayId != 0)
+                {
+                    chosenPathway = patientPathwayAssociationsRootList.FirstOrDefault(x => x.ParentPathwayId.ToString() == parentPathwayId.ToString());
+                }
+                else
+                {
+                    throw new Exception("ParentPathwayId " + parentPathwayId.ToString() + " can't be used.");
+                }
+            }
+            else
+            {
+                chosenPathway = patientPathwayAssociationsRootList[0];
+            }
+            return GetPathwayAssociation_Self(chosenPathway);
         }
         public void CloseCitizenPathwayAssociation(AvailablePathwayAssociations_Self_Root citizenPathwayAssociation)
         {
@@ -1538,37 +1854,45 @@ namespace NexusAPIWrapper
         {
             string htmlResult = handler.GetResultFromHtml(transformedBodyHTML, "Aftaler omkring kost første døgn efter udskrivning");
             var domObject = handler.CreateDomObject(htmlResult).FirstElement();
-            int numberOfElements = domObject.ChildElements.Count();
-
-            for (int i = 0; i < numberOfElements; i++)
+            if (domObject != null)
             {
-                var dataRowElement = domObject.ChildElements.ElementAt(i);
-                switch (i)
+                int numberOfElements = domObject.ChildElements.Count();
+
+                for (int i = 0; i < numberOfElements; i++)
                 {
-                    case 0://Madpakke gives med
-                        if (dataRowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
-                        {
-                            transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge.PackedLunchProvided = true;
-                        }
-                        else
-                        {
-                            transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge.PackedLunchProvided = false;
-                        }
-                        break;
-                    case 1: //Aftalt indkøb på udskrivelesdagen
-                        if (dataRowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
-                        {
-                            transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge.AgreedPurchasesOnTheDayOfDischarge = true;
-                        }
-                        else
-                        {
-                            transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge.AgreedPurchasesOnTheDayOfDischarge = false;
-                        }
-                        break;
-                    default:
-                        break;
+                    var dataRowElement = domObject.ChildElements.ElementAt(i);
+                    switch (i)
+                    {
+                        case 0://Madpakke gives med
+                            if (dataRowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
+                            {
+                                transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge.PackedLunchProvided = true;
+                            }
+                            else
+                            {
+                                transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge.PackedLunchProvided = false;
+                            }
+                            break;
+                        case 1: //Aftalt indkøb på udskrivelesdagen
+                            if (dataRowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
+                            {
+                                transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge.AgreedPurchasesOnTheDayOfDischarge = true;
+                            }
+                            else
+                            {
+                                transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge.AgreedPurchasesOnTheDayOfDischarge = false;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
+            else
+            {
+                transformedBody.AgreementsRegardingDietTheFirstDayAfterDischarge = null;
+            }
+            
 
 
         }
@@ -1710,40 +2034,48 @@ namespace NexusAPIWrapper
         {
             string htmlResult = handler.GetResultFromHtml(transformedBodyHTML, "Funktionsevner ved udskrivelse");
             var domObject = handler.CreateDomObject(htmlResult).FirstElement();
-            int numberOfElements = domObject.ChildElements.Count();
-
-            for (int i = 0; i < numberOfElements; i++)
+            if (domObject != null)
             {
-                TransformedBody_FunctionalAbilitiesAtDischarge ability = new TransformedBody_FunctionalAbilitiesAtDischarge();
-                var rowElement = domObject.ChildElements.ElementAt(i);
+                int numberOfElements = domObject.ChildElements.Count();
 
-                for (int j = 0; j < rowElement.ChildElements.Count(); j++)
+                for (int i = 0; i < numberOfElements; i++)
                 {
-                    if (rowElement.ChildElements.ElementAt(j).FirstChild != null) // If element value is null, we do nothing
+                    TransformedBody_FunctionalAbilitiesAtDischarge ability = new TransformedBody_FunctionalAbilitiesAtDischarge();
+                    var rowElement = domObject.ChildElements.ElementAt(i);
+
+                    for (int j = 0; j < rowElement.ChildElements.Count(); j++)
                     {
-                        string value = rowElement.ChildElements.ElementAt(j).FirstChild.ToString();
-                        switch (j)
+                        if (rowElement.ChildElements.ElementAt(j).FirstChild != null) // If element value is null, we do nothing
                         {
-                            case 0: // Function
-                                ability.Function = value;
-                                break;
-                            case 1: // Score
-                                ability.Score = value;
-                                break;
-                            case 2: // Description
-                                ability.Description = value;
-                                break;
-                            default:
-                                break;
+                            string value = rowElement.ChildElements.ElementAt(j).FirstChild.ToString();
+                            switch (j)
+                            {
+                                case 0: // Function
+                                    ability.Function = value;
+                                    break;
+                                case 1: // Score
+                                    ability.Score = value;
+                                    break;
+                                case 2: // Description
+                                    ability.Description = value;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        else
+                        {
+
                         }
                     }
-                    else
-                    {
-
-                    }
+                    transformedBody.FunctionalAbilitiesAtDischarge.Add(ability);
                 }
-                transformedBody.FunctionalAbilitiesAtDischarge.Add(ability);
             }
+            else
+            {
+                transformedBody.FunctionalAbilitiesAtDischarge = null;
+            }
+            
         }
 
         internal void GetDischargeReportData_Diagnoses(TransformedBody_Root transformedBody, HtmlHandler handler, string transformedBodyHTML)
@@ -1963,11 +2295,17 @@ namespace NexusAPIWrapper
         internal void GetDischargeReportData_Relatives_GetCommentsForRelatives(IDomObject domObject, TransformedBody_Root transformedBody)
         {
             var relativeCommentsTable = domObject;
-            var relativeCommentsTbody = relativeCommentsTable.ChildElements.First();
-            var relativeCommentsTr = relativeCommentsTbody.ChildElements.ElementAt(1); // We use the element at 1, as the element at 0 is the header
-            var relativeCommentsTdString = relativeCommentsTr.ChildElements.First().FirstChild.ToString();
-
-            transformedBody.CommentsForRelatives = relativeCommentsTdString;
+            try
+            {
+                var relativeCommentsTbody = relativeCommentsTable.ChildElements.First();
+                var relativeCommentsTr = relativeCommentsTbody.ChildElements.ElementAt(1); // We use the element at 1, as the element at 0 is the header
+                var relativeCommentsTdString = relativeCommentsTr.ChildElements.First().FirstChild.ToString();
+                transformedBody.CommentsForRelatives = relativeCommentsTdString;
+            }
+            catch (Exception)
+            {
+                transformedBody.CommentsForRelatives = "N/A";
+            }
         }
 
         internal void GetDischargeReportData_Relatives_GetType(string typeTdHTMLString, TransformedBody_Relavites relative)
@@ -2022,9 +2360,278 @@ namespace NexusAPIWrapper
             }
         }
 
+        public string GetPatientGrantByIdLink(int id)
+        {
+            string patientGrantByIdLink = GetPatientGrantByIdHomeRessourceLink();
+            return patientGrantByIdLink + "/" + id;
+        }
+        public PatientGrantById_Root GetPatientGrantById(int id)
+        {
+            string patientGrantByIdLink = GetPatientGrantByIdHomeRessourceLink();
+            var webResultPatientGrant = CallAPI(this, GetPatientGrantByIdLink(id), Method.Get);
+            return JsonConvert.DeserializeObject<PatientGrantById_Root>(webResultPatientGrant.Result.ToString());
+        }
         
+        public List<PatientGrantById_CurrentWorkflowTransition> GetCurrentWorkflowTransitions(int patientGrantId)
+        {
+            PatientGrantById_Root patientGrant = GetPatientGrantById(patientGrantId);
+            return patientGrant.CurrentWorkflowTransitions;
+        }
+        public List<PatientGrantById_CurrentWorkflowTransition> GetCurrentWorkflowTransitions(PatientGrantById_Root patientGrant)
+        {
+            return patientGrant.CurrentWorkflowTransitions;
+        }
+
+        public PatientGrantById_CurrentWorkflowTransition GetSpecificPatientGrantWorkflowTransition(int patientGrantId, string transitionName)
+        {
+            List<PatientGrantById_CurrentWorkflowTransition> transitions = GetCurrentWorkflowTransitions(patientGrantId);
+            return transitions.FirstOrDefault(x => x.Name == transitionName);
+        }
+        public PatientGrantById_CurrentWorkflowTransition GetSpecificPatientGrantWorkflowTransition(PatientGrantById_Root patientGrant, string transitionName)
+        {
+            List<PatientGrantById_CurrentWorkflowTransition> transitions = GetCurrentWorkflowTransitions(patientGrant);
+            return transitions.FirstOrDefault(x => x.Name == transitionName);
+        }
+
+        string GetPatientGrantWorkflowTransitionPrepareEditLink(int patientGrantId, string workflowTransitionName)
+        {
+            PatientGrantById_CurrentWorkflowTransition workflowTransition = GetSpecificPatientGrantWorkflowTransition(patientGrantId, workflowTransitionName);
+            return workflowTransition.Links.PrepareEdit.Href;
+        }
+        string GetPatientGrantWorkflowTransitionPrepareEditLink(PatientGrantById_Root patientGrant, string workflowTransitionName)
+        {
+            PatientGrantById_CurrentWorkflowTransition workflowTransition = GetSpecificPatientGrantWorkflowTransition(patientGrant, workflowTransitionName);
+            return workflowTransition.Links.PrepareEdit.Href;
+        }
+
+        public PatientGrantByIdCurWkFlTrPrepEdt_Root GetWorkflowTransitionPrepareEdit(int patientGrantId, string workflowTransitionName)
+        {
+            string patientGrantWorkflowTransitionPrepareEditLink = GetPatientGrantWorkflowTransitionPrepareEditLink(patientGrantId, workflowTransitionName);
+            return GetWorkflowTransitionPrepareEdit(patientGrantWorkflowTransitionPrepareEditLink);
+        }
+        public PatientGrantByIdCurWkFlTrPrepEdt_Root GetWorkflowTransitionPrepareEdit(PatientGrantById_Root patientGrant, string workflowTransitionName)
+        {
+            string patientGrantWorkflowTransitionPrepareEditLink = GetPatientGrantWorkflowTransitionPrepareEditLink(patientGrant, workflowTransitionName);
+            return GetWorkflowTransitionPrepareEdit(patientGrantWorkflowTransitionPrepareEditLink);
+        }
+        public PatientGrantByIdCurWkFlTrPrepEdt_Root GetWorkflowTransitionPrepareEdit(string workflowTransitionPrepareEditLink)
+        {
+            var webResultPrepareEdit = CallAPI(this, workflowTransitionPrepareEditLink, Method.Get);
+            return JsonConvert.DeserializeObject<PatientGrantByIdCurWkFlTrPrepEdt_Root>(webResultPrepareEdit.Result.ToString());
+        }
+
+        public List<PatientGrantByIdCurWkFlTrPrepEdt_Element> GetTransitionElements(int patientGrantId, string workflowTransitionName)
+        {
+            PatientGrantByIdCurWkFlTrPrepEdt_Root prepareEdit = GetWorkflowTransitionPrepareEdit(patientGrantId,workflowTransitionName);
+            return prepareEdit.Elements;
+        }
+        public List<PatientGrantByIdCurWkFlTrPrepEdt_Element> GetTransitionElements(PatientGrantById_Root patientGrant, string workflowTransitionName)
+        {
+            PatientGrantByIdCurWkFlTrPrepEdt_Root prepareEdit = GetWorkflowTransitionPrepareEdit(patientGrant, workflowTransitionName);
+            return prepareEdit.Elements;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="elementName">eg. "supplier"</param>
+        /// <returns></returns>
+        public PatientGrantByIdCurWkFlTrPrepEdt_Element GetTransitionElement(List<PatientGrantByIdCurWkFlTrPrepEdt_Element> elements, string elementName)
+        {
+            return elements.FirstOrDefault(x => x.Type == elementName);
+        }
+        public PatientGrantByIdCurWkFlTrPrepEdt_Element GetTransitionElement(PatientGrantById_Root patientGrant, string elementName)
+        {
+            List<PatientGrantByIdCurWkFlTrPrepEdt_Element> elements = GetTransitionElements(patientGrant, elementName);
+            return elements.FirstOrDefault(x => x.Type == elementName);
+        }
+
+        public List<PatientGrantByIdCurWkFlTrPrepEdtAvSuppl_Root> GetAvailableSuppliers(PatientGrantByIdCurWkFlTrPrepEdt_Element transitionElement)
+        {
+            string availableSuppliersLink = transitionElement.Links.AvailableSuppliers.Href;
+            var webResultAvSuppliers = CallAPI(this, availableSuppliersLink, Method.Get);
+            return JsonConvert.DeserializeObject<List<PatientGrantByIdCurWkFlTrPrepEdtAvSuppl_Root>>(webResultAvSuppliers.Result.ToString());
+        }
+
+        /// <summary>
+        /// Will handle file names, so they do not exeed the 100 char limit
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns>Returns the file name and NOT the full path</returns>
+        public string HandleFileNameConstraints(string file)
+        {
+            var fileExtension = System.IO.Path.GetExtension(file);
+            string fileName = System.IO.Path.GetFileNameWithoutExtension(file);
+            string newFileName = string.Empty;
+            var folderSplitList = dataHandler.SplitStringByString(file);
+            //string fileName = folderSplitList.Last();
+            int attachmentIndex = 999;
+            //Get base file name - eg. Biler - _nr6_12-07-2018
+            int baseFileNameIndex = dataHandler.GetDatePosition(fileName) + 10;
+            string baseFileName = fileName.Substring(0, baseFileNameIndex);
+
+            //fileName = fileName.Substring(0, 100);
+            int fileNamePosition = file.IndexOf(fileName); // getting the position of the file name in the full file path string
+                
+            string fileFolderString = file.Substring(0, fileNamePosition); // setting the file folder tree string to have the new file name appended
+
+            if (fileName.Length > 100)
+            {
+                
+                // finding out if file is an attachment
+                bool attmnt = false;
+                if (fileName.Contains("attachment"))
+                {
+                    attmnt = true;
+                    // replacing attachment with attmnt to make the file name shorter
+                    fileName = fileName.Replace("attachment", "attmnt");
+
+                    attachmentIndex = fileName.IndexOf("attmnt");
+                }
+
+                
+                if (!attmnt) // it is not an attachment
+                {
+                    newFileName = fileName.Substring(0, 100) + fileExtension;
+                }
+                else // it is an attachment
+                {
+                    if (attachmentIndex != 999)
+                    {
+                        newFileName = baseFileName + "_" + fileName.Substring(attachmentIndex);
+                        if (newFileName.Length > 100)
+                        {
+                            newFileName = newFileName.Substring(0, 100);
+                        }
+                        newFileName = fileFolderString + newFileName + fileExtension;
+                    }
+                }
+                
+            }
+            else
+            {
+                if (fileName.Contains("attachment"))
+                {
+                    // replacing attachment with attmnt to make the file name shorter
+                    fileName = fileName.Replace("attachment", "attmnt");
+                }
+                newFileName = fileFolderString + fileName + fileExtension;
+            }
+
+            return newFileName;
+        }
+        /// <summary>
+        /// Will handle file names, so they do not exeed the 100 char limit
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="replacementStrings">collection of strings to replace - eg. (attachment, attmnt)</param>
+        /// <returns>Returns the file name and NOT the full path</returns>
+        
+        public string HandleFileNameConstraints(string file, Dictionary<string,string> replacementStrings = null)
+        {
+            var fileExtension = System.IO.Path.GetExtension(file);
+            string fileName = System.IO.Path.GetFileNameWithoutExtension(file);
+            string newFileName = string.Empty;
+            var folderSplitList = dataHandler.SplitStringByString(file);
+            //string fileName = folderSplitList.Last();
+            int attachmentIndex = 999;
+            
+
+            //fileName = fileName.Substring(0, 100);
+            int fileNamePosition = file.IndexOf(fileName); // getting the position of the file name in the full file path string
+
+            string fileFolderString = file.Substring(0, fileNamePosition); // setting the file folder tree string to have the new file name appended
+
+            // looping through the replacementStrings collection
+            if (replacementStrings != null)
+            {
+                foreach (var item in replacementStrings)
+                {
+                    string stringToFind = item.Key;
+                    string stringReplacement = item.Value;
+
+                    fileName = fileName.Replace(stringToFind, stringReplacement);
+                }
+            }
+
+            if (fileName.Length > 100)
+            {
+                // finding out if file is an attachment
+                bool attmnt = false;
+                if (fileName.Contains("attachment"))
+                {
+                    attmnt = true;
+                }
+
+                
+
+                //Get base file name - eg. Biler - _nr6_12-07-2018
+                int baseFileNameIndex = dataHandler.GetDatePosition(fileName) + 10;
+                string baseFileName = fileName.Substring(0, baseFileNameIndex);
+
+                if (attmnt)
+                {
+                    // replacing attachment with attmnt to make the file name shorter
+                    fileName = fileName.Replace("attachment", "attmnt");
+
+                    attachmentIndex = fileName.IndexOf("attmnt");
+                }
 
 
+                if (!attmnt) // it is not an attachment
+                {
+                    newFileName = fileName.Substring(0, 100) + fileExtension;
+                }
+                else // it is an attachment
+                {
+                    if (attachmentIndex != 999)
+                    {
+                        newFileName = baseFileName + "_" + fileName.Substring(attachmentIndex);
+                        if (newFileName.Length > 100)
+                        {
+                            newFileName = newFileName.Substring(0, 100);
+                        }
+                        newFileName = fileFolderString + newFileName + fileExtension;
+                    }
+                }
+
+            }
+            else
+            {
+                if (fileName.Contains("attachment"))
+                {
+                    // replacing attachment with attmnt to make the file name shorter
+                    fileName = fileName.Replace("attachment", "attmnt");
+                }
+                newFileName = fileFolderString + fileName + fileExtension;
+            }
+
+            return newFileName;
+        }
+
+        /// <summary>
+        /// Returns all available tags for documents. It uses a hard coded link. So if this fails, use GetAvailableTagsForDocuments( documentPrototype ).
+        /// </summary>
+        /// <returns></returns>
+        public List<Patient_DocumentPrototype_AvailableTags_Root> GetAvailableTagsForDocuments()
+        {
+            var avTagsResult = CallAPI(this, GetAvailabeTagsForDocumentsLink_Review(), Method.Get);
+            return JsonConvert.DeserializeObject<List<Patient_DocumentPrototype_AvailableTags_Root>>(avTagsResult.Result.ToString());
+        }
+
+        public List<Patient_DocumentPrototype_AvailableTags_Root> GetAvailableTagsForDocuments(Patient_DocumentPrototype_Root documentPrototype)
+        {
+            string availabeTagsLink = documentPrototype.Links.AvailableTags.Href;
+            var avTagsResult = CallAPI(this, availabeTagsLink, Method.Get);
+            return JsonConvert.DeserializeObject<List<Patient_DocumentPrototype_AvailableTags_Root>>(avTagsResult.Result.ToString());
+        }
+
+        public List<ProfessionalJobs_Root> GetAllProfessionalJobs()
+        {
+            string professionalJobsLink = GetHomeRessourceLink("professionalJobs");
+            var webResult = CallAPI(this, professionalJobsLink, Method.Get);
+            return JsonConvert.DeserializeObject<List<ProfessionalJobs_Root>>(webResult.Result.ToString());
+        }
 
 
 

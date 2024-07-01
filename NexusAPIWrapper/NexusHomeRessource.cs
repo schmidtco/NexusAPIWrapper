@@ -31,7 +31,7 @@ namespace NexusAPIWrapper
             this.url = url;
             this.accessToken = accessToken;
             Links = new SortedDictionary<string, string>();
-            //GetHomeRessource();
+            GetHomeRessource();
         }
         public void AddResource(string linkName, string href)
         {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 
 namespace NexusAPIWrapper
 {
@@ -33,6 +34,7 @@ namespace NexusAPIWrapper
         ///////////////////
         public NexusResult CallAPI(NexusAPI api, string endpointURL, Method callMethod)
         {
+            //Thread.Sleep(TimeSpan.FromSeconds(3)); // Wait for 3 seconds as we could face an "unauthorized" error
             WebRequest webRequest = new WebRequest(api.clientCredentials.Host, endpointURL, callMethod, api.tokenObject.AccessToken);
             webRequest.AddBearerToken();
             webRequest.Execute();
@@ -114,7 +116,7 @@ namespace NexusAPIWrapper
                 * You only need to add headers and body, before running the Execute method.
                 */
         {
-            WebRequest webRequest = new WebRequest(api.clientCredentials.Host, api.GetPatientDetailsSearchLink(), Method.Post);
+            WebRequest webRequest = new WebRequest(api.clientCredentials.Host, api.GetPatientDetailsSearchHomeRessourceLink(), Method.Post);
             webRequest.request.AddHeader("Authorization", $"Bearer {api.tokenObject.AccessToken}");
             webRequest.request.AddHeader("Content-Type", "application/json");
             JObject jsonBody = new JObject();
@@ -126,7 +128,8 @@ namespace NexusAPIWrapper
             //NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(_clientCredentials.url,_tokenObject.AccessToken);
             if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                throw new Exception(webRequest.response.StatusDescription);
+                api.result.httpStatusCode = webRequest.response.StatusCode;
+                api.result.httpStatusText = webRequest.response.StatusDescription;
             }
             else
             {
@@ -139,6 +142,7 @@ namespace NexusAPIWrapper
             }
 
         }
+
         //public NexusResult GetPatientDetailsByCPR(NexusAPI api, string CitizenCPR)
         ///*
         //        * This one uses the WebRequest class RestClient setup
@@ -193,6 +197,25 @@ namespace NexusAPIWrapper
         #region PatientDetailsSearch sub calls
 
 
+        public void GetPatientPreferences(NexusAPI api, PatientDetailsSearch_Patient patient)
+        {
+            WebRequest webRequest = new WebRequest(api.clientCredentials.Host, api.GetPatientPreferencesLink(patient), Method.Get, api.tokenObject.AccessToken);
+            webRequest.AddBearerToken();
+            webRequest.Execute();
+            //NexusHomeRessource nexusHomeRessource = new NexusHomeRessource(_clientCredentials.url,_tokenObject.AccessToken);
+            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(webRequest.response.StatusDescription);
+            }
+            else
+            {
+                NexusResult result = new NexusResult(
+                    webRequest.response.StatusCode,
+                    webRequest.response.StatusDescription,
+                    webRequest.response.Content);
+                api.result = result;
+            }
+        }
         public void GetPatientPreferences(NexusAPI api, string CitizenCPR)
         {
             WebRequest webRequest = new WebRequest(api.clientCredentials.Host, api.GetPatientPreferencesLink(CitizenCPR), Method.Get, api.tokenObject.AccessToken);
@@ -306,6 +329,26 @@ namespace NexusAPIWrapper
             }
         }
 
+        public void GetCitizenPathwayReferencesChildSelf(NexusAPI api, string CitizenCPR, string pathwayName, string pathwayReferenceName, string pathwayReferencChildName)
+        {
+            WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayReferencesChildSelfLink(CitizenCPR, pathwayName, pathwayReferenceName, pathwayReferencChildName), Method.Get);
+
+            webRequest.Execute();
+            if (webRequest.response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(webRequest.response.StatusDescription);
+            }
+            else
+            {
+                NexusResult result = new NexusResult(
+                    webRequest.response.StatusCode,
+                    webRequest.response.StatusDescription,
+                    webRequest.response.Content);
+                api.result = result;
+            }
+        }
+
+
         public void GetCitizenPathwayReferencesSelf(NexusAPI api, string CitizenCPR, string pathwayName, string pathwayReferenceName)
         {
             WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayReferencesSelfLink(CitizenCPR, pathwayName,pathwayReferenceName), Method.Get);
@@ -324,6 +367,7 @@ namespace NexusAPIWrapper
                 api.result = result;
             }
         }
+        
         public void GetCitizenPathwayReferencesSelf(NexusAPI api, string CitizenCPR, string pathwayName, int pathwayReferenceId)
         {
             WebRequest webRequest = StandardWebRequest(api, api.GetCitizenPathwayReferencesSelfLink(CitizenCPR, pathwayName, pathwayReferenceId), Method.Get);
