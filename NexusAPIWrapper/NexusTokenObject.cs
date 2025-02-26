@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CSharp;
 using System.Runtime.CompilerServices;
+using CsQuery.ExtensionMethods.Internal;
 
 namespace NexusAPIWrapper
 {
@@ -16,7 +17,9 @@ namespace NexusAPIWrapper
     {
         #region Properties
         static Timer refreshTokenTimer;
-        const string tokenEndpointURL = "/authx/realms/ringsted/protocol/openid-connect/token";
+        //const string tokenEndpointURL = "/authx/realms/ringsted/.well-known/openid-configuration";
+        //const string tokenEndpointURL = "https://iam.nexus.kmd.dk/authx/realms/ringsted/.well-known/openid-configuration";
+        //const string tokenEndpointURL = "/authx/realms/ringsted/protocol/openid-connect/token";
 
         string _url;
         string _clientID;
@@ -24,11 +27,11 @@ namespace NexusAPIWrapper
 
         string _access_token;
         int _expires_in;
-        int _refresh_expires_in;
-        string _refresh_token;
         string _token_type;
         int _not_before_policy;
         string _session_state;
+
+        ClientCredentials credentials;
 
 
         public string AccessToken
@@ -42,16 +45,7 @@ namespace NexusAPIWrapper
             get => _expires_in;
             private set => _expires_in = value;
         }
-        public int RefreshExpiresIn
-        {
-            get => _refresh_expires_in;
-            private set => _refresh_expires_in = value;
-        }
-        public string RefreshToken
-        {
-            get => string.IsNullOrEmpty(_refresh_token) ? throw new Exception("_refresh_token") : _refresh_token;
-            private set => _refresh_token = value;
-        }
+        
         public string TokenType
         {
             get => string.IsNullOrEmpty(_token_type) ? throw new Exception("_token_type") : _token_type;
@@ -84,6 +78,7 @@ namespace NexusAPIWrapper
 
         public NexusTokenObject(ClientCredentials credentials)
         {
+            this.credentials = credentials;
             url = credentials.Host;
             clientID = credentials.Client_id;
             clientSecret = credentials.Client_secret;
@@ -112,30 +107,55 @@ namespace NexusAPIWrapper
             dynamic result = JObject.Parse(response);
             this.AccessToken = Convert.ToString(result["access_token"]);
             this.ExpiresIn = Convert.ToInt32(result["expires_in"]);
-            this.RefreshExpiresIn = Convert.ToInt32(result["refresh_expires_in"]);
-            this.RefreshToken = Convert.ToString(result["refresh_token"]);
             this.TokenType = Convert.ToString(result["token_type"]);
             this.NotBeforePolicy = Convert.ToInt32(result["not-before-policy"]);
             this.SessionState = Convert.ToString(result["session_state"]);
         }
 
-        public void GetToken(bool userefreshtoken)
+        //public void GetToken(bool userefreshtoken) // BOOL to be removed
+        //{
+        //    var options = new RestClientOptions(url)
+        //    {
+        //        MaxTimeout = -1,
+        //    };
+        //    string grantType = userefreshtoken ? "refresh_token" : "client_credentials"; // change to only client_credentials
+        //    var client = new RestClient(options);
+        //    var request = new RestRequest(tokenEndpointURL, Method.Post);
+        //    request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+        //    request.AddParameter("grant_type", $"{grantType}");
+        //    request.AddParameter("client_id", clientID);
+        //    request.AddParameter("client_secret", clientSecret);
+        //    if (userefreshtoken) // to be removed
+        //    { // to be removed
+        //        request.AddParameter("refresh_token", $"{this.RefreshToken}"); // to be removed
+        //    } // to be removed
+
+        //    RestResponse response = client.ExecutePost(request);
+        //    if (response.StatusCode != System.Net.HttpStatusCode.OK)
+        //    {
+        //        throw new Exception(response.StatusDescription);
+        //    }
+        //    else
+        //    {
+        //        SetProperties(response.Content);
+        //        SetTimer();
+        //    }
+        //}
+        public void GetToken() 
         {
+
             var options = new RestClientOptions(url)
             {
                 MaxTimeout = -1,
             };
-            string grantType = userefreshtoken ? "refresh_token" : "client_credentials";
+            string grantType = "client_credentials"; 
             var client = new RestClient(options);
-            var request = new RestRequest(tokenEndpointURL, Method.Post);
+            string tokenEnpoint = GetTokenEndpoint();
+            var request = new RestRequest(tokenEnpoint, Method.Post);
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
             request.AddParameter("grant_type", $"{grantType}");
             request.AddParameter("client_id", clientID);
             request.AddParameter("client_secret", clientSecret);
-            if (userefreshtoken)
-            {
-                request.AddParameter("refresh_token", $"{this.RefreshToken}");
-            }
 
             RestResponse response = client.ExecutePost(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
@@ -148,30 +168,27 @@ namespace NexusAPIWrapper
                 SetTimer();
             }
         }
-
+        public string GetTokenEndpoint()
+        {
+            string host = credentials.Host;
+            string tokenEndpoint = credentials.Token_endpoint;
+            string newTokenEndpoint = tokenEndpoint.After("kmd.dk");
+            return newTokenEndpoint;
+        }
         private void SetTimer()
         {
-            refreshTokenTimer = new Timer(_ => RefreshAccessToken(), null, this.ExpiresIn * 900, Timeout.Infinite);
-            
-            //refreshTokenTimer.Change(this.ExpiresIn * 1000, 0);
-
-            //refreshTokenTimer = new Timer(new TimerCallback(_RefreshToken));
-            //refreshTokenTimer.Change(this.ExpiresIn * 1000, 0);
+            refreshTokenTimer = new Timer(_ => GetAccessTokenFromNexus(), null, this.ExpiresIn * 900, Timeout.Infinite);
         }
 
-        private void _RefreshToken(object state)
-        {
-            refreshTokenTimer.Dispose();
-            //GetAccessTokenFromNexus();
-            RefreshAccessToken();
-        }
+
+        
         void GetAccessTokenFromNexus()
         {
-            GetToken(false);
+            GetToken();
         }
-        void RefreshAccessToken()
-        {
-            GetToken(true);
-        }
+        //void RefreshAccessToken()
+        //{
+        //    GetToken(true);
+        //}
     }
 }

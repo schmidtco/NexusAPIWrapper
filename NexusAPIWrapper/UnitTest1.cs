@@ -46,9 +46,12 @@ namespace NexusAPITest
         [Test]
         public void testAccess()
         {
-            NexusAPI _NexusAPI = new NexusAPI(liveEnvironment);
+            NexusAPI _NexusAPI = new NexusAPI(reviewEnvironment);
             Assert.IsFalse(string.IsNullOrEmpty(_NexusAPI.tokenObject.AccessToken));
         }
+
+        
+
         [Test]
         public void testHomeResource()
         {
@@ -298,7 +301,8 @@ namespace NexusAPITest
         //    string pathwayChildName = "Dokumenter fra Vitae";
 
 
-        //    string documentObjectResponse = "{\"id\":null,\"version\":0,\"uid\":\"e1388e3f-3d53-4e13-8b09-2f3a8d229eee\",\"name\":null,\"notes\":null,\"originalFileName\":null,\"uploadingDate\":null,\"relevanceDate\":\"2023-06-09T06:31:30.036+00:00\",\"status\":\"CREATED\",\"pathwayAssociation\":{\"placement\":{\"id\":null,\"version\":null,\"patientPathwayId\":26859,\"programPathwayId\":4809,\"_links\":{\"patientPathway\":{\"href\":\"/api/core/mobile/ringsted/v2/patientPathways/26859\"}}},\"parentReferenceId\":null,\"referenceId\":null,\"canAssociateWithPathway\":true,\"canAssociateWithPatient\":true,\"associatedWithPatient\":false,\"_links\":{\"availableRootProgramPathways\":{\"href\":\"https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/patients/1623/availableProgramPathways\"},\"availablePathwayAssociation\":{\"href\":\"https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/patients/1623/pathways/26859/availablePathwayAssociations\"}}},\"patientId\":1623,\"fileType\":null,\"tags\":[],\"origin\":null,\"externalId\":null,\"fileExternalId\":null,\"_links\":{\"create\":{\"href\":\"https://ringsted.nexus-review.kmd.dk/api/document-microservice/ringsted/documents\"},\"availableTags\":{\"href\":\"https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/tags/UI/documentTags\"}},\"patientActivityType\":\"document\"}";
+        //    string documentObjectResponse = "{\"id\":null,\"version\":0,\"uid\":\"e1388e3f-3d53-4e13-8b09-2f3a8d229eee\",\"name\":null,\"notes\":null,\"originalFileName\":null,\"uploadingDate\":null,\"relevanceDate\":\"2023-06-09T06:31:30.036+00:00\",\"status\":\"CREATED\",\"pathwayAssociation\":{\"placement\":{\"id\":null,\"version\":null,\"patientPathwayId\":26859,\"programPathwayId\":4809,\"_links\":{\"patientPathway\":{\"href\":\"/api/core/mobile/ringsted/v2/patientPathways/26859\"}}},\"parentReferenceId\":null,\"referenceId\":null,\"canAssociateWithPathway\":true,\"canAssociateWithPatient\":true,\"associatedWithPatient\":false,\"_links\":{\"availableRootProgramPathways\":{\"href\":\"https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/patients/1623/availableProgramPathways\"},\"availablePathwayAssociation\":{\"href\":\"https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/patients/1623/pathways/26859/availablePathwayAssociations\"}}},\"patientId\":1623,\"fileType\":null,\"tags\":[],\"origin\":null,\"externalId\":null,\"fileExternalId\":null,\"_links\":{\"create\":{\"href\":\"https://ringsted.nexus-review.kmd.dk/api/document-microservice/ringsted/documents\"},\"availableTags\":{\"href\":\"https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/tags/UI/documentTags\"}},\"patient
+        //    Type\":\"document\"}";
         //    var dObject = JObject.Parse(documentObjectResponse);
         //    var documentObject = nexusAPI.CreateDocumentObject(citizenCPR, pathwayName, pathwayChildName);
         //    documentObject.Name = "testDokumentFraCSharp - name";
@@ -371,7 +375,7 @@ namespace NexusAPITest
         [Test]
         public void GetOrganizations()
         {
-            NexusAPI_processes processes = new NexusAPI_processes("review");
+            NexusAPI_processes processes = new NexusAPI_processes("live");
             var api = processes.api;
 
             var organizations = api.GetOrganizations();
@@ -700,7 +704,7 @@ namespace NexusAPITest
             NexusAPI_processes processes = new NexusAPI_processes("review");
             var api = processes.api;
 
-            var df = api.GetProfessionals("jette nielsen");
+            var df = api.GetProfessionals("*.*");
 
         }
 
@@ -2089,6 +2093,31 @@ namespace NexusAPITest
             processes.DeleteAllCitizenJournalNotesDirectly("", pathwayName, pathwayReferenceName, pathwayReferenceChildName, pathwayName);
         }
 
-        
+        [Test]
+        public void FS3Test()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
+            var api = processes.api;
+
+            var patient = api.GetPatientDetails("251248-9996");
+            string patientConditionsLink = patient.Links.PatientConditions.Href;
+
+            var result = api.CallAPI(api, patientConditionsLink, Method.Get);
+
+        }
+
+        [Test]
+        public void TestApplyOrganisationAndResponsiblePersonOnPathway()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
+            var api = processes.api;
+
+            var patient = api.GetPatientDetails("251248-9996");
+
+            var patientPreferences = api.GetPatientPreferences(patient);
+            var sdf = api.GetProgramPathwayEnrollmentLink(patient.PatientIdentifier.Identifier,"socialt og sundhedsfagligt grundforløb");
+
+        }
+
     }
 } 

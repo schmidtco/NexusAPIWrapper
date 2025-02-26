@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.CSharp;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
+using static System.Net.WebRequestMethods;
 
 namespace NexusAPIWrapper
 {
@@ -16,6 +17,7 @@ namespace NexusAPIWrapper
         #region Properties
         string url;
         string accessToken;
+        //const string homeRessourceEndpointURL = "/api/core/mobile/ringsted/v2/";
         const string homeRessourceEndpointURL = "/api/core/mobile/ringsted/v2/";
 
         public SortedDictionary<string, string> Links;

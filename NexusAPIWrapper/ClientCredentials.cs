@@ -91,7 +91,7 @@ namespace NexusAPIWrapper
                     this.Third_part = reader["Third_part"].ToString();
                     this.Client_id = reader["Client_id"].ToString();
                     this.Client_secret = reader["Client_secret"].ToString();
-                    this.Token_endpoint = "https://" + reader["Token_endpoint"].ToString();
+                    this.Token_endpoint = reader["Token_endpoint"].ToString();
                     this.API_homeressource_endpoint = reader["API_homeressource_endpoint"].ToString();
                     this.Host = "https://" + reader["Host"].ToString();
                     this.Environment = reader["Environment"].ToString();
