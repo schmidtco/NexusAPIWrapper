@@ -2,13 +2,23 @@ using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
+using AngleSharp.Text;
 using CsQuery;
+using CsQuery.Engine.PseudoClassSelectors;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Math;
+using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments;
+using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.SqlServer.Server;
 using MimeKit.Cryptography;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NexusAPIWrapper;
 using NexusAPIWrapper.Custom_classes;
+using NexusAPIWrapper.Custom_classes.FS3NewConditions.OldNewConditions;
 using NexusAPIWrapper.HomeRessource.Preferences.ACTIVITYLIST.ACTIVITYLIST_Content.Content.Pages.Links.Content._Root.Links.ReferencedObject._Root.Links.TransformedBody;
 using NUnit.Framework;
 using Org.BouncyCastle.Utilities;
@@ -16,8 +26,11 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -26,6 +39,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Remoting.Metadata;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Xml;
@@ -50,12 +64,12 @@ namespace NexusAPITest
             Assert.IsFalse(string.IsNullOrEmpty(_NexusAPI.tokenObject.AccessToken));
         }
 
-        
+
 
         [Test]
         public void testHomeResource()
         {
-            NexusAPI _NexusAPI = new NexusAPI(liveEnvironment);
+            NexusAPI _NexusAPI = new NexusAPI(reviewEnvironment);
             NexusHomeRessource _ressource = new NexusHomeRessource(_NexusAPI.clientCredentials.Host, _NexusAPI.tokenObject.AccessToken);
             NexusResult result = _ressource.GetHomeRessource();
             Assert.IsTrue(result.httpStatusCode == System.Net.HttpStatusCode.OK);
@@ -73,6 +87,8 @@ namespace NexusAPITest
         {
             NexusAPI _NexusAPI = new NexusAPI(liveEnvironment);
             var links = _NexusAPI.GetPatientDetailsLinks(nancyBerggrenTestCPR);
+
+            var result = _NexusAPI.CallAPI(_NexusAPI, links.MedicationCard.Href, Method.Get);
             Assert.IsNotNull(links);
         }
         [Test]
@@ -519,12 +535,13 @@ namespace NexusAPITest
         [Test]
         public void GetProfessionals()
         {
-            NexusAPI_processes processes = new NexusAPI_processes("review");
+            NexusAPI_processes processes = new NexusAPI_processes("live");
             var api = processes.api;
-            string queryString = "Hansen";
+            string queryString = "tülay agis";
 
 
             var professionals = api.GetProfessionals(queryString);
+            //var proConfig = api.GetProfessionalConfiguration(professionals.FirstOrDefault().Id);
             Assert.IsNotNull(professionals);
         }
         [Test]
@@ -966,7 +983,7 @@ namespace NexusAPITest
             NexusAPI_processes processes = new NexusAPI_processes(reviewEnvironment);
             var api = processes.api;
             var patient = api.GetPatientDetails(nancyBerggrenTestCPR);
-            string statusName = "Aktiv - 72 timers regel";
+            string statusName = "Aktiv - 96 timers regel";
 
             //var patientStates = api.GetAvailablePatientStates(patient.Links.AvailablePatientStates.Href);
             //var updatedPatient1 = processes.ChangeStatusOnCitizen(nancyBerggrenTestCPR, "Aktiv");
@@ -1126,7 +1143,7 @@ namespace NexusAPITest
             }
         }
         [Test]
-        public void tettetetds_møde_med_sudavili_omkring_72Timer_og_lukning_af_borgere()
+        public void tettetetds_møde_med_sudavili_omkring_96Timer_og_lukning_af_borgere()
         {
             NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
             var api = processes.api;
@@ -1151,7 +1168,7 @@ namespace NexusAPITest
             }
             var preferences = api.GetPreferences();
             var list = api.GetPreferencesActivityLists();
-            var chosenList = list.FirstOrDefault(x => x.Name == "72 timers behandlingsansvar");
+            var chosenList = list.FirstOrDefault(x => x.Name == "96 timers behandlingsansvar");
 
             string listSelfLink = chosenList.Links.Self.Href;
             var webResultListSelf = api.CallAPI(api, listSelfLink, Method.Get);
@@ -1188,22 +1205,22 @@ namespace NexusAPITest
             }
         }
         [Test]
-        public void Handle72TimersAnsvar()
+        public void Handle96TimersAnsvar()
         {
             NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
             var api = processes.api;
 
-            var medComMessages = api.GetPreferencesActivityListSelfObjectContent("72 timers behandlingsansvar", 28, 02, 2024, 30, 03, 2024);
+            var medComMessages = api.GetPreferencesActivityListSelfObjectContent("96 timers behandlingsansvar", 23, 06, 2025, 23, 06, 2025);
             ReferencedObject_Base_Root chosenMedComMessage = new ReferencedObject_Base_Root();
             TransformedBody_Root transformedBody = new TransformedBody_Root();
             foreach (var medComMessage in medComMessages)
             {
             }
         }
-        
+
 
         [Test]
-        public void citizen72Hours()
+        public void citizen96Hours()
         {
             NexusAPI_processes processes = new NexusAPI_processes();
             var api = processes.api;
@@ -1211,20 +1228,20 @@ namespace NexusAPITest
             processes.ChangeStatusOnCitizen(1, "Aktiv");
         }
         [Test]
-        public void Get72HoursCitizensToDb_processes()
+        public void Get96HoursCitizensToDb_processe()
         {
             NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
             var api = processes.api;
 
-            processes.Add72HoursCitizensToDb(15, 4, 2024, 16, 4, 2024);
+            processes.Add96HoursCitizensToDb(01, 07, 2025, 02, 07, 2025);
         }
         [Test]
-        public void Get72HoursCitizensToDb()
+        public void Get96HoursCitizensToDb()
         {
             NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
             var api = processes.api;
 
-            var activityList = api.GetPreferencesActivityListSelfObjectContent("72 timers behandlingsansvar", 29, 04, 2024, 06, 05, 2024);
+            var activityList = api.GetPreferencesActivityListSelfObjectContent("96 timers behandlingsansvar", 29, 04, 2024, 06, 05, 2024);
             foreach (var item in activityList)
             {
                 // for each item in the activity list we
@@ -1242,15 +1259,15 @@ namespace NexusAPITest
                 string timeOfDischarge = currentAdmission.TimeOfDischarge;
                 DateTime dateOfDischarge = api.dataHandler.GetDateAndTime(timeOfDischarge);
                 // check if patient is in the db
-                PatientWith72HourTreatmentGuarantee patientInDb = api.dataHandler.GetPatientWith72HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
+                PatientWith96HourTreatmentGuarantee patientInDb = api.dataHandler.GetPatientWith96HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
                 // if patient is in db we check if current dateOfDischarge is later than the one in db
                 if (patientInDb != null)
                 {
                     // if current dateOfDischarge is later than the one in db, we update the data in db
                     if (dateOfDischarge > patientInDb.TimeOfDischarge)
                     {
-                        api.dataHandler.RunSQLWithoutReturnResult("UPDATE PatientsWithCurrent72HourTreatmentGuarantee SET TimeOfDischarge = '" + api.dataHandler.ConvertDateTmeToDbFormat(dateOfDischarge) + "' WHERE Id = " + patientInDb.Id.ToString());
-                        PatientWith72HourTreatmentGuarantee updatedPatientInDb = api.dataHandler.GetPatientWith72HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
+                        api.dataHandler.RunSQLWithoutReturnResult("UPDATE PatientsWithCurrent96HourTreatmentGuarantee SET TimeOfDischarge = '" + api.dataHandler.ConvertDateTmeToDbFormat(dateOfDischarge) + "' WHERE Id = " + patientInDb.Id.ToString());
+                        PatientWith96HourTreatmentGuarantee updatedPatientInDb = api.dataHandler.GetPatientWith96HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
                         if (dateOfDischarge != updatedPatientInDb.TimeOfDischarge)
                         {
                             throw new Exception("Update of patient failed");
@@ -1265,8 +1282,8 @@ namespace NexusAPITest
                 else
                 {
                     // Patient does not exist in db - therefore we add data to the db
-                    api.dataHandler.RunSQLWithoutReturnResult("INSERT INTO PatientsWithCurrent72HourTreatmentGuarantee(PatientId, PatientName, TimeOfDischarge) VALUES (" + patient.Id + ", '" + patient.FirstName + "', '" + api.dataHandler.ConvertDateTmeToDbFormat(dateOfDischarge) + "')");
-                    PatientWith72HourTreatmentGuarantee newPatientInDb = api.dataHandler.GetPatientWith72HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
+                    api.dataHandler.RunSQLWithoutReturnResult("INSERT INTO PatientsWithCurrent96HourTreatmentGuarantee(PatientId, PatientName, TimeOfDischarge) VALUES (" + patient.Id + ", '" + patient.FirstName + "', '" + api.dataHandler.ConvertDateTmeToDbFormat(dateOfDischarge) + "')");
+                    PatientWith96HourTreatmentGuarantee newPatientInDb = api.dataHandler.GetPatientWith96HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
                     if (newPatientInDb == null)
                     {
                         throw new Exception("Failed to add patient to db");
@@ -1450,9 +1467,10 @@ namespace NexusAPITest
             string formName = "Journalnotat - Nebs";
             string formAction = "Låst";
             string tagName = "Historiske notater - BB";
+            string citizenCPR = "";
 
             // Get citizen pathway references
-            var citizenpathwayReferencesChildren = api.GetCitizenPathwayReferencesChildren("140910-6699", pathwayName, pathwayReferenceName);
+            var citizenpathwayReferencesChildren = api.GetCitizenPathwayReferencesChildren(citizenCPR, pathwayName, pathwayReferenceName);
 
             List<PwayRefChildSelf_JournalNote_RefObj_Root> journalNotes = new List<PwayRefChildSelf_JournalNote_RefObj_Root>();
             foreach (var child in citizenpathwayReferencesChildren)
@@ -1983,7 +2001,7 @@ namespace NexusAPITest
             string filePath = "C:\\Users\\msch\\Desktop\\1237_Samtykkeerklæring vedr. indhente alle tilgængelige oplysninger fra psykologiske undersøgelser - TestPersonFornavn TestPersonEfternavn.txt";
 
             //var uploadedDocument = processes.UploadPatientPathwayDocumentToNexus(
-            //    "1409106699",
+            //    "CPR",
             //    "Historiske dokumenter - BB", //Borgerforløb
             //    "Socialt og sundhedsfagligt Grundforløb", //Grundforløb
             //    "Udfører: Døgnstøtte Nebs Møllegard", //Forløb
@@ -2115,9 +2133,1657 @@ namespace NexusAPITest
             var patient = api.GetPatientDetails("251248-9996");
 
             var patientPreferences = api.GetPatientPreferences(patient);
-            var sdf = api.GetProgramPathwayEnrollmentLink(patient.PatientIdentifier.Identifier,"socialt og sundhedsfagligt grundforløb");
+            var sdf = api.GetProgramPathwayEnrollmentLink(patient.PatientIdentifier.Identifier, "socialt og sundhedsfagligt grundforløb");
+
+        }
+        [Test]
+        public void TestDeleteProfessional()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("live");
+            var api = processes.api;
+            string queryString = "julia søndergaard";
+
+
+            var professionals = api.GetProfessionals(queryString);
+            var proConfig = api.GetProfessionalConfiguration(professionals.FirstOrDefault().Id);
+            // You can't remove CPR unless you also remove the KmdVagplanConfiguration Extra CPR
+            proConfig.Cpr = "";
+            proConfig.KmdVagtplanConfiguration.CprExtra = null;
+
+            //processes.UpdateProfessional(proConfig.Links.Update.Href, JsonConvert.SerializeObject(proConfig));
+
+            // remove StsSn
+            var result = api.CallAPI(api, proConfig.Links.DeleteStsSn.Href, Method.Delete);
+
+
+            Assert.IsNotNull(professionals);
+        }
+
+
+
+        [Test]
+        public void TestRemoveCPRAndStsSNFromProfessional_FJERN_VIKARER_FRA_NEXUS()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("live");
+            var api = processes.api;
+            string queryString = "vik1";
+            // Get all VIK professionals
+            var professionals = processes.GetProfessionals(queryString, false);
+            // Load list of active professionals
+            string filePath = "C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\AktiveVikarbrugere.xlsx";
+            string connString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={filePath};Extended Properties='Excel 12.0 Xml;HDR=YES;'";
+
+            using (OleDbConnection conn = new OleDbConnection(connString))
+            {
+                conn.Open();
+
+                // Get the first sheet name
+                DataTable dtSchema = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                string sheetName = dtSchema.Rows[0]["TABLE_NAME"].ToString();
+
+                // Read data from the first sheet
+                string query = $"SELECT * FROM [{sheetName}]";
+
+                using (OleDbDataAdapter adapter = new OleDbDataAdapter(query, conn))
+                {
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    // loop VIK professionals and check if they are in the list
+                    foreach (var vikUser in professionals)
+                    {
+                        if (vikUser.Initials.Contains("vik")) // if the initials doesn't contain vik, we don't do anything 
+                        {
+                            if (vikUser.Initials == "vik1465")
+                            {
+                                var dkj = "0";
+                            }
+                            bool vikUserFound = false;
+                            foreach (DataRow row in dt.Rows)
+                            {
+
+                                var vikValue = row.ItemArray[1];
+
+                                if (vikUser.Initials.ToString() == vikValue.ToString())
+                                {
+                                    vikUserFound = true;
+                                }
+                            }
+                            if (!vikUserFound)
+                            {
+                                var vikUserConfig = api.GetProfessionalConfiguration(vikUser.Id);
+                                // You can't remove CPR unless you also remove the KmdVagplanConfiguration Extra CPR
+                                vikUserConfig.Cpr = "";
+                                vikUserConfig.KmdVagtplanConfiguration.CprExtra = null;
+                                vikUserConfig.Active = false;
+
+                                processes.UpdateProfessional(vikUserConfig.Links.Update.Href, JsonConvert.SerializeObject(vikUserConfig));
+
+                                // remove StsSn
+                                var result = api.CallAPI(api, vikUserConfig.Links.DeleteStsSn.Href, Method.Delete);
+                                Debug.WriteLine("CPR and UUID removed for " + vikUser.Initials);
+                                //Debug.WriteLine(vikUser.Initials + " has CPR: " + vikUserConfig.Cpr);
+                            }
+                        }
+
+                    }
+
+                }
+
+                // 
+                // If not remove CPR and StsSn
+            }
+        }
+        [Test]
+        public void ChangeRole()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("live");
+            var api = processes.api;
+
+            //var organizations = api.GetOrganizations();
+            var orgToWorkWith = api.GetOrganizationsTree();
+            string orgSelfLink = orgToWorkWith.Links.Self.Href;
+
+            var result = api.CallAPI(api, orgSelfLink, Method.Get);
+            var orgSelf = JsonConvert.DeserializeObject<OrganizationsSelf_Root>(result.Result.ToString());
+
+            string orgRolesLink = orgSelfLink + "/roles";
+            var rolesResult = api.CallAPI(api, orgRolesLink, Method.Get);
+            var orgRoles = JsonConvert.DeserializeObject<List<OrganizationsSelfLinksRoles_Root>>(rolesResult.Result.ToString());
+            var orgRole = orgRoles.FirstOrDefault(x => x.Name == "Nebs Møllegård Basis");
+            string orgRoleSelfLink = orgRole.Links.Self.Href;
+
+            var orgRoleSelfResult = api.CallAPI(api, orgRoleSelfLink, Method.Get);
+            var orgRoleSelf = JsonConvert.DeserializeObject<OrganizationsSelfLinksRolesSelf_Root>(orgRoleSelfResult.Result.ToString());
+        }
+        [Test]
+        public void MigreringTilNyFS3()
+        {
+            // Tilstande er PaitneConditions
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            //Load Citizen/Patient
+            var citizen = api.GetPatientDetails(nancyBerggrenTestCPR);
+
+            //Hent borgers tilstande
+            var patientConditions = processes.GetPatientConditions(citizen, true);
+            foreach (var condition in patientConditions)
+            {
+                string conditionName = condition.ConditionClassificationItem.Name;
+                string groupName = condition.ConditionClassificationItem.Group.Name;
+                string groupShortName = condition.ConditionClassificationItem.Group.ShortName;
+
+                string assessment = condition.CurrentAssessment;
+                string conditionDescription = condition.CurrentLevelDescription;
+
+                var activeAssignments = processes.GetPatientCondition_ActiveAssignments(condition); // opgaver
+                var currentObservations = processes.GetPatientCondition_CurrentObservations(condition); // nuværende observationer
+                var allObservations = processes.GetPatientCondition_AllObservations(condition); // alle observationer
+                var relatedActivities = processes.GetPatientCondition_RelatedActivities(condition); // relaterede aktiviteter
+                var relatedActivitiesWithHistory = processes.GetPatientCondition_RelatedActivitiesWithHistory(condition); // relaterede aktiviteter med historik
+
+                string link = condition.Links.RelatedActivitiesWithHistory.Href;
+                var result = api.CallAPI(api, link, Method.Get);
+                var relatedActivites = JsonConvert.DeserializeObject<List<PatCond_RelActiWHist_Root>>(result.Result.ToString());
+
+
+                if (groupShortName == "RES")
+                {
+                    var df = 0;
+                }
+            }
+
+            //var citizenList = api.GetPreferencesCitizenLists(); SKAL IKKE BRUGES
+
+            //Udlæs borgere som skal tilrettes
+            var patientIds = api.GetAllPatientIds();
+            //Loop alle borgere
+            foreach (var patientId in patientIds)
+            {
+                //Load Citizen/Patient
+                //var citizen = api.GetPatientDetails(patientId);
+
+                //Hent borgers tilstande
+                //string conditionLink = citizen.Links.PatientConditions.Href;
+                //var result = api.CallAPI(api, conditionLink, Method.Get);
+
+                //Lav nye midlertidige tilstande som objekter
+
+                //Match gammel tilstand til ny
+                //Overfør/tilføj informationer fra gammel tilstand til ny midlertidig tilstand
+
+                //Hent dokumenter i temp-folder
+
+                //Tilføj data til ny tilstand
+
+                //Når alle tilstande er gennemgået
+                //Fjern gamle tilstande
+
+                //Tilføje nye tilstande, hvis de har data i sig
+            }
+        }
+
+        [Test]
+        public void CreateConditionOnPatient()
+        {
+            /*
+             * 1. find borger
+             * 2. hent mulige tilstande på borger 
+             * 3. vælg tilstande 1,2,3+
+             * 4. hver tilstand har et Id, som skal påføres, når der kaldes ind til oprettelse af tilstand - via ConditionsBulkPrototype endpoint.
+             * 5. kald endpoint således: https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/patients/1/conditions/observations/bulkPrototype?classificationIds=303,304 Request Method:GET
+             * 6. Dette laver en prototype, der skal bruges som body, når det sendes ind i Nexus
+             * 7. https://ringsted.nexus-review.kmd.dk/api/assignments//mobile/ringsted/v2/assignments/auto/prototype Request Method:POST
+             */
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var patient = api.GetPatientDetails(nancyBerggrenTestCPR);
+            var links = patient.Links;
+
+
+            var prototype = api.CreatePatientConditionsBulkPrototype(patient, new[] { 303 });
+            var stateValueChosen = prototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Aktiv");
+            prototype.UpdateStateValue(stateValueChosen);
+            var result = api.CallAPI(api, prototype.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(prototype));
+            List<CondBulkProtoCreate_Root> prototypeCreated = JsonConvert.DeserializeObject<List<CondBulkProtoCreate_Root>>(result.Result.ToString());
+
+            //var result = api.CallAPI(api, links.ConditionsBulkPrototype.Href, Method.Get);
+
 
         }
 
+        public (string area, string group, string condition) GetNewCondition(PatientConditions_Root patientCondition)
+        {
+            string conditionArea = "";
+            string conditionGroup = "";
+            string conditionName = "";
+
+
+            switch (conditionArea)
+            {
+                case "Funktionsevnetilstande":
+
+                    break;
+                case "Helbredstilstande":
+
+                    break;
+                case "Genoptræningstilstande":
+
+                    break;
+                case "Sundhedsfremmetilstande":
+
+                    break;
+                default:
+                    throw new Exception("Area not handled");
+                    break;
+            }
+
+            return ("", "", "");
+        }
+        public string GetNewCondition(string patientConditionName)
+        {
+            string newConditionName = string.Empty;
+            switch (patientConditionName.ToLower())
+            {
+                #region helbredstilstande
+                case "problemer med personlig pleje":
+                case "problemer med daglige aktiviteter":
+                    newConditionName = "problemer med daglige aktiviteter";
+                    break;
+                case "respirationsproblemer":
+                    newConditionName = "respirationsproblemer";
+                    break;
+                case "cirkulationsproblemer":
+                    newConditionName = "cirkulationsproblemer";
+                    break;
+                case "problemer med seksualitet":
+                    newConditionName = "problemer med seksualitet, køn og kropsopfattelse";
+                    break;
+                case "problemer med mobilitet og bevægelse":
+                    newConditionName = "problemer med mobilitet og bevægelse";
+                    break;
+                case "problemer med væskeindtag":
+                case "problemer med fødeindtag":
+                    newConditionName = "problemer med ernæring";
+                    break;
+                case "uhensigtsmæssig vægtændring":
+                case "problemer med overvægt":
+                case "problemer med undervægt":
+                    newConditionName = "problemer med vægt";
+                    break;
+                case "akutte smerter":
+                case "periodevise smerter":
+                case "kroniske smerter":
+                    newConditionName = "problemer med smerter";
+                    break;
+                case "problemer med synssans":
+                case "problemer med lugtesans":
+                case "problemer med hørelse":
+                case "problemer med smagssans":
+                case "problemer med følesans":
+                    newConditionName = "problemer med sanser";
+                    break;
+                case "problemer med kirurgisk sår":
+                case "problemer med cancersår":
+                case "problemer med traumesår":
+                case "problemer med arterielt sår":
+                case "problemer med venøst sår":
+                case "problemer med blandingssår":
+                    newConditionName = "problemer med andre sår";
+                    break;
+                case "problemer med tryksår":
+                    newConditionName = "problemer med tryksår";
+                    break;
+                case "problemer med diabetisk sår":
+                    newConditionName = "problemer med diabetisk sår";
+                    break;
+                case "andre problemer med hud og slimhinder":
+                    newConditionName = "problemer med hud og slimhinder";
+                    break;
+                case "problemer med kommunikation":
+                    newConditionName = "problemer med kommunikation";
+                    break;
+                case "problemer med socialt samvær":
+                    newConditionName = "problemer med socialt samvær";
+                    break;
+                case "emotionelle problemer":
+                case "mentale problemer":
+                    newConditionName = "problemer med trivsel";
+                    break;
+                case "problemer med misbrug":
+                    newConditionName = "problemer med misbrug";
+                    break;
+                case "problemer med vandladning":
+                case "problemer med urininkontinens":
+                    newConditionName = "problemer med vandladning";
+                    break;
+                case "problemer med afføringsinkontinens":
+                case "problemer med mave og tarm":
+                    newConditionName = "problemer med mave og tarm";
+                    break;
+                case "problemer med hukommelse":
+                    newConditionName = "problemer med hukommelse";
+                    break;
+                case "problemer med indsigt i behandlingsformål":
+                case "problemer med sygdomsindsigt":
+                    newConditionName = "problemer med sundhedskompetence";
+                    break;
+                case "kognitive problemer":
+                    newConditionName = "kognitive problemer";
+                    break;
+                case "døgnrytmeproblemer":
+                case "søvnproblemer":
+                    newConditionName = "problemer med søvn og hvile";
+                    break;
+
+                #endregion helbredstilstande
+                #region funktionsevnetilstande
+                case "vaske sig":
+                case "gå på toilet":
+                case "kropspleje":
+                case "af- og påklædning":
+                    newConditionName = "personlig pleje";
+                    break;
+
+                case "varetage egen sundhed":
+                    newConditionName = "sundhedskompetencer";
+                    break;
+
+                case "spise":
+                case "drikke":
+                case "fødeindtagelse":
+                case "spise og drikke":
+                    newConditionName = "spise og drikke";
+                    break;
+
+                case "udføre daglige rutiner":
+                case "skaffe sig varer og tjenesteydelser":
+                case "lave mad":
+                case "lave husligt arbejde":
+                case "indkøb":
+                    newConditionName = "lave husligt arbejde";
+                    break;
+
+                case "ændre kropsstilling":
+                case "forflytte sig":
+                case "løfte og bære":
+                    newConditionName = "forflytte sig";
+                    break;
+
+                case "gå":
+                case "bevæge sig omkring":
+                case "færden i forskellige omgivelser":
+                case "bruge transportmidler":
+                    newConditionName = "mobilitet og bevægelse";
+                    break;
+
+                case "udholdenhed":
+                case "muskelstyrke":
+                    newConditionName = "energi og handlekraft";
+                    break;
+
+                case "tilegne sig færdigheder":
+                case "problemløsning":
+                case "orienteringsevne":
+                case "overordnede kognitive funktioner":
+                    newConditionName = "kognitive funktioner";
+                    break;
+
+                case "anvende kommunikationsudstyr og -teknikker":
+                    newConditionName = "kommunikation";
+                    break;
+
+                case "energi og handlekraft":
+                    newConditionName = "energi og handlekraft";
+                    break;
+
+                case "hukommelse":
+                    newConditionName = "hukommelse";
+                    break;
+
+                case "følelsesfunktioner":
+                    newConditionName = "trivsel";
+                    break;
+
+                case "have lønnet beskæftigelse":
+                    // påfør liste til sudarvili
+                    return null;
+                    //newConditionName = "udgår / strivies i generelle oplysninger";
+                    //break;
+                    #endregion funktionsevnetilstande
+            }
+            return newConditionName;
+
+
+
+        }
+        public string GetNewConditionTextString(PatientConditions_Root existingCondition, PatientConditions_Root condition, string typeToReturn = "Fagligt notat")
+        {
+            string newString = string.Empty;
+            string existingString = string.Empty;
+            string conditionString = string.Empty;
+            switch (typeToReturn)
+            {
+                case "Fagligt notat":
+                case "Current level description":
+                    if (existingCondition.CurrentLevel == null)
+                    {
+                        existingString = existingCondition.ConditionClassificationItem.Name + ": " + existingCondition.CurrentLevelDescription + " (Nuværende niveau: Ingen angivet, Forventet niveau: Ingen angivet)";
+                    }
+                    else
+                    {
+                        existingString = existingCondition.ConditionClassificationItem.Name + ": " + existingCondition.CurrentLevelDescription + " (Nuværende niveau: " + existingCondition.CurrentLevel.NumericRepresentation + "-" + existingCondition.CurrentLevel.Name + ", Forventet niveau: " + existingCondition.ExpectedLevel.NumericRepresentation + "-" + existingCondition.ExpectedLevel.Name + ")";
+                    }
+                    if (condition.CurrentLevel == null)
+                    {
+                        conditionString = condition.ConditionClassificationItem.Name + ": " + condition.CurrentLevelDescription + "(Nuværende niveau: Ingen angivet, Forventet niveau: Ingen angivet)";
+                    }
+                    else
+                    {
+                        conditionString = condition.ConditionClassificationItem.Name + ": " + condition.CurrentLevelDescription + "(Nuværende niveau: " + condition.CurrentLevel.NumericRepresentation + "-" + condition.CurrentLevel.Name + ", Forventet niveau: " + condition.ExpectedLevel.NumericRepresentation + "-" + condition.ExpectedLevel.Name + ")";
+                    }
+
+                    if (existingCondition.CurrentLevelDescription != null && existingCondition.CurrentLevelDescription.Contains(existingCondition.ConditionClassificationItem.Name))
+                    {
+                        newString = existingCondition.CurrentLevelDescription + " | " + "\n\n" + conditionString;
+                    }
+                    else
+                    {
+                        newString = existingString + " | " + "\n" + conditionString;
+                    }
+                    break;
+                case "Beskrivelse":
+                case "Expected level description":
+                    //existingString = existingCondition.ConditionClassificationItem.Name + ": " + existingCondition.ExpectedLevelDescription;
+                    //conditionString = condition.ConditionClassificationItem.Name + ": " + condition.ExpectedLevelDescription;
+                    //if (existingCondition.ExpectedLevelDescription != null && existingCondition.ExpectedLevelDescription.Contains(existingCondition.ConditionClassificationItem.Name))
+                    //{
+                    //    newString = existingCondition.ExpectedLevelDescription + " | " + "\n\n" + conditionString;
+                    //}
+                    //else
+                    //{
+                    //    newString = existingString + " | " + "\n" + conditionString;
+                    //}
+                    break;
+                case "Borgers forventning og mål":
+                case "Goals":
+                    //existingString = existingCondition.ConditionClassificationItem.Name + ": " + existingCondition.Goals;
+                    //conditionString = condition.ConditionClassificationItem.Name + ": " + condition.Goals;
+                    //if (existingCondition.Goals != null && existingCondition.Goals.Contains(existingCondition.ConditionClassificationItem.Name))
+                    //{
+                    //    newString = existingCondition.Goals + " | " + "\n\n" + conditionString;
+                    //}
+                    //else
+                    //{
+                    //    newString = existingString + " | " + "\n\n" + conditionString;
+                    //}
+
+                    break;
+                default:
+                    throw new Exception("Type to return \"" + typeToReturn + "\" has not been implemented");
+            }
+            return newString;
+        }
+
+        [Test]
+        public void TestActivatePatientCondition()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            var patient = api.GetPatientDetails(11622);
+            var links = patient.Links;
+
+            var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+            var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+            foreach (var patientCondition in patientConditions)
+            {
+                var resultPosConditions = api.CallAPI(api, links.AvailableConditionClassifications.Href, Method.Get);
+                var posConditions = JsonConvert.DeserializeObject<List<AvailableConditionClassifications_Root>>(resultPosConditions.Result.ToString());
+                AvailableConditionClassifications_Root newCondition = posConditions.FirstOrDefault(x => x.Name.ToLower() == patientCondition.ConditionClassificationItem.Name.ToLower()); // Try to get a new condition from the list of possible conditions
+
+                var resultNewCondition = api.CallAPI(api, newCondition.Links.NewObservationsPrototype.Href, Method.Get);
+                var NewConditionPrototype = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultNewCondition.Result.ToString());
+                NewConditionPrototype.State.Value = new ObservationsPrototype_Value();
+                NewConditionPrototype.State.Value.Id = NewConditionPrototype.State.PossibleValues[0].Id;
+                //var rr = api.CallAPI(api, NewConditionPrototype.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(NewConditionPrototype));
+
+                // Nuværende
+                //condition.CurrentLevel.NumericRepresentation;
+                NewConditionPrototype.CurrentLevel.Id = NewConditionPrototype.CurrentLevel.PossibleValues[0].Id;
+                // Forventet status
+                //condition.ExpectedLevel.NumericRepresentation;
+                NewConditionPrototype.ExpectedLevel.Id = NewConditionPrototype.ExpectedLevel.PossibleValues[0].Id;
+                // Fagligt notat
+                //NewConditionPrototype.CurrentLevelDescription.Value = condition.ConditionClassificationItem.Name + ": " + condition.CurrentLevelDescription + " (Nuværende niveau: " + condition.CurrentLevel.NumericRepresentation + "-" + condition.CurrentLevel.Name + ", Forventet niveau: " + condition.ExpectedLevel.NumericRepresentation + "-" + condition.ExpectedLevel.Name + ")";
+
+                // Beskrivelse
+                //NewConditionPrototype.ExpectedLevelDescription.Value = condition.ConditionClassificationItem.Name + ": " + condition.ExpectedLevelDescription;
+
+                // Udførelse
+                //condition.Execution.Name; // elementværdi
+                NewConditionPrototype.Execution.Id = NewConditionPrototype.Execution.PossibleValues[0].Id;
+
+                // Betydning af udførelse
+                //condition.Limitations.Name; // elementværdi
+                NewConditionPrototype.Limitations.Id = NewConditionPrototype.Limitations.PossibleValues[0].Id;
+
+                // Borgers forventning og mål
+                //NewConditionPrototype.Goals.Value = condition.ConditionClassificationItem.Name + ": " + condition.Goals;
+
+                // create condition json that's being uploaded to Nexus
+                string newConditionJson = JsonConvert.SerializeObject(NewConditionPrototype);
+                // Create new condition in Nexus
+                var resultNewCond = api.CallAPI(api, NewConditionPrototype.Links.Create.Href, Method.Post, newConditionJson);
+
+
+
+                // Reload patient conditions so the new condition is available for update
+                result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+                patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+            }
+
+        }
+        public void TestMigrateConditionsOnPatient(int patientId, bool insertIntoDb)
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            DataHandler datahandler = new DataHandler();
+            var patient = api.GetPatientDetails(patientId);
+            var links = patient.Links;
+
+            var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+            var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+            var resultPosConditions = api.CallAPI(api, links.AvailableConditionClassifications.Href, Method.Get);
+            var posConditions = JsonConvert.DeserializeObject<List<AvailableConditionClassifications_Root>>(resultPosConditions.Result.ToString());
+
+            // getting a prototype to get possible values for updates
+            AvCondClassCondPrototype_PossibleValue activeStateAvCond = new AvCondClassCondPrototype_PossibleValue();
+            AvCondClassCondPrototype_PossibleValue inactiveStateAvCond = new AvCondClassCondPrototype_PossibleValue();
+
+            ConditionsBulkPrototype_PossibleValue activeStateCondBulkProto = new ConditionsBulkPrototype_PossibleValue();
+            ConditionsBulkPrototype_PossibleValue inactiveStateCondBulkProto = new ConditionsBulkPrototype_PossibleValue();
+            if (posConditions[0].Links.NewObservationsPrototype != null)
+            {
+                var resultProtoprototype = api.CallAPI(api, posConditions[0].Links.NewObservationsPrototype.Href, Method.Get);
+                var protoprototype = JsonConvert.DeserializeObject<AvCondClassCondPrototype_Root>(resultProtoprototype.Result.ToString());
+                activeStateAvCond = protoprototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Aktiv");
+                inactiveStateAvCond = protoprototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Inaktiv");
+
+            }
+            else
+            {
+                var resultProtoprototype = api.CallAPI(api, posConditions[0].Links.ConditionPrototype.Href, Method.Get);
+                var protoprototype = JsonConvert.DeserializeObject<ConditionsBulkPrototype_Root>(resultProtoprototype.Result.ToString());
+                activeStateCondBulkProto = protoprototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Aktiv");
+                inactiveStateCondBulkProto = protoprototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Inaktiv");
+            }
+
+            //List<AvailableConditionClassifications_Root> NewConditions = new List<AvailableConditionClassifications_Root>();
+            foreach (var condition in patientConditions)
+            {
+                if (condition.ConditionClassificationItem.Name == "Fødeindtagelse")
+                {
+                    var d = 0;
+                }
+
+                bool success = true;
+                try
+                {
+                    if (condition.Status == "ACTIVE" || condition.Status == "POTENTIAL") // we only handle active and potential conditions
+                    {
+                        // check which new condition goes on and put the condition in the new list
+                        string patientConditionName = condition.ConditionClassificationItem.Name.ToLower();
+                        string newConditionName = GetNewCondition(patientConditionName);
+                        if (patientConditionName == "have lønnet beskæftigelse")
+                        {
+                            datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3LonnetBeskaeftigelse VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+                        }
+
+                        if (patientConditionName == newConditionName)
+                        {
+                            // we are working on an existing AND same condition and does nothing
+                            bool ExiCon = true;
+
+
+                        }
+                        else
+                        {
+                            // we are not working on an existing condition and need to create a new one or update an existing one
+                            // Nexus UI generates a new prototype.We do the same, and just add data from more conditions to 1.
+
+
+                            // update or create new
+                            AvailableConditionClassifications_Root newCondition = posConditions.FirstOrDefault(x => x.Name.ToLower() == newConditionName); // Try to get a new condition from the list of possible conditions
+                            PatientConditions_Root existingCondition = patientConditions.FirstOrDefault(x => x.ConditionClassificationItem.Name.ToLower() == newConditionName); // Try to get an existing condition
+
+
+                            if (newCondition == null && existingCondition == null)
+                            {
+                                // if both existing and new condition are null, we are not able to create the condition
+
+                            }
+                            else if (existingCondition != null)
+                            {
+                                // then we use the existing condition and update it
+
+
+                                // update existing condition
+
+                                // Nuværende
+                                //condition.CurrentLevel.NumericRepresentation;
+
+                                // Forventet status
+                                //condition.ExpectedLevel.NumericRepresentation;
+
+                                // Fagligt notat
+                                existingCondition.CurrentLevelDescription = GetNewConditionTextString(existingCondition, condition, "Fagligt notat");
+
+                                // Beskrivelse
+                                //existingCondition.ExpectedLevelDescription = GetNewConditionTextString(existingCondition, condition, "Beskrivelse"); // deactivated as they didn't want it migrated
+
+                                // Udførelse
+                                //condition.Execution.Name; // elementværdi
+
+                                // Betydning af udførelse
+                                //condition.Limitations.Name; // elementværdi
+
+                                // Borgers forventning og mål
+                                //existingCondition.Goals = GetNewConditionTextString(existingCondition, condition, "Borgers forventning og mål"); // deactivated as it is not part of the new conditions
+
+
+                                //// Get type of prototype
+                                //if (posConditions[0].Links.NewObservationsPrototype != null)
+                                //{
+                                //    // new observation prototype 
+                                //    HandleNewObservation(api, patient, condition, existingCondition);
+                                //}
+                                //else
+                                //{
+                                //    // condition prototype
+                                //    HandleCondition(api, patient, condition, existingCondition);
+                                //}
+
+                                //// Set status to be active through the state property
+
+
+                                if (posConditions[0].Links.NewObservationsPrototype != null)
+                                {
+                                    existingCondition.State.AdditionalInformation = activeStateAvCond.AdditionalInformation;
+                                    existingCondition.State.Active = activeStateAvCond.Active;
+                                    existingCondition.State.Code = activeStateAvCond.Code;
+                                    existingCondition.State.Id = activeStateAvCond.Id;
+                                    existingCondition.State.Marker = activeStateAvCond.Marker;
+                                    existingCondition.State.Name = activeStateAvCond.Name;
+                                    existingCondition.State.NumericRepresentation = activeStateAvCond.NumericRepresentation;
+                                    existingCondition.State.Version = activeStateAvCond.Version;
+                                }
+                                else
+                                {
+                                    existingCondition.State.AdditionalInformation = activeStateCondBulkProto.AdditionalInformation;
+                                    existingCondition.State.Active = activeStateCondBulkProto.Active;
+                                    existingCondition.State.Code = activeStateCondBulkProto.Code;
+                                    existingCondition.State.Id = activeStateCondBulkProto.Id;
+                                    existingCondition.State.Marker = activeStateCondBulkProto.Marker;
+                                    existingCondition.State.Name = activeStateCondBulkProto.Name;
+                                    existingCondition.State.NumericRepresentation = activeStateCondBulkProto.NumericRepresentation;
+                                    existingCondition.State.Version = activeStateCondBulkProto.Version;
+                                }
+
+                                // Update condition (by creating a new prototype, and adding all information - maybe)
+                                var resultObsProto = api.CallAPI(api, existingCondition.Links.ObservationsPrototype.Href, Method.Get);
+                                ObservationsPrototype_Root observationsPrototype_Root = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultObsProto.Result.ToString());
+                                observationsPrototype_Root.AddDataFromPatientCondition(existingCondition);
+                                var createdProto = api.CallAPI(api, observationsPrototype_Root.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(observationsPrototype_Root));
+
+
+                                // Deactivate condition (the condition where we have moved data from)
+
+                                //Update condition(by creating a new prototype, and adding all information -maybe)
+                                var resultdeactivateObsProto = api.CallAPI(api, condition.Links.ObservationsPrototype.Href, Method.Get);
+                                ObservationsPrototype_Root diactivatedObservationsPrototype_Root = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultdeactivateObsProto.Result.ToString());
+                                diactivatedObservationsPrototype_Root.AddDataFromPatientCondition(condition);
+
+                                if (posConditions[0].Links.NewObservationsPrototype != null)
+                                {
+                                    diactivatedObservationsPrototype_Root.State.Value.AdditionalInformation = inactiveStateAvCond.AdditionalInformation;
+                                    diactivatedObservationsPrototype_Root.State.Value.Active = inactiveStateAvCond.Active;
+                                    diactivatedObservationsPrototype_Root.State.Value.Code = inactiveStateAvCond.Code;
+                                    diactivatedObservationsPrototype_Root.State.Value.Id = inactiveStateAvCond.Id;
+                                    diactivatedObservationsPrototype_Root.State.Value.Marker = inactiveStateAvCond.Marker;
+                                    diactivatedObservationsPrototype_Root.State.Value.Name = inactiveStateAvCond.Name;
+                                    diactivatedObservationsPrototype_Root.State.Value.NumericRepresentation = inactiveStateAvCond.NumericRepresentation;
+                                    diactivatedObservationsPrototype_Root.State.Value.Version = inactiveStateAvCond.Version;
+                                }
+                                else
+                                {
+                                    diactivatedObservationsPrototype_Root.State.Value.AdditionalInformation = inactiveStateCondBulkProto.AdditionalInformation;
+                                    diactivatedObservationsPrototype_Root.State.Value.Active = inactiveStateCondBulkProto.Active;
+                                    diactivatedObservationsPrototype_Root.State.Value.Code = inactiveStateCondBulkProto.Code;
+                                    diactivatedObservationsPrototype_Root.State.Value.Id = inactiveStateCondBulkProto.Id;
+                                    diactivatedObservationsPrototype_Root.State.Value.Marker = inactiveStateCondBulkProto.Marker;
+                                    diactivatedObservationsPrototype_Root.State.Value.Name = inactiveStateCondBulkProto.Name;
+                                    diactivatedObservationsPrototype_Root.State.Value.NumericRepresentation = inactiveStateCondBulkProto.NumericRepresentation;
+                                    diactivatedObservationsPrototype_Root.State.Value.Version = inactiveStateCondBulkProto.Version;
+                                }
+
+
+
+
+                                var inactivePrototype = api.CallAPI(api, diactivatedObservationsPrototype_Root.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(diactivatedObservationsPrototype_Root));
+                            }
+                            else
+                            {
+                                // then we create a new condition 
+
+                                var resultNewCondition = api.CallAPI(api, newCondition.Links.ConditionPrototype.Href, Method.Get);
+                                var NewConditionPrototype = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultNewCondition.Result.ToString());
+                                NewConditionPrototype.State.Value = new ObservationsPrototype_Value();
+                                NewConditionPrototype.State.Value.Id = NewConditionPrototype.State.PossibleValues[0].Id;
+                                //var rr = api.CallAPI(api, NewConditionPrototype.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(NewConditionPrototype));
+
+                                // Nuværende
+                                //condition.CurrentLevel.NumericRepresentation;
+                                NewConditionPrototype.CurrentLevel.Id = NewConditionPrototype.CurrentLevel.PossibleValues[0].Id;
+                                // Forventet status
+                                //condition.ExpectedLevel.NumericRepresentation;
+                                NewConditionPrototype.ExpectedLevel.Id = NewConditionPrototype.ExpectedLevel.PossibleValues[0].Id;
+                                // Fagligt notat
+                                NewConditionPrototype.CurrentLevelDescription.Value = condition.ConditionClassificationItem.Name + ": " + condition.CurrentLevelDescription + " (Nuværende niveau: " + condition.CurrentLevel.NumericRepresentation + "-" + condition.CurrentLevel.Name + ", Forventet niveau: " + condition.ExpectedLevel.NumericRepresentation + "-" + condition.ExpectedLevel.Name + ")";
+
+                                // Beskrivelse
+                                NewConditionPrototype.ExpectedLevelDescription.Value = condition.ConditionClassificationItem.Name + ": " + condition.ExpectedLevelDescription;
+
+                                // Udførelse
+                                //condition.Execution.Name; // elementværdi
+                                NewConditionPrototype.Execution.Id = NewConditionPrototype.Execution.PossibleValues[0].Id;
+
+                                // Betydning af udførelse
+                                //condition.Limitations.Name; // elementværdi
+                                NewConditionPrototype.Limitations.Id = NewConditionPrototype.Limitations.PossibleValues[0].Id;
+
+                                // Borgers forventning og mål
+                                NewConditionPrototype.Goals.Value = condition.ConditionClassificationItem.Name + ": " + condition.Goals;
+
+                                // create condition json that's being uploaded to Nexus
+                                string newConditionJson = JsonConvert.SerializeObject(NewConditionPrototype);
+                                // Create new condition in Nexus
+                                var resultNewCond = api.CallAPI(api, NewConditionPrototype.Links.Create.Href, Method.Post, newConditionJson);
+
+
+
+                                // Reload patient conditions so the new condition is available for update
+                                result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+                                patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+                                TestMigrateConditionsOnPatient(patientId, false);
+                                break;
+                            }
+
+
+                        }
+
+
+                    }
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    throw new Exception("An error occured: " + ex.Message);
+                }
+
+                if (success)
+                {
+                    // Deactive old condition
+
+
+                    ////Update condition(by creating a new prototype, and adding all information -maybe)
+                    //var resultObsProto = api.CallAPI(api, condition.Links.ObservationsPrototype.Href, Method.Get);
+                    //ObservationsPrototype_Root observationsPrototype_Root = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultObsProto.Result.ToString());
+                    //observationsPrototype_Root.AddDataFromPatientCondition(condition);
+
+                    //if (posConditions[0].Links.NewObservationsPrototype != null)
+                    //{
+                    //    observationsPrototype_Root.State.Value.AdditionalInformation = inactiveStateAvCond.AdditionalInformation;
+                    //    observationsPrototype_Root.State.Value.Active = inactiveStateAvCond.Active;
+                    //    observationsPrototype_Root.State.Value.Code = inactiveStateAvCond.Code;
+                    //    observationsPrototype_Root.State.Id = inactiveStateAvCond.Id;
+                    //    observationsPrototype_Root.State.Value.Marker = inactiveStateAvCond.Marker;
+                    //    observationsPrototype_Root.State.Value.Name = inactiveStateAvCond.Name;
+                    //    observationsPrototype_Root.State.Value.NumericRepresentation = inactiveStateAvCond.NumericRepresentation;
+                    //    observationsPrototype_Root.State.Value.Version = inactiveStateAvCond.Version;
+                    //}
+                    //else
+                    //{
+                    //    observationsPrototype_Root.State.Value.AdditionalInformation = inactiveStateCondBulkProto.AdditionalInformation;
+                    //    observationsPrototype_Root.State.Value.Active = inactiveStateCondBulkProto.Active;
+                    //    observationsPrototype_Root.State.Value.Code = inactiveStateCondBulkProto.Code;
+                    //    observationsPrototype_Root.State.Value.Id = inactiveStateCondBulkProto.Id;
+                    //    observationsPrototype_Root.State.Value.Marker = inactiveStateCondBulkProto.Marker;
+                    //    observationsPrototype_Root.State.Value.Name = inactiveStateCondBulkProto.Name;
+                    //    observationsPrototype_Root.State.Value.NumericRepresentation = inactiveStateCondBulkProto.NumericRepresentation;
+                    //    observationsPrototype_Root.State.Value.Version = inactiveStateCondBulkProto.Version;
+                    //}
+
+
+
+                    //observationsPrototype_Root.State.Value.AdditionalInformation = inactiveState.AdditionalInformation;
+                    //observationsPrototype_Root.State.Value.Active = inactiveState.Active;
+                    //observationsPrototype_Root.State.Value.Code = inactiveState.Code;
+                    //observationsPrototype_Root.State.Value.Id = inactiveState.Id;
+                    //observationsPrototype_Root.State.Value.Marker = inactiveState.Marker;
+                    //observationsPrototype_Root.State.Value.Name = inactiveState.Name;
+                    //observationsPrototype_Root.State.Value.NumericRepresentation = inactiveState.NumericRepresentation;
+                    //observationsPrototype_Root.State.Value.Version = inactiveState.Version;
+
+
+                    //var inactivePrototype = api.CallAPI(api, observationsPrototype_Root.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(observationsPrototype_Root));
+
+                    if (insertIntoDb)
+                    {
+                        datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+                    }
+                }
+
+            }
+        }
+        [Test]
+        public void TestMigrateConditions()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            DataHandler datahandler = new DataHandler();
+
+
+            int startDay = 1;
+            int startMonth = 7;
+            int startYear = 2024;
+            int endDay = 1;
+            int endMonth = 7;
+            int endYear = 2026;
+            var activityList1 = api.GetPreferencesActivityListSelfObjectContent("- 1 - Borgerliste til migrering", startDay, startMonth, startYear, endDay, endMonth, endYear);
+
+
+            List<ACTIVITYLIST_Pages_Content_Patient> PatientList = new List<ACTIVITYLIST_Pages_Content_Patient>();
+            foreach (var item in activityList1)
+            {
+                ACTIVITYLIST_Pages_Content_Patient patientItem = item.Patients[0];
+                if (!PatientList.Exists(x => x.Id == patientItem.Id))
+                {
+                    PatientList.Add(patientItem);
+                }
+            }
+
+            foreach (var patientElement in PatientList)
+            {
+                string connectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+                SqlConnection sqlConnection = new SqlConnection(connectionString);
+                string queryString = "SELECT * FROM FS3Migrering WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
+                SqlCommand command = new SqlCommand(queryString, sqlConnection);
+
+                int? patientIdInDb = null;
+                using (sqlConnection)
+                {
+                    command.Connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        patientIdInDb = Convert.ToInt32(reader["CitizenId"].ToString());
+                    }
+                    if (patientIdInDb == null)
+                    {
+                        TestMigrateConditionsOnPatient(Convert.ToInt32(patientElement.Id), true);
+                    }
+                }
+            } // foreach patient end loop
+
+
+
+        }
+        [Test]
+        public void TestMigrateConditionsSinglePatient()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            DataHandler datahandler = new DataHandler();
+
+
+            TestMigrateConditionsOnPatient(11622, true);
+        }
+
+
+        private void HandleCondition(NexusAPI api, PatientDetailsSearch_Patient patient, PatientConditions_Root patienCondition, PatientConditions_Root existingCondition)
+        {
+            var resultPosConditions = api.CallAPI(api, patient.Links.AvailableConditionClassifications.Href, Method.Get);
+            var posConditions = JsonConvert.DeserializeObject<List<AvailableConditionClassifications_Root>>(resultPosConditions.Result.ToString());
+
+            var resultProtoprototype = api.CallAPI(api, posConditions[0].Links.ConditionPrototype.Href, Method.Get);
+            var protoprototype = JsonConvert.DeserializeObject<ConditionsBulkPrototype_Root>(resultProtoprototype.Result.ToString());
+            var activeState = protoprototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Aktiv");
+            var inactiveState = protoprototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Inaktiv");
+
+            existingCondition.State.AdditionalInformation = activeState.AdditionalInformation;
+            existingCondition.State.Active = activeState.Active;
+            existingCondition.State.Code = activeState.Code;
+            existingCondition.State.Id = activeState.Id;
+            existingCondition.State.Marker = activeState.Marker;
+            existingCondition.State.Name = activeState.Name;
+            existingCondition.State.NumericRepresentation = activeState.NumericRepresentation;
+            existingCondition.State.Version = activeState.Version;
+
+            // Update condition (by creating a new prototype, and adding all information - maybe)
+            var resultObsProto = api.CallAPI(api, existingCondition.Links.ObservationsPrototype.Href, Method.Get);
+            ObservationsPrototype_Root observationsPrototype_Root = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultObsProto.Result.ToString());
+            observationsPrototype_Root.AddDataFromPatientCondition(existingCondition);
+            var createdProto = api.CallAPI(api, observationsPrototype_Root.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(observationsPrototype_Root));
+
+            bool success = false;
+            if (!createdProto.Result.ToString().Contains("error"))
+            {
+                success = true;
+            }
+
+            // if success we deactivate the old condition
+            if (success)
+            {
+                // Deactive old condition
+
+
+                //Update condition(by creating a new prototype, and adding all information -maybe)
+                var resultObsProtoType = api.CallAPI(api, patienCondition.Links.ObservationsPrototype.Href, Method.Get);
+                ObservationsPrototype_Root observationsPrototypeRoot = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultObsProtoType.Result.ToString());
+                observationsPrototypeRoot.AddDataFromPatientCondition(patienCondition);
+
+                observationsPrototypeRoot.State.Value.AdditionalInformation = inactiveState.AdditionalInformation;
+                observationsPrototypeRoot.State.Value.Active = inactiveState.Active;
+                observationsPrototypeRoot.State.Value.Code = inactiveState.Code;
+                observationsPrototypeRoot.State.Value.Id = inactiveState.Id;
+                observationsPrototypeRoot.State.Value.Marker = inactiveState.Marker;
+                observationsPrototypeRoot.State.Value.Name = inactiveState.Name;
+                observationsPrototypeRoot.State.Value.NumericRepresentation = inactiveState.NumericRepresentation;
+                observationsPrototypeRoot.State.Value.Version = inactiveState.Version;
+
+
+                var inactivePrototype = api.CallAPI(api, observationsPrototypeRoot.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(observationsPrototypeRoot));
+
+            }
+        }
+
+        private void HandleNewObservation(NexusAPI api, PatientDetailsSearch_Patient patient, PatientConditions_Root patienCondition, PatientConditions_Root existingCondition)
+        {
+            var resultPosConditions = api.CallAPI(api, patient.Links.AvailableConditionClassifications.Href, Method.Get);
+            var posConditions = JsonConvert.DeserializeObject<List<AvailableConditionClassifications_Root>>(resultPosConditions.Result.ToString());
+
+            var resultProtoprototype = api.CallAPI(api, posConditions[0].Links.NewObservationsPrototype.Href, Method.Get);
+            var protoprototype = JsonConvert.DeserializeObject<AvCondClassCondPrototype_Root>(resultProtoprototype.Result.ToString());
+            var activeState = protoprototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Aktiv");
+            var inactiveState = protoprototype.State.PossibleValues.FirstOrDefault(x => x.Name == "Inaktiv");
+
+            existingCondition.State.AdditionalInformation = activeState.AdditionalInformation;
+            existingCondition.State.Active = activeState.Active;
+            existingCondition.State.Code = activeState.Code;
+            existingCondition.State.Id = activeState.Id;
+            existingCondition.State.Marker = activeState.Marker;
+            existingCondition.State.Name = activeState.Name;
+            existingCondition.State.NumericRepresentation = activeState.NumericRepresentation;
+            existingCondition.State.Version = activeState.Version;
+
+            // Update condition (by creating a new prototype, and adding all information - maybe)
+            var resultObsProto = api.CallAPI(api, existingCondition.Links.ObservationsPrototype.Href, Method.Get);
+            ObservationsPrototype_Root observationsPrototype_Root = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultObsProto.Result.ToString());
+            observationsPrototype_Root.AddDataFromPatientCondition(existingCondition);
+            var createdProto = api.CallAPI(api, observationsPrototype_Root.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(observationsPrototype_Root));
+
+            // check if createdProto has en error or not to determain bool success
+            bool success = false;
+            if (!createdProto.Result.ToString().Contains("error"))
+            {
+                success = true;
+            }
+
+            // if success we deactivate the old condition
+            if (success)
+            {
+                // Deactive old condition
+
+
+                //Update condition(by creating a new prototype, and adding all information -maybe)
+                var resultObsProtoType = api.CallAPI(api, patienCondition.Links.ObservationsPrototype.Href, Method.Get);
+                ObservationsPrototype_Root observationsPrototypeRoot = JsonConvert.DeserializeObject<ObservationsPrototype_Root>(resultObsProto.Result.ToString());
+                observationsPrototype_Root.AddDataFromPatientCondition(patienCondition);
+
+                observationsPrototype_Root.State.Value.AdditionalInformation = inactiveState.AdditionalInformation;
+                observationsPrototype_Root.State.Value.Active = inactiveState.Active;
+                observationsPrototype_Root.State.Value.Code = inactiveState.Code;
+                observationsPrototype_Root.State.Value.Id = inactiveState.Id;
+                observationsPrototype_Root.State.Value.Marker = inactiveState.Marker;
+                observationsPrototype_Root.State.Value.Name = inactiveState.Name;
+                observationsPrototype_Root.State.Value.NumericRepresentation = inactiveState.NumericRepresentation;
+                observationsPrototype_Root.State.Value.Version = inactiveState.Version;
+
+
+                var inactivePrototype = api.CallAPI(api, observationsPrototype_Root.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(observationsPrototype_Root));
+
+            }
+        }
+
+        [Test]
+        public void TestGetAllProfessionals()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var professionals = api.GetProfessionals("");
+            //string professionalsLink = api.GetProfessionalsHomeRessourceLink();
+            //var result = api.CallAPI(api, professionalsLink, Method.Get);
+        }
+
+        [Test]
+        public void Test_Remove_CPR_and_KMD_Vagtplan_from_professionals()
+        {
+            //SKAL TESTES NÅR HANNE ER HJEMME FRA FERIE I JUNI 2025, SÅFREMT NOGET SKULLE GÅ GALT
+            NexusAPI_processes processes = new NexusAPI_processes("live");
+            var api = processes.api;
+
+            processes.Remove_CPR_And_KMD_vagtplan_from_professionals("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Medarbejderoplysninger - Ringsted Kommune.xlsx", "C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\OS2Vikar.xlsx");
+        }
+
+        [Test]
+        public void GetActivityListForFS3Migration()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            int startDay = 1;
+            int startMonth = 7;
+            int startYear = 2024;
+            int endDay = 1;
+            int endMonth = 7;
+            int endYear = 2026;
+            var activityList1 = api.GetPreferencesActivityListSelfObjectContent("- 1 - Borgerliste til migrering", startDay, startMonth, startYear, endDay, endMonth, endYear);
+
+
+            List<ACTIVITYLIST_Pages_Content_Patient> PatientList = new List<ACTIVITYLIST_Pages_Content_Patient>();
+            foreach (var item in activityList1)
+            {
+                ACTIVITYLIST_Pages_Content_Patient patient = item.Patients[0];
+                if (!PatientList.Exists(x => x.Id == patient.Id))
+                {
+                    PatientList.Add(patient);
+                }
+            }
+
+        }
+
+        [Test]
+        public void TestMedcom()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
+            var api = processes.api;
+            string citizenCPR = nancyBerggrenTestCPR;
+
+            var indboxMessages = processes.GetPatientInboxMessages(citizenCPR);
+        }
+
+        [Test]
+        public void TestUpdateConditionOnNancy()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var result = processes.UpdateCitizenCondition(nancyBerggrenTestCPR, "Nye tilstandsgrupper", "Sygepleje", "Respiration og cirkulation", "Respirationsproblemer", "opdateringstekst", true);
+        }
+        [Test]
+        public void TestUpdateConditionOnNancyNonAddedCondition()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var result = processes.UpdateCitizenCondition(nancyBerggrenTestCPR, "Nye tilstandsgrupper", "Sygepleje", "Smerter og sanseindtryk", "Problemer med sanser", "Problemer med at smage", false);
+        }
+        [Test]
+        public void TestUpdateConditionOnNancyNonAddedCondition2()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var result = processes.UpdateCitizenCondition(nancyBerggrenTestCPR, "Nye tilstandsgrupper", "Sundhedsfremme og forebyggelse", "Mental sundhed", "Trivsel", "Har det svært ved for mange mennesker (MSCH VIA API)", false);
+        }
+        [Test]
+        public void TestGetPatientConditions()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var conditions = processes.GetPatientConditions(nancyBerggrenTestCPR, true);
+
+            foreach (var condition in conditions)
+            {
+                string conditionGroupName = condition.ConditionClassificationItem.Group.Name;
+                string conditionName = condition.ConditionClassificationItem.Name;
+                string currentAssessment = condition.CurrentAssessment;
+                string currentLevelDescription = condition.CurrentLevelDescription;
+                string expectecAssessment = condition.ExpectedAssessment;
+                string expectedLevelDescription = condition.ExpectedLevelDescription;
+                int currentLevel = (int)condition.CurrentLevel.NumericRepresentation;
+                int expectedLevel = (int)condition.ExpectedLevel.NumericRepresentation;
+
+                var correctConditionGroupNameObject = new DataHandler().GetCorrectConditionToUpdateName(conditionGroupName);
+                CitDashbCitCondSelfWidgVisi_Root visitation = api.GetCitizenConditionVisitations(nancyBerggrenTestCPR, "Nye tilstandsgrupper", correctConditionGroupNameObject.ConditionGroupName);
+
+
+                //Update the condition - but not the levels
+
+                //Check if condition type needs levels
+                switch (correctConditionGroupNameObject.ConditionType)
+                {
+                    case "Funktionsevnetilstande":
+                        //Update levels
+                        break;
+
+                    case "Helbredstilstande":
+                        //Don't update levels as the condition don't have them
+                        break;
+
+                    default:
+                        throw new Exception("Condition type unknown.");
+                }
+            }
+        }
+        [Test]
+        public void TestCreateNewConditionOnNancy()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var patientPreferences = api.GetPatientPreferences(nancyBerggrenTestCPR);
+            var dashboard = patientPreferences.CITIZENDASHBOARD;
+            var chosenDashboard = dashboard.FirstOrDefault(x => x.Name == "Nye tilstandsgrupper");
+            var _1 = api.GetCitizenDashboardCitizenConditionElement(nancyBerggrenTestCPR, "Nye tilstandsgrupper"); //dashboardName
+
+            var chosenTilstand = _1.View.Widgets.FirstOrDefault(x => x.HeaderTitle == "Sygepleje"); //conditionToUpdateName
+                                                                                                    //var apiResult = api.CallAPI(api,chosenTilstand.Links.Conditions.Href, Method.Get,true);
+                                                                                                    // List<CitDashbCitCondSelfWidgCond_Root> condition = JsonConvert.DeserializeObject<List<CitDashbCitCondSelfWidgCond_Root>>(apiResult.Result.ToString());
+
+            var apiResultVisitations = api.CallAPI(api, chosenTilstand.Links.Visitation.Href, Method.Get, true); // this is like clicking the edit/rediger button       
+            CitDashbCitCondSelfWidgVisi_Root visitation = JsonConvert.DeserializeObject<CitDashbCitCondSelfWidgVisi_Root>(apiResultVisitations.Result.ToString());
+
+            // visitation lists all the different conditions.
+            // so we need to choose what to update
+
+            string conditionGroupNameToUpdate = "Respiration og cirkulation"; //conditionGroupName
+            int? conditionGroupToUpdateElementInt = null;
+            int? conditionToUpdateElementInt = null;
+            CitDashbCitCondSelfWidgVisi_ConditionGroupVisitation conditionGroupToUpdate = new CitDashbCitCondSelfWidgVisi_ConditionGroupVisitation();
+            CitDashbCitCondSelfWidgVisi_Condition conditionToUpdate = new CitDashbCitCondSelfWidgVisi_Condition();
+
+            for (int i = 0; i < visitation.ConditionGroupVisitation.Count; i++)
+            {
+                var item = visitation.ConditionGroupVisitation[i];
+
+                if (item.ConditionGroup.GroupClassification.Name == conditionGroupNameToUpdate)
+                {
+                    conditionGroupToUpdate = item;
+                    conditionGroupToUpdateElementInt = i;
+                    break;
+                }
+            }
+
+            string conditionToUpdateString = "Respirationsproblemer"; //conditionName
+            for (int i = 0; i < conditionGroupToUpdate.Conditions.Count; i++)
+            {
+                var item = conditionGroupToUpdate.Conditions[i];
+
+                if (item.Classification.Name == conditionToUpdateString)
+                {
+                    conditionToUpdate = item;
+                    conditionToUpdateElementInt = i;
+                    break;
+                }
+            }
+
+            conditionToUpdate.Description = "KOL - test via API (MSCH)"; //conditionText
+
+            conditionGroupToUpdate.Conditions[(int)conditionToUpdateElementInt] = conditionToUpdate;
+            visitation.ConditionGroupVisitation[(int)conditionGroupToUpdateElementInt] = conditionGroupToUpdate;
+
+
+            string jsonObj = JsonConvert.SerializeObject(visitation);
+            api.CallAPI(api, visitation.Links.Visit.Href, Method.Post, jsonObj);
+
+        }
+
+        [Test]
+        public void TestMigrateConditionsToCitizenConditions()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            DataHandler datahandler = new DataHandler();
+
+
+            int startDay = 1;
+            int startMonth = 7;
+            int startYear = 2024;
+            int endDay = 1;
+            int endMonth = 7;
+            int endYear = 2026; 
+            var activityList1 = api.GetPreferencesActivityListSelfObjectContent("- 1 - Borgerliste til migrering", startDay, startMonth, startYear, endDay, endMonth, endYear);
+
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
+
+            List<ACTIVITYLIST_Pages_Content_Patient> PatientList = new List<ACTIVITYLIST_Pages_Content_Patient>();
+            foreach (var item in activityList1)
+            {
+                if (PatientList.Count != 100)
+                {
+                    ACTIVITYLIST_Pages_Content_Patient patientItem = item.Patients[0];
+                    if (!PatientList.Exists(x => x.Id == patientItem.Id))
+                    {
+                        PatientList.Add(patientItem);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            foreach (var patientElement in PatientList)
+            {
+                string connectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+                SqlConnection sqlConnection = new SqlConnection(connectionString);
+                string queryString = "SELECT * FROM FS3Migrering WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
+                SqlCommand command = new SqlCommand(queryString, sqlConnection);
+
+                int? patientIdInDb = null;
+                using (sqlConnection)
+                {
+                    command.Connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        patientIdInDb = Convert.ToInt32(reader["CitizenId"].ToString());
+                    }
+                    if (patientIdInDb == null)
+                    {
+                        TestMigrateConditionsOnPatientToCitCon(Convert.ToInt32(patientElement.Id),oldAndNewConditions, true);
+                    }
+                }
+            } // foreach patient end loop
+
+
+
+        }
+        public string GetNewConditionText(PatientConditions_Root patientCondition)
+        {
+            string currentAssesment = patientCondition.CurrentAssessment;
+            string currentLevelDescription = patientCondition.CurrentLevelDescription;
+            string expectedLEvelDescription = patientCondition.ExpectedLevelDescription;
+            string currentLevel = patientCondition.CurrentLevel != null ? patientCondition.CurrentLevel.NumericRepresentation.ToString() : 0.ToString();
+            string expectedLevel = patientCondition.ExpectedLevel != null ? patientCondition.ExpectedLevel.NumericRepresentation.ToString() : 0.ToString();
+
+            string NewConditionText = string.Empty;
+
+            string conditionArea = patientCondition.ConditionClassificationItem.Group.Law;
+            switch (conditionArea)
+            {
+                case "SERVICE_LAW":
+                    conditionArea = "Funktionsevnetilstande";
+                    NewConditionText = patientCondition.ConditionClassificationItem.Name.ToUpper() +
+                "\nFagligt notat: " + currentLevelDescription +
+                "\nBeskrivelse: " + expectedLEvelDescription +
+                "\nNuværende funktionsniveau: " + currentLevel +
+                "\nForventet funktionsniveau: " + expectedLevel;
+                    break;
+                case "HEALTH_LAW":
+                    conditionArea = "Helbredstilstande";
+                    NewConditionText = patientCondition.ConditionClassificationItem.Name.ToUpper() +
+                "\nNuværende vurdering: " + currentAssesment+
+                "\nFagligt notat: " + currentLevelDescription +
+                "\nBeskrivelse: " + expectedLEvelDescription;
+                    break;
+                case "TRAINING_LAW":
+                    NewConditionText = null;
+                    break;
+                default:
+                    break;
+            }
+            
+            return NewConditionText;
+        }
+        
+        public void TestMigrateConditionsOnPatientToCitCon(string citizenCPR, bool insertIntoDb = false)
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            var patient = api.GetPatientDetails(citizenCPR);
+
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
+            TestMigrateConditionsOnPatientToCitCon((int)patient.Id,oldAndNewConditions, true);
+        }
+        [Test]
+        public void TestConditions()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            //Test all patient conditions if they are on the list
+            for (int i = 1; i < 14000; i++)
+            {
+                var patient = api.GetPatientDetails(i);
+                var links = patient.Links;
+
+                var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+                var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+                foreach (var condition in patientConditions)
+                {
+                    string conditionName = condition.ConditionClassificationItem.Name;
+                    string newConditionToUpdate = GetNewCondition(conditionName);
+
+                    if (newConditionToUpdate == "" || newConditionToUpdate == null)
+                    {
+                        string errorsg = "fejl i tilstandsnavn til opslag";
+                    }
+                }
+            }
+        }
+        [Test]
+        public void TestReadConditionExcel()
+        {
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
+
+            var result = oldAndNewConditions.GetNewMapping("Helbredstilstande", "Ernæring", "Problemer med overvægt"); 
+        }
+        [Test]
+        public void MigrateCitizenConditions()
+        {
+            List<string> citizens = new List<string>();
+            
+            citizens.Add("251248-9996");
+
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
+            foreach (var citizen in citizens)
+            {
+                TestMigrateConditionsOnPatientToCitCon(citizen,oldAndNewConditions, true);
+            }
+        }
+        public void TestMigrateConditionsOnPatientToCitCon(string citizenCPR, OldAndNewConditions oldAndNewConditions, bool insertIntoDb = false)
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            var patient = api.GetPatientDetails(citizenCPR);
+            TestMigrateConditionsOnPatientToCitCon((int)patient.Id, oldAndNewConditions, insertIntoDb);
+        }
+        public void TestMigrateConditionsOnPatientToCitCon(int patientId, OldAndNewConditions oldAndNewConditions, bool insertIntoDb = false)
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            DataHandler datahandler = new DataHandler();
+            var patient = api.GetPatientDetails(patientId);
+            var links = patient.Links;
+
+            var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+            var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+            foreach (var condition in patientConditions)
+            {
+                (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment) citizenCondtion;
+                //try
+                //{
+                    if (condition.Status == "ACTIVE")// || condition.Status == "POTENTIAL") // we only handle active and potential conditions
+                    {
+                        string conditionArea = condition.ConditionClassificationItem.Group.Law;
+                    switch (conditionArea)
+                    {
+                        case "SERVICE_LAW":
+                            conditionArea = "Funktionsevnetilstande";
+                            break;
+                        case "HEALTH_LAW":
+                            conditionArea = "Helbredstilstande";
+                            break;
+                        case "TRAINING_LAW":
+                            continue;
+                        default:
+                            continue;
+                            //break;
+                    }
+                    string groupName = condition.ConditionClassificationItem.Group.Name;
+                    string conditionName = condition.ConditionClassificationItem.Name;
+
+                    var newCondition = oldAndNewConditions.GetNewMapping(conditionArea, groupName, conditionName);
+
+                    //(string ConditionGroupName, string ConditionType) = datahandler.GetCorrectConditionToUpdateName(groupName);
+                    //    string newConditionToUpdate = GetNewCondition(conditionName);
+                        string conditionText = GetNewConditionText(condition); //condition.CurrentLevelDescription;
+                        if (conditionText == null) { conditionText = "Ingen beskrivelse i gammel tilstand."; }
+
+                        if (conditionArea == "Funktionsevnetilstande")
+                        {
+                        citizenCondtion = processes.UpdateCitizenCondition(
+                                patient.PatientIdentifier.Identifier,
+                                "Nye tilstandsgrupper",
+                                newCondition.NewArea,
+                                newCondition.NewCategory,
+                                newCondition.NewCondition,
+                                conditionText,
+                                true,
+                                condition.CurrentLevel != null ? (int)condition.CurrentLevel.NumericRepresentation : 0,
+                                condition.ExpectedLevel != null ? (int)condition.ExpectedLevel.NumericRepresentation : 0
+                                );
+                        }
+                        else
+                        {
+                        citizenCondtion = processes.UpdateCitizenCondition(
+                                patient.PatientIdentifier.Identifier,
+                                "Nye tilstandsgrupper",
+                                newCondition.NewArea,
+                                newCondition.NewCategory,
+                                newCondition.NewCondition,
+                                conditionText,
+                                true
+                                );
+                        }
+                    }
+                    
+
+                }
+                //catch (Exception)
+                //{
+
+                //    throw new Exception("Something went wrong with " + patient.FullName + " - ID: " + patient.Id);
+                //}
+                
+                
+                
+            //}
+            // Add citizen to db for finished data transfer
+            datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+
+        }
+        [Test]
+        public void TestRunMigrationProcess()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+
+            string oldNewPath = "C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx";
+            string connectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+            string dbTableName = "FS3Migrering";
+            string activityListName = "- 1 - Borgerliste til migrering";
+
+            processes.MigrateToNewFS3Conditions(oldNewPath, activityListName, connectionString, dbTableName, "Review");
+        }
+
+        [Test]
+        public void TestMigrationOfPotentialConditions()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
+
+            int startDay = 1;
+            int startMonth = 7;
+            int startYear = 2024;
+            int endDay = 1;
+            int endMonth = 7;
+            int endYear = 2026;
+            var activityList = api.GetPreferencesActivityListSelfObjectContent("- 2 - borgerliste til migrering potentielle helbredstilstande", startDay, startMonth, startYear, endDay, endMonth, endYear);
+
+            DataHandler dataHandler = new DataHandler();
+
+            List<ACTIVITYLIST_Pages_Content_Patient> PatientList = new List<ACTIVITYLIST_Pages_Content_Patient>();
+            int patientCounter = 0;
+            foreach (var item in activityList)
+            {
+                if (patientCounter == 200)
+                {
+                    break;
+                }
+                ACTIVITYLIST_Pages_Content_Patient patientItem = item.Patients[0];
+                if (!PatientList.Exists(x => x.Id == patientItem.Id))
+                {
+                    PatientList.Add(patientItem);
+                    patientCounter++;
+                }
+            }
+            string SQLConnectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+            string dbTableName = "FS3Migrering";
+            foreach (var patientElement in PatientList)
+            {
+                //if (patientCounter == 100)
+                //{
+                //    break;
+                //}
+                SqlConnection sqlConnection = new SqlConnection(SQLConnectionString);
+                string queryString = "SELECT * FROM " + dbTableName + " WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
+                SqlCommand command = new SqlCommand(queryString, sqlConnection);
+
+                int? patientIdInDb = null;
+                using (sqlConnection)
+                {
+                    command.Connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        patientIdInDb = Convert.ToInt32(reader["CitizenId"].ToString());
+                    }
+                    if (patientIdInDb == null)
+                    {
+                        MigratePotentialConditionsOnPatientToCitizenConditionGroup(Convert.ToInt32(patientElement.Id), oldAndNewConditions, "Review", true);
+                        patientCounter++;
+                    }
+                }
+            } // foreach patient end loop
+
+        }
+        [Test]
+        public void TestMigrationOnSpecificCitizen()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
+
+            MigratePotentialConditionsOnPatientToCitizenConditionGroup(16968, oldAndNewConditions, "Review");
+        }
+        /// <summary>
+        /// Denne er endnu ikke lagt ind som alm. proces der kan kaldes
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="oldAndNewConditions"></param>
+        /// <param name="environment"></param>
+        /// <param name="insertIntoDb"></param>
+        public void MigratePotentialConditionsOnPatientToCitizenConditionGroup(int patientId, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false)
+        {
+            NexusAPI_processes processes = new NexusAPI_processes(environment);
+            var api = processes.api;
+            DataHandler datahandler = new DataHandler();
+            var patient = api.GetPatientDetails(patientId);
+            var links = patient.Links;
+
+            var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+            var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+            foreach (var condition in patientConditions)
+            {
+                (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment) citizenCondtion;
+                //try
+                //{
+                string conditionNameT = condition.ConditionClassificationItem.Name;
+                if (condition.Status == "POTENTIAL") // we only handle active and potential conditions
+                {
+                    string conditionArea = condition.ConditionClassificationItem.Group.Law;
+                    switch (conditionArea)
+                    {
+                        case "SERVICE_LAW":
+                            conditionArea = "Funktionsevnetilstande";
+                            break;
+                        case "HEALTH_LAW":
+                            conditionArea = "Helbredstilstande";
+                            break;
+                        case "TRAINING_LAW":
+                            continue;
+                        default:
+                            continue;
+                            //break;
+                    }
+                    string groupName = condition.ConditionClassificationItem.Group.Name;
+                    string conditionName = condition.ConditionClassificationItem.Name;
+
+                    var newCondition = oldAndNewConditions.GetNewMapping(conditionArea, groupName, conditionName);
+
+                    //(string ConditionGroupName, string ConditionType) = datahandler.GetCorrectConditionToUpdateName(groupName);
+                    //    string newConditionToUpdate = GetNewCondition(conditionName);
+                    string conditionText = GetNewConditionText(condition); //condition.CurrentLevelDescription;
+                    if (conditionText == null) { conditionText = "Ingen beskrivelse i gammel tilstand."; }
+
+                    if (conditionArea == "Funktionsevnetilstande")
+                    {
+                        citizenCondtion = processes.UpdateCitizenConditionGroup(
+                                patient.PatientIdentifier.Identifier,
+                                "Nye tilstandsgrupper",
+                                newCondition.NewArea,
+                                newCondition.NewCategory,
+                                conditionText,
+                                true,
+                                condition.CurrentLevel != null ? (int)condition.CurrentLevel.NumericRepresentation : 0,
+                                condition.ExpectedLevel != null ? (int)condition.ExpectedLevel.NumericRepresentation : 0
+                                );
+                    }
+                    else // Helbredstilstande
+                    {
+                        citizenCondtion = processes.UpdateCitizenConditionGroup(
+                                patient.PatientIdentifier.Identifier,
+                                "Nye tilstandsgrupper",
+                                newCondition.NewArea,
+                                newCondition.NewCategory,
+                                conditionText,
+                                true
+                                );
+                    }
+                }
+
+
+            }
+            //catch (Exception)
+            //{
+
+            //    throw new Exception("Something went wrong with " + patient.FullName + " - ID: " + patient.Id);
+            //}
+
+
+
+            //}
+            // Add citizen to db for finished data transfer
+            datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+
+        }
     }
-} 
+}

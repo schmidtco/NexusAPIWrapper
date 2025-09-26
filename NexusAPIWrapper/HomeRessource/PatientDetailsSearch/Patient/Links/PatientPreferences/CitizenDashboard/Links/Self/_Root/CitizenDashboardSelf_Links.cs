@@ -53,6 +53,8 @@ namespace NexusAPIWrapper{
 
         [JsonProperty("availableFormDefinitions")]
         public CitizenDashboardSelf_AvailableFormDefinitions AvailableFormDefinitions;
+
+
     }
 
 }

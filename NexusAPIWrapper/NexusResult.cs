@@ -32,9 +32,12 @@ namespace NexusAPIWrapper
         ///////////////////
         ///SHARED METHODS//
         ///////////////////
-        public NexusResult CallAPI(NexusAPI api, string endpointURL, Method callMethod)
+        public NexusResult CallAPI(NexusAPI api, string endpointURL, Method callMethod, bool baseUrlNeeded = false)
         {
-            //Thread.Sleep(TimeSpan.FromSeconds(3)); // Wait for 3 seconds as we could face an "unauthorized" error
+            if (baseUrlNeeded)
+            {
+                endpointURL = api.tokenObject.url + endpointURL;
+            }
             WebRequest webRequest = new WebRequest(api.clientCredentials.Host, endpointURL, callMethod, api.tokenObject.AccessToken);
             webRequest.AddBearerToken();
             webRequest.Execute();
@@ -52,8 +55,12 @@ namespace NexusAPIWrapper
                 return result;
             }
         }
-        public NexusResult CallAPI(NexusAPI api, string endpointURL, string JsonBody, Method callMethod)
+        public NexusResult CallAPI(NexusAPI api, string endpointURL, string JsonBody, Method callMethod, bool baseUrlNeeded = false)
         {
+            if (baseUrlNeeded)
+            {
+                endpointURL = api.tokenObject.url + endpointURL;
+            }
             WebRequest webRequest = new WebRequest(api.clientCredentials.Host, endpointURL, callMethod, api.tokenObject.AccessToken);
             webRequest.AddBearerToken();
             webRequest.request.AddJsonBody(JsonBody);

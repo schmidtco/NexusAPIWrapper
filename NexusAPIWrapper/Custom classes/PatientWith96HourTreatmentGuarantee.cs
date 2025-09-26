@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NexusAPIWrapper.Custom_classes
 {
-    internal class PatientWith72HourTreatmentGuarantee
+    internal class PatientWith96HourTreatmentGuarantee
     {
         public int Id { get; set; }
         public int PatientId { get; set; }

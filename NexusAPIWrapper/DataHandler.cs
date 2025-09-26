@@ -3,10 +3,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NexusAPIWrapper.Custom_classes;
 using Org.BouncyCastle.Asn1.X509;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.OleDb;
+using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -29,7 +33,7 @@ namespace NexusAPIWrapper
             json,
             unknown
         }
-
+        
         internal int GetDatePosition(string input)
         {
             string pattern = @"(((0[1-9])|([12][0-9])|(3[01]))-((0[0-9])|(1[012]))-((20[012]\d|19\d\d)|(1\d|2[0123])))";
@@ -391,14 +395,14 @@ namespace NexusAPIWrapper
         {
             return TimeOfX.Substring(TimeOfX.Length - 5, 5);
         }
-        internal PatientWith72HourTreatmentGuarantee GetPatientWith72HoursTreatmentGuarantee(int patientId)
+        internal PatientWith96HourTreatmentGuarantee GetPatientWith96HoursTreatmentGuarantee(int patientId)
         {
-            string queryString = "SELECT * from PatientsWithCurrent72HourTreatmentGuarantee WHERE PatientId = " + patientId.ToString();
-            return Run72HourSQLQuery(queryString);
+            string queryString = "SELECT * from PatientsWithCurrent96HourTreatmentGuarantee WHERE PatientId = " + patientId.ToString();
+            return Run96HourSQLQuery(queryString);
         }
-        internal PatientWith72HourTreatmentGuarantee Run72HourSQLQuery(string queryString)
+        internal PatientWith96HourTreatmentGuarantee Run96HourSQLQuery(string queryString)
         {
-            PatientWith72HourTreatmentGuarantee patient = null;
+            PatientWith96HourTreatmentGuarantee patient = null;
             string connectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
             SqlConnection sqlConnection = new SqlConnection(connectionString);
             SqlCommand command = new SqlCommand(queryString, sqlConnection);
@@ -409,7 +413,7 @@ namespace NexusAPIWrapper
 
                 while (reader.Read())
                 {
-                    patient = new PatientWith72HourTreatmentGuarantee();
+                    patient = new PatientWith96HourTreatmentGuarantee();
                     patient.Id = Convert.ToInt32(reader["Id"].ToString());
                     patient.PatientId = Convert.ToInt32(reader["PatientId"].ToString());
                     patient.PatientName = reader["PatientName"].ToString();
@@ -457,6 +461,72 @@ namespace NexusAPIWrapper
             notes.LoadXml(UTF8Output);
 
             return JsonConvert.SerializeXmlNode(notes);
+        }
+
+        internal (string ConditionGroupName, string ConditionType) GetCorrectConditionToUpdateName(string conditionGroupName)
+        {
+            string newConditionGroupName = string.Empty;
+            string newConditionType = string.Empty;
+
+            switch (conditionGroupName) // Getting the condition group name
+            {
+                #region Funktionsevnetilstande
+                case "Egenomsorg":
+                case "Praktiske opgaver":
+                case "Mobilitet":
+                case "Samfundsliv":
+                case "Mentale funktioner":
+                    newConditionGroupName = "Pleje og omsorg";
+                    break;
+                #endregion Funktionsevnetilstande
+                #region Helbredstilstande
+                case "Funktionsniveau":
+                case "Respiration og cirkulation":
+                case "Seksualitet, køn og kropsopfattelse":
+                case "Bevægeapparat":
+                case "Ernæring":
+                case "Smerter og sanseindtryk":
+                case "Hud og slimhinder":
+                case "Kommunikation":
+                case "Psykosociale forhold":
+                case "Udskillelse af affaldsstoffer":
+                case "Viden og udvikling":
+                case "Søvn og hvile":
+                    newConditionGroupName = "Sygepleje";
+                    break;
+                #endregion Helbredstilstande
+                default:
+                    throw new Exception("Condition Group Name not available.");
+            }
+
+            switch (conditionGroupName) // Getting the condition type
+            {
+                case "Egenomsorg":
+                case "Praktiske opgaver":
+                case "Mobilitet":
+                case "Samfundsliv":
+                case "Mentale funktioner":
+                    newConditionType = "Funktionsevnetilstande";
+                    break;
+                case "Funktionsniveau":
+                case "Respiration og cirkulation":
+                case "Seksualitet, køn og kropsopfattelse":
+                case "Bevægeapparat":
+                case "Ernæring":
+                case "Smerter og sanseindtryk":
+                case "Hud og slimhinder":
+                case "Kommunikation":
+                case "Psykosociale forhold":
+                case "Udskillelse af affaldsstoffer":
+                case "Viden og udvikling":
+                case "Søvn og hvile":
+                    newConditionType = "Helbredstilstande";
+                    break;
+                default:
+                    throw new Exception("Condition Group Name not available.");
+            }
+
+            return (newConditionGroupName, newConditionType);
         }
 
         

@@ -143,14 +143,15 @@ namespace NexusAPIWrapper
         //}
         public void GetToken() 
         {
-
+            
             var options = new RestClientOptions(url)
             {
                 MaxTimeout = -1,
             };
+            
             string grantType = "client_credentials"; 
             var client = new RestClient(options);
-            string tokenEnpoint = GetTokenEndpoint();
+            string tokenEnpoint = credentials.Token_endpoint; //GetTokenEndpoint();
             var request = new RestRequest(tokenEnpoint, Method.Post);
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
             request.AddParameter("grant_type", $"{grantType}");
@@ -173,7 +174,7 @@ namespace NexusAPIWrapper
             string host = credentials.Host;
             string tokenEndpoint = credentials.Token_endpoint;
             string newTokenEndpoint = tokenEndpoint.After("kmd.dk");
-            return newTokenEndpoint;
+            return tokenEndpoint;
         }
         private void SetTimer()
         {

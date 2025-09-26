@@ -12,12 +12,14 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CsQuery;
 using CsQuery.Engine.PseudoClassSelectors;
+using DocumentFormat.OpenXml.Spreadsheet;
 using MailKit.Net.Smtp;
 using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NexusAPIWrapper.HomeRessource.Preferences.ACTIVITYLIST.ACTIVITYLIST_Content.Content.Pages.Links.Content._Root.Links.ReferencedObject._Root.Links.TransformedBody;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Utilities;
 using RestSharp;
 
 namespace NexusAPIWrapper
@@ -724,6 +726,16 @@ namespace NexusAPIWrapper
             }
             return chosenWidget;
         }
+        
+        public CitizenDashboardCitizenConditionSelf_Root GetCitizenDashboardCitizenConditionElement(string citizenCPR, string dashboardElementName)
+        {
+            PatientPreferences_CITIZENDASHBOARD dashboardElement = GetCitizenDashboardElement(citizenCPR, dashboardElementName);
+            var selfWebResult = CallAPI(this, dashboardElement.Links.Self.Href, Method.Get);
+
+            return JsonConvert.DeserializeObject<CitizenDashboardCitizenConditionSelf_Root>(selfWebResult.Result.ToString());
+        }
+
+
         /// <summary>
         /// Returns a list of widgets. Widgets are the headers of the view - eg. Organisationer tilknyttet borgeren, pårørende and opret grundforløb & forløb
         /// </summary>
@@ -1635,17 +1647,39 @@ namespace NexusAPIWrapper
             NexusResult nexusResult = new NexusResult();
             return nexusResult.GetTransformedBodyOfMedcomMessage(api, endpointURL);
         }
+        public NexusResult CallAPI(NexusAPI api, string endpointURL, Method callMethod, string JsonBody = null, bool baseUrlNeeded = false)
+        {
+            NexusResult nexusResult = new NexusResult();
+            if (JsonBody == null)
+            {
+                return nexusResult.CallAPI(this, endpointURL, callMethod, baseUrlNeeded);
+            }
+            else
+            {
+                return nexusResult.CallAPI(this, endpointURL, JsonBody, callMethod, baseUrlNeeded);
+            }
+        }
         public NexusResult CallAPI(NexusAPI api, string endpointURL, Method callMethod, string JsonBody = null)
         {
             NexusResult nexusResult = new NexusResult();
             if (JsonBody == null)
             {
-                return nexusResult.CallAPI(this, endpointURL, callMethod);
+                return nexusResult.CallAPI(this, endpointURL, callMethod, false);
             }
             else
             {
-                return nexusResult.CallAPI(this, endpointURL, JsonBody, callMethod);
+                return nexusResult.CallAPI(this, endpointURL, JsonBody, callMethod, false);
             }
+        }
+        public NexusResult CallAPI(NexusAPI api, string endpointURL, Method callMethod, bool baseUrlNeeded = false)
+        {
+            NexusResult nexusResult = new NexusResult();
+            return nexusResult.CallAPI(this, endpointURL, callMethod, baseUrlNeeded);
+        }
+        public NexusResult CallAPI(NexusAPI api, string endpointURL, Method callMethod)
+        {
+            NexusResult nexusResult = new NexusResult();
+            return nexusResult.CallAPI(this, endpointURL, callMethod, false);
         }
 
         private string GetElementDataFromSortedDict(SortedDictionary<string, SortedDictionary<string, string>> dict, string elementName)
@@ -1853,6 +1887,7 @@ namespace NexusAPIWrapper
         internal void GetDischargeReportData_AgreementsRegardingDietFirstDayAfterDischarge(TransformedBody_Root transformedBody, HtmlHandler handler, string transformedBodyHTML)
         {
             string htmlResult = handler.GetResultFromHtml(transformedBodyHTML, "Aftaler omkring kost første døgn efter udskrivning");
+            
             var domObject = handler.CreateDomObject(htmlResult).FirstElement();
             if (domObject != null)
             {
@@ -1901,71 +1936,79 @@ namespace NexusAPIWrapper
         {
             string htmlResult = handler.GetResultFromHtml(transformedBodyHTML, "Medicin information relateret til udskrivning");
             var domObject = handler.CreateDomObject(htmlResult).FirstElement();
-            int numberOfElements = domObject.ChildElements.Count();
-
-            for (int i = 0; i < domObject.ChildElements.Count(); i++)
+            if (domObject != null)
             {
-                // Not all MedicationInformation has comments and therefore has different amounts of <tr>
-                // So we need to make sure which we are working on, and adding data to the transformedBody object
-                var rowElement = domObject.ChildElements.ElementAt(i);
-                int countOfChildElements = rowElement.ChildElements.Count();
-                string informationTitle = rowElement.ChildElements.ElementAt(0).FirstChild.ToString();
-                if (countOfChildElements == 2)
+                int numberOfElements = domObject.ChildElements.Count();
+
+                for (int i = 0; i < domObject.ChildElements.Count(); i++)
                 {
-                    //Header will be in the first element
-                    //Value will be in the second element
-                    switch (informationTitle)
+                    // Not all MedicationInformation has comments and therefore has different amounts of <tr>
+                    // So we need to make sure which we are working on, and adding data to the transformedBody object
+                    var rowElement = domObject.ChildElements.ElementAt(i);
+                    int countOfChildElements = rowElement.ChildElements.Count();
+                    string informationTitle = rowElement.ChildElements.ElementAt(0).FirstChild.ToString();
+                    if (countOfChildElements == 2)
                     {
-                        case "Medsendt medicin":
-                            transformedBody.MedicationInformationRelatedToDischarge.EnclosedMedicationDate = rowElement.ChildElements.ElementAt(1).FirstChild.ToString();
-                            break;
-                        case "Recept til apotek":
-                            if (rowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
-                            {
-                                transformedBody.MedicationInformationRelatedToDischarge.PrescriptionForPharmacy = true;
-                            }
-                            else
-                            {
-                                transformedBody.MedicationInformationRelatedToDischarge.PrescriptionForPharmacy = false;
-                            }
-                            break;
-                        case "Afhentning/Udbringning aftalt":
-                            if (rowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
-                            {
-                                transformedBody.MedicationInformationRelatedToDischarge.PickupDeliveryAgreed = true;
-                            }
-                            else
-                            {
-                                transformedBody.MedicationInformationRelatedToDischarge.PickupDeliveryAgreed = false;
-                            }
-                            break;
-                        case "Dosisdispensering genbestilt":
-                            if (rowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
-                            {
-                                transformedBody.MedicationInformationRelatedToDischarge.DoseDispensingReordered = true;
-                            }
-                            else
-                            {
-                                transformedBody.MedicationInformationRelatedToDischarge.DoseDispensingReordered = false;
-                            }
-                            break;
-                        default:
-                            break;
+                        //Header will be in the first element
+                        //Value will be in the second element
+                        switch (informationTitle)
+                        {
+                            case "Medsendt medicin":
+                                transformedBody.MedicationInformationRelatedToDischarge.EnclosedMedicationDate = rowElement.ChildElements.ElementAt(1).FirstChild.ToString();
+                                break;
+                            case "Recept til apotek":
+                                if (rowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
+                                {
+                                    transformedBody.MedicationInformationRelatedToDischarge.PrescriptionForPharmacy = true;
+                                }
+                                else
+                                {
+                                    transformedBody.MedicationInformationRelatedToDischarge.PrescriptionForPharmacy = false;
+                                }
+                                break;
+                            case "Afhentning/Udbringning aftalt":
+                                if (rowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
+                                {
+                                    transformedBody.MedicationInformationRelatedToDischarge.PickupDeliveryAgreed = true;
+                                }
+                                else
+                                {
+                                    transformedBody.MedicationInformationRelatedToDischarge.PickupDeliveryAgreed = false;
+                                }
+                                break;
+                            case "Dosisdispensering genbestilt":
+                                if (rowElement.ChildElements.ElementAt(1).FirstChild.ToString().Contains("Ja"))
+                                {
+                                    transformedBody.MedicationInformationRelatedToDischarge.DoseDispensingReordered = true;
+                                }
+                                else
+                                {
+                                    transformedBody.MedicationInformationRelatedToDischarge.DoseDispensingReordered = false;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        // If only 1 element is present, it will be the header, and the value will be in the next <tr> element
+                        switch (informationTitle)
+                        {
+                            case "Kommentar til medsent medicin":
+                                transformedBody.MedicationInformationRelatedToDischarge.CommentsForEnclosedMedication = domObject.ChildElements.ElementAt(i + 1).ChildElements.ElementAt(0).FirstChild.ToString();
+                                i++; // We add 1 to i as the next element in the iteration will be the value <tr> we just added to the transformedBody.MedicationInformationRelatedToDischarge.CommentsForEnclosedMedication property
+                                break;
+                            default:
+                                throw new Exception("Header of \"" + informationTitle + "\" can't be handled. Please add it to GetDischargeReportData_MedicationInformationRelatedToDischarge.");
+                        }
                     }
                 }
-                else
-                {
-                    // If only 1 element is present, it will be the header, and the value will be in the next <tr> element
-                    switch (informationTitle)
-                    {
-                        case "Kommentar til medsent medicin":
-                            transformedBody.MedicationInformationRelatedToDischarge.CommentsForEnclosedMedication = domObject.ChildElements.ElementAt(i + 1).ChildElements.ElementAt(0).FirstChild.ToString();
-                            i++; // We add 1 to i as the next element in the iteration will be the value <tr> we just added to the transformedBody.MedicationInformationRelatedToDischarge.CommentsForEnclosedMedication property
-                            break;
-                        default:
-                            throw new Exception("Header of \"" + informationTitle + "\" can't be handled. Please add it to GetDischargeReportData_MedicationInformationRelatedToDischarge.");
-                    }
-                }
+            
+            }
+            else
+            {
+                transformedBody.MedicationInformationRelatedToDischarge = null;
             }
         }
 
@@ -2633,6 +2676,37 @@ namespace NexusAPIWrapper
             return JsonConvert.DeserializeObject<List<ProfessionalJobs_Root>>(webResult.Result.ToString());
         }
 
+        
+        public ConditionsBulkPrototype_Root CreatePatientConditionsBulkPrototype(PatientDetailsSearch_Patient patient, int[] conditionIds)
+        {
+            var links = patient.Links;
+
+            string conditionIdsString = string.Join(",", conditionIds);
+            string parameterString = "?classificationIds=" + conditionIdsString;
+
+            string prototypeLink = links.ConditionsBulkPrototype.Href;
+            var result = CallAPI(this, prototypeLink + parameterString, Method.Get);
+            ConditionsBulkPrototype_Root conditionsBulkPrototype = JsonConvert.DeserializeObject<ConditionsBulkPrototype_Root>(result.Result.ToString());
+            return conditionsBulkPrototype; 
+        }
+
+        public List<AvailableConditionClassifications_Root> GetAvailablePatientConditions (PatientDetailsSearch_Patient patient)
+        {
+            string availableConditionClassificationsLink = patient.Links.AvailableConditionClassifications.Href;
+            var availableConditionClassificationsResult = CallAPI(this, availableConditionClassificationsLink, Method.Get);
+            var availableConditionClassifications = JsonConvert.DeserializeObject<List<AvailableConditionClassifications_Root>>(availableConditionClassificationsResult.Result.ToString());
+            return availableConditionClassifications;
+        }
+
+        public CitDashbCitCondSelfWidgVisi_Root GetCitizenConditionVisitations(string citizenCPR, string dashboardElementName, string conditionName)
+        {
+            CitizenDashboardCitizenConditionSelf_Root citizenConditionElement = GetCitizenDashboardCitizenConditionElement(citizenCPR, dashboardElementName);
+            var chosenCondition = citizenConditionElement.View.Widgets.FirstOrDefault(x => x.HeaderTitle == conditionName);
+
+            var visitationsResult = CallAPI(this, chosenCondition.Links.Visitation.Href, Method.Get, true); // this is like clicking the edit/rediger button       
+            CitDashbCitCondSelfWidgVisi_Root visitation = JsonConvert.DeserializeObject<CitDashbCitCondSelfWidgVisi_Root>(visitationsResult.Result.ToString());
+            return visitation;
+        }
 
 
         #endregion Shared methods

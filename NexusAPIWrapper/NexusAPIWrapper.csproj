@@ -128,7 +128,9 @@
     <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_Self.cs" />
     <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_UnclosableReferences.cs" />
     <Compile Include="Custom classes\BB Journal\PathwayReferencesChildSelf\PathwayReferencesChildSelf_BB_WithdrawPatient.cs" />
-    <Compile Include="Custom classes\PatientWith72HourTreatmentGuarantee.cs" />
+    <Compile Include="Custom classes\FS3NewConditions\ConditionChecker.cs" />
+    <Compile Include="Custom classes\FS3NewConditions\OldNewConditions\OldAndNewConditions.cs" />
+    <Compile Include="Custom classes\PatientWith96HourTreatmentGuarantee.cs" />
     <Compile Include="Document Object\Create\AvailablePathwayAssociation.cs" />
     <Compile Include="Document Object\Create\AvailableRootProgramPathways.cs" />
     <Compile Include="Document Object\Create\AvailableTags.cs" />
@@ -139,6 +141,10 @@
     <Compile Include="Document Object\Create\Placement.cs" />
     <Compile Include="Document Object\Create\CreateDocumentObject.cs" />
     <Compile Include="DataHandler.cs" />
+    <Compile Include="HomeRessource\AssingmentGroupRegistrationForIncomingMedcoms\AssingmentGroupRegistrationForIncomingMedcoms_Option.cs" />
+    <Compile Include="HomeRessource\AssingmentGroupRegistrationForIncomingMedcoms\AssingmentGroupRegistrationForIncomingMedcoms_Requirement.cs" />
+    <Compile Include="HomeRessource\AssingmentGroupRegistrationForIncomingMedcoms\AssingmentGroupRegistrationForIncomingMedcoms_Root.cs" />
+    <Compile Include="HomeRessource\AssingmentGroupRegistrationForIncomingMedcoms\AssingmentGroupRegistrationForIncomingMedcoms_SystemAssignmentType.cs" />
     <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableActions\FormDataPrototype_AvailableActions_CreateFormData.cs" />
     <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableActions\FormDataPrototype_AvailableActions_Links.cs" />
     <Compile Include="HomeRessource\Nested folders due to limitations - 1\FormDataPrototype\AvailableActions\FormDataPrototype_AvailableActions_ResultWith.cs" />
@@ -214,6 +220,25 @@
     <Compile Include="HomeRessource\Organizations\Organizations_Root.cs" />
     <Compile Include="HomeRessource\Organizations\Organizations_Self.cs" />
     <Compile Include="HomeRessource\Organizations\Organizations_StsOrganization.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_Audit.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_AvailablePermissions.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_AvailablePermissionsTree.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_AvailableProfessionals.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_CopyPrototype.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_Links.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_Permissions.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_PermissionsTree.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_Professionals.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_Root.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_Self.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_StsProfessionalAssignments.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_Update.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_UpdatePermissions.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\Links\Self\OrganizationsSelfLinksRolesSelf_UpdateProfessionals.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\OrganizationsSelfLinksRoles_Links.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\OrganizationsSelfLinksRoles_Root.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\OrganizationsSelfLinksRoles_Self.cs" />
+    <Compile Include="HomeRessource\Organizations\Self\Links\Roles\OrganizationsSelfLinksRoles_UpdateProfessionals.cs" />
     <Compile Include="HomeRessource\Organizations\Self\OrganizationsSelf_AddProfessional.cs" />
     <Compile Include="HomeRessource\Organizations\Self\OrganizationsSelf_Audit.cs" />
     <Compile Include="HomeRessource\Organizations\Self\OrganizationsSelf_AvailableDrugInventories.cs" />
@@ -262,6 +287,41 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ActivePrograms\_Root\ActivePrograms_PathwayType.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ActivePrograms\_Root\ActivePrograms_Root.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ActivePrograms\_Root\ActivePrograms_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\AvailableConditionClassifications_ConditionPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\AvailableConditionClassifications_Group.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\AvailableConditionClassifications_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\AvailableConditionClassifications_NewObservationsPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\AvailableConditionClassifications_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Create.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_CurrentLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_CurrentLevelDescription.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Execution.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_ExpectedLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_ExpectedLevelDescription.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Goals.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Limitations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Patient.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_PatientProperties.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_PossibleValue.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_State.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\_Root\AvCondClassCondPrototype_Type.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailablePathwayAssociations\Links\Self\AvailablePathwayAssociations_Self_ActivePrograms.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailablePathwayAssociations\Links\Self\AvailablePathwayAssociations_Self_ActivityIdentifier.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailablePathwayAssociations\Links\Self\AvailablePathwayAssociations_Self_AddEventsToPathway.cs" />
@@ -355,6 +415,67 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_SelfReference.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_Type.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableProgramPathways\PatientEnrolled\PatientEnrolled_Update.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Create.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_CurrentAssessment.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_CurrentLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_CurrentLevelDescription.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Execution.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_ExpectedAssessment.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_ExpectedLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_ExpectedLevelDescription.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Goals.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Limitations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Patient.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_PatientProperties.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_PossibleValue.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_State.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Type.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\ConditionsBulkPrototype_Value.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_ActiveAssignments.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_ActivityDashboard.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_AllObservations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Assignments.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Audit.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_AutoAssignmentsPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_AvailableAssignmentTypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_ConditionClassificationItem.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Configuration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_CorrespondingConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_CurrentObservations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_DefaultSenderOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_DefaultSenderOrganizationForReply.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Group.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_LastUpdater.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_ObservationsPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_PatientConditionTimeline.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_PossibleCauseConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Print.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_RelatedActivitiesWithHistory.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_State.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_TabletAppConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\ConditionsBulkPrototype\Links\Create\CondBulkProtoCreate_Update.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Available Tags\Patient_DocumentPrototype_AvailableTags_Grouping.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Available Tags\Patient_DocumentPrototype_AvailableTags_Links.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Available Tags\Patient_DocumentPrototype_AvailableTags_Root.cs" />
@@ -378,6 +499,213 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_Links.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_PathwayAssociation.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Patient_DocumentPrototype_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_Patient.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_PatientProperties.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_State.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Links\Self\Patient_InboxMessages_Self_Type.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Patient_InboxMessages_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Patient_InboxMessages_Page.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Patient_InboxMessages_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\InboxMessages\_Root\Patient_InboxMessages_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_AssignmentPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_BulkAssignmentPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_OrganizationAssignee.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_Type.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Assignments\PatCond_Assign_WorkflowState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Create.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_CurrentLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_CurrentLevelDescription.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Execution.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_ExpectedLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_ExpectedLevelDescription.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Goals.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Limitations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Patient.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_PatientProperties.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_PossibleValue.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_RelatedActivitiesWithHistory.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_State.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Type.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ObservationsPrototype\ObservationsPrototype_Value.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_CurrentAssessment.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_CurrentLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_CurrentLevelDescription.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Execution.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_ExpectedAssessment.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_ExpectedLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_ExpectedLevelDescription.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Goals.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Limitations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Patient.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_PatientProperties.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_PossibleValue.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_RelatedActivitiesWithHistory.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_State.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Type.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\PatCond_Observ_Value.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Activity.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_PatCond_RelActiWHist_.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_ActivityReference.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_AdditionalInfo.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_AuditEntry.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_AuditResource.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_CitizenActivitiesGroup.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Configuration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_DefaultSenderOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_DefaultSenderOrganizationForReply.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_DeleteActivityLink.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_GrantIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_LinkType.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Patient.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_PatientProperties.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_PrimaryOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Professional.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_ProfessionalJob.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_ReferencedObject.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_StsOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_TabletAppConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Translation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_Type.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivitiesWithHistory\PatCond_RelActiWHist_WorkflowState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_Activity.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_ActivityLinksPrototypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_ActivityReference.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_AdditionalInfo.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_AvailableCountries.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_CitizenActivitiesGroup.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_CitizenOverviewForms.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_CitizenRegistryConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_CurrentAddress.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_DeleteActivityLink.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_GeoCoordinates.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_GrantIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_LinkType.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_MeasurementData.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_MeasurementInstructions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_Patient.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_PatientIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_PatientOrganizations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_PatientOverview.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_PatientProperties.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_PatientState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_ReferencedObject.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_SearchPostalDistrict.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_Type.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\RelatedActivities\PatCond_RelActi_WorkflowState.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_ActiveAssignments.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_ActivityDashboard.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_ActivityIdentifier.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_AllObservations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Assignments.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Audit.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_AutoAssignmentsPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_AvailableAssignmentTypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_ConditionClassificationItem.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Configuration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_CorrespondingConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_CurrentLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_CurrentObservations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_DefaultSenderOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_DefaultSenderOrganizationForReply.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Execution.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_ExpectedLevel.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Group.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_LastUpdater.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Limitations.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_ObservationsPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_PatientConditionTimeline.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_PossibleCauseConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_PrimaryOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Print.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_ProfessionalJob.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_RelatedActivitiesWithHistory.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_State.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_StsOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_TabletAppConfiguration.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\PatientConditions_Update.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Links.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Organization.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_RemoveFromPatient.cs" />
@@ -385,6 +713,44 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Self.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_StsOrganization.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientOrganizations\PatientOrganizations_Update.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_ClosestFs3Assignments.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_Conditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_CopyPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_EditablePreference.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_Law.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_LinkablePatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_PatientConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_PatientConditionsTimeline.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_PossibleLaw.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_QuickFilter.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_SuggestedConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_View.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_Visitation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\CitizenDashboardCitizenConditionSelf_Widget.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Conditions\CitDashbCitCondSelfWidgCond_Classification.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Conditions\CitDashbCitCondSelfWidgCond_Law.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Conditions\CitDashbCitCondSelfWidgCond_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Conditions\CitDashbCitCondSelfWidgCond_LinkWithGrant.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Conditions\CitDashbCitCondSelfWidgCond_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Conditions\CitDashbCitCondSelfWidgCond_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Conditions\CitDashbCitCondSelfWidgCond_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Activate.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Audit.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Classification.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Condition.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_ConditionGroup.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_ConditionGroupVisitation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Deactivate.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_GroupClassification.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Law.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_RelatedActivities.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\CitDashbCitCondSelfWidgVisi_Visit.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\AvailableTags\CitPathwSelfDocPrototype_AvailableTags_.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\AvailableTags\CitPathwSelfDocPrototype_AvailableTags_Links.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\DocumentPrototype\AvailableTags\CitPathwSelfDocPrototype_AvailableTags_Root.cs" />
@@ -614,36 +980,36 @@
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_UpdateWithImage.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_Value.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\_Root\PatientDetailsSearch_ValuePeriod.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_ActionsVisibility.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_AdditionalInformation.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_AvailableAssignmentTypes.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_AvailableFormDefinitions.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_AvailablePrototypes.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_AvailableTags.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_BasketGrantAdditionalInformation.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_BulkGet.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Content.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_CopyableForms.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_CopyPrototype.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_CreatableObjects.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_DocumentPrototype.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_EditablePreference.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Filter.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Links.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_OrderGrantAdditionalInformation.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Organization.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_PageReference.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_PageReferenceOption.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_PathwayReferences.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Preference.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Root.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Self.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_StsOrganization.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_SuggestedGrantsForConditions.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_View.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_ViewPreference.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_ViewType.cs" />
-    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Widget.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_ActionsVisibility.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_AdditionalInformation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_AvailableAssignmentTypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_AvailableFormDefinitions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_AvailablePrototypes.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_AvailableTags.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_BasketGrantAdditionalInformation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_BulkGet.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Content.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_CopyableForms.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_CopyPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_CreatableObjects.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_DocumentPrototype.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_EditablePreference.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Filter.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Links.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_OrderGrantAdditionalInformation.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Organization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_PageReference.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_PageReferenceOption.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_PathwayReferences.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Preference.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Root.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Self.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_StsOrganization.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_SuggestedGrantsForConditions.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_View.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_ViewPreference.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_ViewType.cs" />
+    <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Widget.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenData\Links\Self\CitizenDataSelf_AvailableFormDefinitions.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenData\Links\Self\CitizenDataSelf_AvailableTags.cs" />
     <Compile Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenData\Links\Self\CitizenDataSelf_Content.cs" />
@@ -1130,11 +1496,26 @@
     <Reference Include="DiffPlex, Version=1.7.2.0, Culture=neutral, PublicKeyToken=1d35e91d1bd7bc0f, processorArchitecture=MSIL">
       <HintPath>..\packages\DiffPlex.1.7.2\lib\net40\DiffPlex.dll</HintPath>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.3.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.3.3.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.3.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.3.0\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=8.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.8.1.0\lib\net462\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=8.1.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.8.1.0\lib\net462\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit, Version=4.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.4.1.0\lib\net47\MailKit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.6.0.0\lib\net462\Microsoft.Bcl.HashCode.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
@@ -1158,6 +1539,9 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
     <Reference Include="MimeKit, Version=4.1.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
       <HintPath>..\packages\MimeKit.4.1.0\lib\net47\MimeKit.dll</HintPath>
     </Reference>
@@ -1167,6 +1551,7 @@
     <Reference Include="nunit.framework, Version=3.13.3.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.13.3\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="RestSharp, Version=108.0.3.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.108.0.3\lib\netstandard2.0\RestSharp.dll</HintPath>
     </Reference>
@@ -1174,6 +1559,11 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -1195,6 +1585,9 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Xml.8.0.2\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="System.Text.Encoding.CodePages, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encoding.CodePages.6.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
@@ -1213,6 +1606,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -1227,7 +1621,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\CitizenDashboardSelf_Widget\Links\PathwayReferences\_Root\ReadMe.txt" />
+    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ActiveAssignments\TextFile1.txt" />
+    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\AllObservations\ReadMe.txt" />
+    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\CurrentObservations\ReadMe.txt" />
+    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Observations\_ReadMe.txt" />
+    <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\_Root\CitizenDashboardSelf_Widget\Links\PathwayReferences\_Root\ReadMe.txt" />
     <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\JournalNotes\ReferencedObject\ReadMe.txt" />
     <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Child\Links\Self\_Root_BB\ReadMe.txt" />
     <Content Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenPathway\Links\Self\Links\PathwayReferences\Links\Self\Links\AvailableFormDefinitions\FormDataPrototype\ReadMe.txt" />
@@ -1236,7 +1634,18 @@
     <Content Include="HomeRessource\Preferences\ACTIVITYLIST\ACTIVITYLIST_Content\Content\Pages\Links\Content\_Root\Links\ReferencedObject\_Root\_ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\AvailableConditionClassifications\Links\ConditionPrototype\Links\Create\" />
     <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\DocumentPrototype\_Root\Links\Create\Upload\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\ActivityDashboard\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Audit\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\AutoAssignmentsPrototype\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\AvailableAssignmentTypes\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\Configuration\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\CorrespondingConditions\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\PatientConditionTimeline\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\PossibleCauseConditions\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientConditions\Links\StsOrganization\" />
+    <Folder Include="HomeRessource\PatientDetailsSearch\Patient\Links\PatientPreferences\CitizenDashboard\Links\Self\citizenCondition\Widgets\Links\Visitation\Links\Visit\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

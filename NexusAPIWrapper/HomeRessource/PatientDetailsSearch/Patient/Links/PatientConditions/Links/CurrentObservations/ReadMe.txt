@@ -1,0 +1,1 @@
+﻿Current observations are just a single Observation

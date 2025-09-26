@@ -1,12 +1,23 @@
-﻿using MimeKit;
+﻿using AngleSharp.Text;
+using CsQuery.Engine.PseudoClassSelectors;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.Spreadsheet;
+using MimeKit;
 using Newtonsoft.Json;
 using NexusAPIWrapper.Custom_classes;
+using NexusAPIWrapper.Custom_classes.FS3NewConditions.OldNewConditions;
 using NexusAPIWrapper.HomeRessource.Preferences.ACTIVITYLIST.ACTIVITYLIST_Content.Content.Pages.Links.Content._Root.Links.ReferencedObject._Root.Links.TransformedBody;
 using NexusAPIWrapper.RKSQLRPA01DataSetTableAdapters;
 using Org.BouncyCastle.Asn1.X509;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -113,7 +124,7 @@ namespace NexusAPIWrapper
         }
 
 
-        
+
 
         /// <summary>
         /// Enrolls the patient/citizen to the specified program pathway (Grundforløb)
@@ -275,6 +286,11 @@ namespace NexusAPIWrapper
         }
 
 
+        public List<Professional_Root> GetProfessionals()
+        {
+            List<Professional_Root> professionals = new List<Professional_Root>();
+            return professionals;
+        }
 
         /// <summary>
         /// Returning the professional object class
@@ -306,6 +322,166 @@ namespace NexusAPIWrapper
             return professionals;
         }
 
+
+        //public List<PatientConditions_Root> GetPatientConditions(string citizenCPR)
+        //{
+        //    var patient = api.GetPatientDetails(citizenCPR);
+        //    var links = patient.Links;
+
+        //    var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+        //    var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+        //    return patientConditions;
+        //}
+        
+
+        #region Patient conditions
+        public List<PatientConditions_Root> GetPatientConditions(string citizenCPR)
+        {
+            var patient = api.GetPatientDetails(citizenCPR);
+
+            return GetPatientConditions(patient);
+        }
+        public List<PatientConditions_Root> GetPatientConditions(string citizenCPR, bool ActiveConditionsOnly)
+        {
+            var patient = api.GetPatientDetails(citizenCPR);
+            return GetPatientConditions(patient, ActiveConditionsOnly);
+        }
+
+        public List<PatientConditions_Root> GetPatientConditions(PatientDetailsSearch_Patient patient)
+        {
+            string patientConditionsLink = patient.Links.PatientConditions.Href;
+
+            var result = api.CallAPI(api, patientConditionsLink, Method.Get);
+            return JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+        }
+        public List<PatientConditions_Root> GetPatientConditions(PatientDetailsSearch_Patient patient, bool ActiveConditionsOnly)
+        {
+            string patientConditionsLink = patient.Links.PatientConditions.Href;
+            var result = api.CallAPI(api, patientConditionsLink, Method.Get);
+            var conditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+            if (ActiveConditionsOnly)
+            {
+                List<PatientConditions_Root> activeConditions = new List<PatientConditions_Root>();
+                foreach (var condition in conditions)
+                {
+                    if (condition.Status.ToLower() == "active")
+                    {
+                        activeConditions.Add(condition);
+                    }
+                }
+                return activeConditions;
+            }
+            else
+            {
+                return conditions;
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="borgerTilstand">patientCondition</param>
+        /// <returns>liste over aktive opgaver på tilstanden</returns>
+        public List<PatCond_Assign_Root> HentBorgerTilstand_AktiveOpgaver(PatientConditions_Root borgerTilstand)
+        {
+            return GetPatientCondition_ActiveAssignments(borgerTilstand);
+        }
+        public List<PatCond_Assign_Root> GetPatientCondition_ActiveAssignments(PatientConditions_Root patientCondition)
+        {
+            string activeAssignmentLink = patientCondition.Links.ActiveAssignments.Href;
+            var result = api.CallAPI(api, activeAssignmentLink, Method.Get);
+            var activeAssignments = JsonConvert.DeserializeObject<List<PatCond_Assign_Root>>(result.Result.ToString());
+            return activeAssignments;
+        }
+
+        public PatCond_Observ_Root HentBorgerTilstand_NuværendeObservationer(PatientConditions_Root borgerTilstand)
+        {
+            return GetPatientCondition_CurrentObservations(borgerTilstand);
+        }
+        public PatCond_Observ_Root GetPatientCondition_CurrentObservations(PatientConditions_Root patientCondition)
+        {
+            string currentObservationsLink = patientCondition.Links.CurrentObservations.Href;
+            var result = api.CallAPI(api, currentObservationsLink, Method.Get);
+            var currentObservations = JsonConvert.DeserializeObject<PatCond_Observ_Root>(result.Result.ToString());
+            return currentObservations;
+        }
+
+        public List<PatCond_Observ_Root> HentBorgerTilstand_AlleObservationer(PatientConditions_Root borgerTilstand)
+        {
+            return GetPatientCondition_AllObservations(borgerTilstand);
+        }
+        public List<PatCond_Observ_Root> GetPatientCondition_AllObservations(PatientConditions_Root patientCondition)
+        {
+            string allObservationsLink = patientCondition.Links.AllObservations.Href;
+            var result = api.CallAPI(api, allObservationsLink, Method.Get);
+            var allObservations = JsonConvert.DeserializeObject<List<PatCond_Observ_Root>>(result.Result.ToString());
+            return allObservations;
+        }
+
+        public List<PatCond_RelActi_Root> HentBorgerTilstand_RelateredeAktiviteter(PatientConditions_Root borgerTilstand)
+        {
+            return GetPatientCondition_RelatedActivities(borgerTilstand);
+        }
+        public List<PatCond_RelActi_Root> GetPatientCondition_RelatedActivities(PatientConditions_Root patientCondition)
+        {
+            string RelatedActivitiesLink = patientCondition.Links.RelatedActivities.Href;
+            var result = api.CallAPI(api, RelatedActivitiesLink, Method.Get);
+            var relatedActivities = JsonConvert.DeserializeObject<List<PatCond_RelActi_Root>>(result.Result.ToString());
+            return relatedActivities;
+        }
+
+        public List<PatCond_RelActiWHist_Root> HentBorgerTilstand_RelateredeAktiviteterMedHistorik(PatientConditions_Root borgerTilstand)
+        {
+            return GetPatientCondition_RelatedActivitiesWithHistory(borgerTilstand);
+        }
+        public List<PatCond_RelActiWHist_Root> GetPatientCondition_RelatedActivitiesWithHistory(PatientConditions_Root patientCondition)
+        {
+            string RelatedActivitiesWithHistoryLink = patientCondition.Links.RelatedActivitiesWithHistory.Href;
+            var result = api.CallAPI(api, RelatedActivitiesWithHistoryLink, Method.Get);
+            var relatedActivitiesWithHistory = JsonConvert.DeserializeObject<List<PatCond_RelActiWHist_Root>>(result.Result.ToString());
+            return relatedActivitiesWithHistory;
+        }
+        /// <summary>
+        /// Henter opgaver på en given tilstand
+        /// </summary>
+        /// <param name="patientTilstand">Tilstanden du gerne vil hente opgaver på</param>
+        /// <param name="aktiveOpgaverKun">Vil du kun have aktive opgaver hentet</param>
+        /// <returns></returns>
+        public List<PatCond_Assign_Root> Hent_Patient_Tilstandsopgaver(PatientConditions_Root patientTilstand, bool aktiveOpgaverKun)
+        {
+            return GetPatientConditionAssignments(patientTilstand, aktiveOpgaverKun);
+        }
+        /// <summary>
+        /// Returns assignments on a citizens condition
+        /// </summary>
+        /// <param name="patientCondition"></param>
+        /// <param name="activeAssignmentsOnly"></param>
+        /// <returns></returns>
+        public List<PatCond_Assign_Root> GetPatientConditionAssignments(PatientConditions_Root patientCondition, bool activeAssignmentsOnly)
+        {
+
+            var conditionLinks = patientCondition.Links;
+            string assignmentsLink = conditionLinks.Assignments.Href;
+            string activeAssignmentsLink = conditionLinks.ActiveAssignments.Href;
+
+            var assignmentsResult = api.CallAPI(api, assignmentsLink, Method.Get);
+            var activeAssignmentsResult = api.CallAPI(api, activeAssignmentsLink, Method.Get);
+
+            List<PatCond_Assign_Root> assignments = JsonConvert.DeserializeObject<List<PatCond_Assign_Root>>(assignmentsResult.Result.ToString());
+            List<PatCond_Assign_Root> activeAssignments = JsonConvert.DeserializeObject<List<PatCond_Assign_Root>>(activeAssignmentsResult.Result.ToString());
+
+            if (activeAssignmentsOnly)
+            {
+                return activeAssignments;
+            }
+            else
+            {
+                return assignments;
+            }
+        }
+        #endregion Patient conditions
         ///// <summary>
         ///// This returns the Id of the organization, which is used in the organizations update method (POST)
         ///// </summary>
@@ -319,8 +495,199 @@ namespace NexusAPIWrapper
 
         #endregion Getting/Returning processes
 
+        #region ExcelReader
+
+        private List<string> GetRowData(Row row, WorkbookPart workbookPart)
+        {
+            List<string> rowData = new List<string>();
+            SharedStringTable sharedStringTable = workbookPart.SharedStringTablePart?.SharedStringTable;
+
+            foreach (Cell cell in row.Elements<Cell>())
+            {
+                string cellValue = string.Empty;
+
+                if (cell.DataType != null && cell.DataType == CellValues.SharedString)
+                {
+                    int stringId = int.Parse(cell.InnerText);
+                    cellValue = sharedStringTable.ElementAt(stringId).InnerText;
+                }
+                else if (cell.CellValue != null)
+                {
+                    cellValue = cell.CellValue.InnerText;
+                }
+
+                rowData.Add(cellValue);
+            }
+
+            return rowData;
+        }
+        private HashSet<string> GetUsernamesFromOS2Vikar(string filePathOS2Vikar)
+        {
+            HashSet<string> usernames = new HashSet<string>();
+
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePathOS2Vikar, false))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+
+                // Skip header row and process data rows
+                foreach (Row row in sheetData.Elements<Row>().Skip(1))
+                {
+                    List<string> rowData = GetRowData(row, workbookPart);
+
+                    // Assume username is in column index 8 (same as first sheet)
+                    if (rowData.Count >= 2)
+                    {
+                        string username = rowData[1];
+                        if (!string.IsNullOrEmpty(username))
+                        {
+                            usernames.Add(username);
+                        }
+                    }
+                }
+            }
+
+            return usernames;
+        }
+        #endregion ExcelReader
+
         #region Professionals
 
+        /// <summary>
+        /// Takes a list from SOFD with employees, loops the list, checks if employee is inactive in Nexus and not in the list from OS2Vikar. If so, the CPR and KMD vagplan is removed.
+        /// </summary>
+        /// <param name="fullFilePathSOFD">full file path of SOFD file <param>
+        /// <param name="filePathOS2Vikar">full file path of OS2 vikar file</param>
+        internal void Remove_CPR_And_KMD_vagtplan_from_professionals(string fullFilePathSOFD, string filePathOS2Vikar)
+        {
+            {
+                // Read second Excel file to get list of usernames
+                HashSet<string> validUsernames = GetUsernamesFromOS2Vikar(filePathOS2Vikar);
+
+                using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(fullFilePathSOFD, false))
+                {
+                    WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                    WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                    SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+
+                    // Skip header row and process data rows
+                    foreach (Row row in sheetData.Elements<Row>().Skip(1))
+                    {
+                        List<string> rowData = GetRowData(row, workbookPart);
+
+                        // Check if row has enough columns and get accountType (column index 10)
+                        if (rowData.Count > 10)
+                        {
+                            string accountType = rowData[9];
+                            if (accountType == "Active Directory")
+                            {
+                                string professionalUsername = rowData[7]; // Column index 8
+
+                                // Check if username exists in second sheet
+                                if (!validUsernames.Contains(professionalUsername))
+                                {
+                                    var professionalResult = api.GetProfessionals(professionalUsername);
+                                    if (professionalResult.Count == 1)
+                                    {
+                                        var professional = professionalResult[0];
+                                        if (professional.Active == false)
+                                        {
+                                            Remove_CPR_And_KMD_vagtplan(professional);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        internal void Remove_CPR_And_KMD_vagtplan(ProfessionalConfiguration_Root professionalConfigurationObject)
+        {
+            // You can't remove CPR unless you also remove the KmdVagplanConfiguration Extra CPR
+            professionalConfigurationObject.Cpr = "";
+            professionalConfigurationObject.KmdVagtplanConfiguration.CprExtra = null;
+            professionalConfigurationObject.Active = false;
+
+            this.UpdateProfessional(professionalConfigurationObject.Links.Update.Href, JsonConvert.SerializeObject(professionalConfigurationObject));
+        }
+        internal void Remove_CPR_And_KMD_vagtplan(Professional_Root professional)
+        {
+            var professionalConfigurationObject = this.api.GetProfessionalConfiguration(professional.Id);
+            Remove_CPR_And_KMD_vagtplan(professionalConfigurationObject);
+        }
+        /// <summary>
+        /// Deactivates professionals in Nexus if they are not present on the list of substitutes in OS2 Vikar. Columns to have are (A): Substitute name (B): Vikxxxx
+        /// </summary>
+        /// <param name="fullFilePath">Full path to the file downloaded from OS2 Vikar</param>
+        internal void RemoveCPRAndStsSNFromProfessional_FJERN_VIKARER_FRA_NEXUS(string fullFilePath)
+        {
+            //NexusAPI_processes processes = new NexusAPI_processes("live");
+            //var api = processes.api;
+            string queryString = "vik1";
+            // Get all VIK professionals
+            var professionals = this.GetProfessionals(queryString, false);
+            // Load list of active professionals
+            string filePath = fullFilePath;
+            string connString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={filePath};Extended Properties='Excel 12.0 Xml;HDR=YES;'";
+
+            using (OleDbConnection conn = new OleDbConnection(connString))
+            {
+                conn.Open();
+
+                // Get the first sheet name
+                DataTable dtSchema = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                string sheetName = dtSchema.Rows[0]["TABLE_NAME"].ToString();
+
+                // Read data from the first sheet
+                string query = $"SELECT * FROM [{sheetName}]";
+
+                using (OleDbDataAdapter adapter = new OleDbDataAdapter(query, conn))
+                {
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    // loop VIK professionals and check if they are in the list
+                    foreach (var vikUser in professionals)
+                    {
+                        if (vikUser.Initials.Contains("vik")) // if the initials doesn't contain vik, we don't do anything 
+                        {
+                            if (vikUser.Initials == "vik1465")
+                            {
+                                var dkj = "0";
+                            }
+                            bool vikUserFound = false;
+                            foreach (DataRow row in dt.Rows)
+                            {
+
+                                var vikValue = row.ItemArray[1];
+
+                                if (vikUser.Initials.ToString() == vikValue.ToString())
+                                {
+                                    vikUserFound = true;
+                                }
+                            }
+                            if (!vikUserFound)
+                            {
+                                var vikUserConfig = api.GetProfessionalConfiguration(vikUser.Id);
+                                Remove_CPR_And_KMD_vagtplan(vikUserConfig);
+                                
+                                // remove StsSn
+                                var result = api.CallAPI(api, vikUserConfig.Links.DeleteStsSn.Href, Method.Delete);
+                                Debug.WriteLine("CPR and UUID removed for " + vikUser.Initials);
+                                //Debug.WriteLine(vikUser.Initials + " has CPR: " + vikUserConfig.Cpr);
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
         public void ActivateInactiveSubstituteProfessionals()
         {
             var professionalsList = api.GetProfessionals("vik");
@@ -337,7 +704,7 @@ namespace NexusAPIWrapper
                 }
             }
         }
-       
+
 
         public void ActivateProfessional(int id)
         {
@@ -468,7 +835,7 @@ namespace NexusAPIWrapper
         /// <returns></returns>
         public List<ProfessionalJobs_Root> GetPossibleProfessionalJobs(int professionalId)
         {
-            var professional = GetProfessional(professionalId); 
+            var professional = GetProfessional(professionalId);
             //var currentRoles = api.CallAPI(api, professional.Links.Roles.Href, Method.Get);
             var possibleProfessionalJobs = api.CallAPI(api, professional.Links.AvailableProfessionalJobs.Href, Method.Get);
 
@@ -511,6 +878,15 @@ namespace NexusAPIWrapper
             api.result.UpdateProfessional(api, updateEndpoint, api.GetAddedRemovedRequestBody(added, removed), method);
         }
 
+        /// <summary>
+        /// Updating a professional with a requestBody string
+        /// </summary>
+        /// <param name="updateEndpoint"></param>
+        /// <param name="requestBody"></param>
+        public void UpdateProfessional(string updateEndpoint, string requestBody)
+        {
+            api.result.UpdateProfessional(api, updateEndpoint, requestBody, Method.Put);
+        }
         /// <summary>
         /// Updating a professional with a requestBody string
         /// </summary>
@@ -571,9 +947,9 @@ namespace NexusAPIWrapper
             smtpClient.Send(From, To, subject, body);
         }
 
-        public TransformedBody_Root GetDischargeReportData(ReferencedObject_Base_Root baseObject) 
+        public TransformedBody_Root GetDischargeReportData(ReferencedObject_Base_Root baseObject)
         {
-            
+
             string transformedBodyHTML = api.GetTransformedBodyHTML(baseObject);
             TransformedBody_Root transformedBody = new TransformedBody_Root();
             HtmlHandler handler = new HtmlHandler();
@@ -612,7 +988,7 @@ namespace NexusAPIWrapper
             string serializedObject = JsonConvert.SerializeObject(patient);
 
             return api.UpdatePatient(patient.Links.Update.Href, serializedObject);
-            
+
         }
 
         /// <summary>
@@ -635,9 +1011,9 @@ namespace NexusAPIWrapper
             var folderPath = System.IO.Directory.GetParent(fullFilePath).ToString();
             var prototypeDocument = api.GetGetCitizenPathwayReferencesChildSelf_DocumentPrototype(citizenCPR, pathwayName, pathwayReference, pathwayReferenceChildName); // Get document prototype
             CitPathwSelfDocPrototype_Root prototypeCreatedDocument = new CitPathwSelfDocPrototype_Root();
-            
-                prototypeCreatedDocument = api.CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(prototypeDocument, fullFilePath); // Changing the prototype values
-            
+
+            prototypeCreatedDocument = api.CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(prototypeDocument, fullFilePath); // Changing the prototype values
+
             var prototypeUploadedDocument = api.UploadPatientPathwayDocumentPrototype(prototypeCreatedDocument); // Upload document prototype to get an object with an Id
             return api.UploadPatientPathwayDocumentToNexus(prototypeUploadedDocument, fullFilePath); // Upload the document to Nexus on the Id from the prototype
         }
@@ -653,20 +1029,20 @@ namespace NexusAPIWrapper
             tagNameArray[0] = tagName;
             return UploadPatientPathwayDocumentToNexus(citizenCPR, pathwayName, pathwayReference, fullFilePath, pathwayReferenceChildName, tagNameArray);
         }
-        public WebRequest UploadPatientPathwayDocumentToNexus(string citizenCPR, string pathwayName, string pathwayReference,  string fullFilePath, string pathwayReferenceChildName, string tagName = null, string name = null, string originalFileName = null)
+        public WebRequest UploadPatientPathwayDocumentToNexus(string citizenCPR, string pathwayName, string pathwayReference, string fullFilePath, string pathwayReferenceChildName, string tagName = null, string name = null, string originalFileName = null)
         {
             string[] tagNameArray = new string[1];
             tagNameArray[0] = tagName;
-            return UploadPatientPathwayDocumentToNexus(citizenCPR,pathwayName,pathwayReference,pathwayReferenceChildName,fullFilePath, tagNameArray,name,originalFileName);
+            return UploadPatientPathwayDocumentToNexus(citizenCPR, pathwayName, pathwayReference, pathwayReferenceChildName, fullFilePath, tagNameArray, name, originalFileName);
         }
         public WebRequest UploadPatientPathwayDocumentToNexus(string citizenCPR, string pathwayName, string pathwayReference, string fullFilePath, string pathwayReferenceChildName, string[] tagNames, string documentDescription)
         {
             var folderPath = System.IO.Directory.GetParent(fullFilePath).ToString();
             var prototypeDocument = api.GetGetCitizenPathwayReferencesChildSelf_DocumentPrototype(citizenCPR, pathwayName, pathwayReference, pathwayReferenceChildName); // Get document prototype
             CitPathwSelfDocPrototype_Root prototypeCreatedDocument = new CitPathwSelfDocPrototype_Root();
-            
+
             prototypeCreatedDocument = api.CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(prototypeDocument, fullFilePath); // Changing the prototype values
-            
+
 
             if (tagNames != null)
             {
@@ -751,14 +1127,14 @@ namespace NexusAPIWrapper
         /// <param name="name"></param>
         /// <param name="originalFileName"></param>
         /// <returns>Returns a WebRequest where Status can be checked for 200 OK</returns>
-        public WebRequest UploadPatientPathwayDocumentToNexus(string citizenCPR, string pathwayName, string pathwayReference,  string fullFilePath, string name = null, string originalFileName = null)
+        public WebRequest UploadPatientPathwayDocumentToNexus(string citizenCPR, string pathwayName, string pathwayReference, string fullFilePath, string name = null, string originalFileName = null)
         {
             var folderPath = System.IO.Directory.GetParent(fullFilePath).ToString();
-            var prototypeDocument = api.GetGetCitizenPathwayReferencesSelf_DocumentPrototype(citizenCPR, pathwayName,pathwayReference); // Get document prototype
+            var prototypeDocument = api.GetGetCitizenPathwayReferencesSelf_DocumentPrototype(citizenCPR, pathwayName, pathwayReference); // Get document prototype
             CitPathwSelfDocPrototype_Root prototypeCreatedDocument = new CitPathwSelfDocPrototype_Root();
             if (name != null)
             {
-                prototypeCreatedDocument = api.CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(prototypeDocument,folderPath, name, name); // Changing the prototype values
+                prototypeCreatedDocument = api.CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(prototypeDocument, folderPath, name, name); // Changing the prototype values
             }
             else
             {
@@ -781,7 +1157,7 @@ namespace NexusAPIWrapper
         public WebRequest UploadPatientPathwayDocumentToNexus(string citizenCPR, string pathwayName, string pathwayReference, string fullFilePath, int pathwayReferenceId, string name = null, string originalFileName = null)
         {
 
-            var prototypeDocument = api.GetGetCitizenPathwayReferencesSelf_DocumentPrototype(citizenCPR, pathwayName, pathwayReference,pathwayReferenceId); // Get document prototype
+            var prototypeDocument = api.GetGetCitizenPathwayReferencesSelf_DocumentPrototype(citizenCPR, pathwayName, pathwayReference, pathwayReferenceId); // Get document prototype
             var prototypeCreatedDocument = api.CreateGetCitizenPathwayReferencesSelf_DocumentPrototype(prototypeDocument, fullFilePath); // Changing the prototype values
             var prototypeUploadedDocument = api.UploadPatientPathwayDocumentPrototype(prototypeCreatedDocument); // Upload document prototype to get an object with an Id
             return api.UploadPatientPathwayDocumentToNexus(prototypeUploadedDocument, fullFilePath); // Upload the document to Nexus on the Id from the prototype
@@ -831,9 +1207,9 @@ namespace NexusAPIWrapper
             return exists;
         }
 
-        public void Add72HoursCitizensToDb(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear)
+        public void Add96HoursCitizensToDb(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear)
         {
-            var activityList = api.GetPreferencesActivityListSelfObjectContent("72 timers behandlingsansvar", startDay, startMonth, startYear, endDay, endMonth, endYear);
+            var activityList = api.GetPreferencesActivityListSelfObjectContent("96 timers behandlingsansvar", startDay, startMonth, startYear, endDay, endMonth, endYear);
             foreach (var item in activityList)
             {
                 // for each item in the activity list we
@@ -851,15 +1227,15 @@ namespace NexusAPIWrapper
                 string timeOfDischarge = currentAdmission.TimeOfDischarge;
                 DateTime dateOfDischarge = api.dataHandler.GetDateAndTime(timeOfDischarge);
                 // check if patient is in the db
-                PatientWith72HourTreatmentGuarantee patientInDb = api.dataHandler.GetPatientWith72HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
+                PatientWith96HourTreatmentGuarantee patientInDb = api.dataHandler.GetPatientWith96HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
                 // if patient is in db we check if current dateOfDischarge is later than the one in db
                 if (patientInDb != null)
                 {
                     // if current dateOfDischarge is later than the one in db, we update the data in db
                     if (dateOfDischarge > patientInDb.TimeOfDischarge)
                     {
-                        api.dataHandler.RunSQLWithoutReturnResult("UPDATE PatientsWithCurrent72HourTreatmentGuarantee SET TimeOfDischarge = '" + api.dataHandler.ConvertDateTmeToDbFormat(dateOfDischarge) + "' WHERE Id = " + patientInDb.Id.ToString());
-                        PatientWith72HourTreatmentGuarantee updatedPatientInDb = api.dataHandler.GetPatientWith72HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
+                        api.dataHandler.RunSQLWithoutReturnResult("UPDATE PatientsWithCurrent96HourTreatmentGuarantee SET TimeOfDischarge = '" + api.dataHandler.ConvertDateTmeToDbFormat(dateOfDischarge) + "' WHERE Id = " + patientInDb.Id.ToString());
+                        PatientWith96HourTreatmentGuarantee updatedPatientInDb = api.dataHandler.GetPatientWith96HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
                         if (dateOfDischarge != updatedPatientInDb.TimeOfDischarge)
                         {
                             throw new Exception("Update of patient failed");
@@ -874,8 +1250,8 @@ namespace NexusAPIWrapper
                 else
                 {
                     // Patient does not exist in db - therefore we add data to the db
-                    api.dataHandler.RunSQLWithoutReturnResult("INSERT INTO PatientsWithCurrent72HourTreatmentGuarantee(PatientId, PatientName, TimeOfDischarge) VALUES (" + patient.Id + ", '" + patient.FirstName + "', '" + api.dataHandler.ConvertDateTmeToDbFormat(dateOfDischarge) + "')");
-                    PatientWith72HourTreatmentGuarantee newPatientInDb = api.dataHandler.GetPatientWith72HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
+                    api.dataHandler.RunSQLWithoutReturnResult("INSERT INTO PatientsWithCurrent96HourTreatmentGuarantee(PatientId, PatientName, TimeOfDischarge) VALUES (" + patient.Id + ", '" + patient.FirstName + "', '" + api.dataHandler.ConvertDateTmeToDbFormat(dateOfDischarge) + "')");
+                    PatientWith96HourTreatmentGuarantee newPatientInDb = api.dataHandler.GetPatientWith96HoursTreatmentGuarantee(Convert.ToInt32(patient.Id));
                     if (newPatientInDb == null)
                     {
                         throw new Exception("Failed to add patient to db");
@@ -931,24 +1307,24 @@ namespace NexusAPIWrapper
             //Get data from SOFD - all job titles
             //Get data from Nexus - all professional jobs
             var availableJobsInNexus = api.GetAllProfessionalJobs();
-            
 
-                //Loop SOFD data
-                    //Compare data in db
-                        //if SOFD data in db is updated
-                            //update database
-                            //update Nexus
-                        //else (data not present in db)
-                            //Create in Nexus and store data
-                            //add to database - both SOFD and stored Nexus data
-                        //if - end
-                    //Compare data in db - end
-                //Loop SOFD data - end
+
+            //Loop SOFD data
+            //Compare data in db
+            //if SOFD data in db is updated
+            //update database
+            //update Nexus
+            //else (data not present in db)
+            //Create in Nexus and store data
+            //add to database - both SOFD and stored Nexus data
+            //if - end
+            //Compare data in db - end
+            //Loop SOFD data - end
         }
 
         public List<PwayRefChildSelf_JournalNote_RefObj_Root> GetAllJournalNotes(string citizenCPR, string pathwayName, string pathwayReferenceName)
         {
-            
+
             // Get citizen pathway references
             var citizenpathwayReferencesChildren = api.GetCitizenPathwayReferencesChildren(citizenCPR, pathwayName, pathwayReferenceName);
 
@@ -970,7 +1346,7 @@ namespace NexusAPIWrapper
             return journalNotes;
         }
 
-        
+
 
 
         /// <summary>
@@ -984,7 +1360,7 @@ namespace NexusAPIWrapper
         public bool DoesJournalNoteExist(string citizenCPR, string pathwayName, string pathwayReferenceName, string pathwayReferenceChildName, FormDataPrototype_Root journalNoteReferencedObject)
         {
             bool journalNoteExists = false;
-            List<PwayRefChildSelf_JournalNote_RefObj_Root> journalNotes = GetAllCitizenJournalNotes(citizenCPR, pathwayName, pathwayReferenceName,pathwayReferenceChildName);
+            List<PwayRefChildSelf_JournalNote_RefObj_Root> journalNotes = GetAllCitizenJournalNotes(citizenCPR, pathwayName, pathwayReferenceName, pathwayReferenceChildName);
 
             foreach (var note in journalNotes)
             {
@@ -1043,7 +1419,7 @@ namespace NexusAPIWrapper
 
                     journalNotes.Add(journalNoteReferencedObject);
                 }
-                
+
             }
 
             return journalNotes;
@@ -1082,7 +1458,7 @@ namespace NexusAPIWrapper
 
                 }
             }
-            
+
 
             return journalNotes;
         }
@@ -1128,7 +1504,7 @@ namespace NexusAPIWrapper
 
             }
 
-            
+
         }
 
         /// <summary>
@@ -1136,6 +1512,7 @@ namespace NexusAPIWrapper
         /// </summary>
         public void HandleDeadOrInactiveCitizens()
         {
+            throw new Exception("Not implemented yet.");
             /*
              * Er der nogle punkter der ikke kan udføres fordi der er andre ting der skal håndteres først!?
              * Sundhed & Træning
@@ -1170,11 +1547,486 @@ namespace NexusAPIWrapper
 
 
         }
+        /// <summary>
+        /// Creates 1 or more conditions on the patient, and sets the state. No additional information can be added to the conditions.
+        /// </summary>
+        /// <param name="patient">patient/citizen object</param>
+        /// <param name="conditionIds">1 or more ids representing the different conditions you want to attach a patient</param>
+        /// <param name="conditionState">"Aktiv"(default), "Inaktiv" or "Ikke relevant"</param>
+        /// <returns>The created condition(s) as an object</returns>
+        public List<CondBulkProtoCreate_Root> CreatePatientCondition(PatientDetailsSearch_Patient patient, int[] conditionIds, string conditionState = "Aktiv")
+        {
+
+            var prototype = api.CreatePatientConditionsBulkPrototype(patient, conditionIds);
+            string createLink = prototype.Links.Create.Href;
+
+            var stateValueChosen = prototype.State.PossibleValues.FirstOrDefault(x => x.Name == conditionState);
+            prototype.UpdateStateValue(stateValueChosen);
+
+
+            return CreatePatientCondition(prototype);
+        }
+        /// <summary>
+        /// Takes a conditionPrototype that has all the information updated, and creates the condition(s) on the patient
+        /// </summary>
+        /// <param name="conditionPrototype"></param>
+        /// <returns>The created condition(s) as an object</returns>
+        public List<CondBulkProtoCreate_Root> CreatePatientCondition(ConditionsBulkPrototype_Root conditionPrototype)
+        {
+            var result = api.CallAPI(api, conditionPrototype.Links.Create.Href, Method.Post, JsonConvert.SerializeObject(conditionPrototype));
+            List<CondBulkProtoCreate_Root> prototypeCreated = JsonConvert.DeserializeObject<List<CondBulkProtoCreate_Root>>(result.Result.ToString());
+            return prototypeCreated;
+        }
+
+
+        public List<Patient_InboxMessages_Self_Root> GetPatientInboxMessages(string citizenCPR)
+        {
+            
+            var patientDetails = api.GetPatientDetails(citizenCPR);
+            string citizenInboxMessagesLink = patientDetails.Links.InboxMessages.Href;
+            var inboxResult = api.CallAPI(api, citizenInboxMessagesLink, Method.Get);
+            var inboxResultObj = JsonConvert.DeserializeObject<Patient_InboxMessages_Root>(inboxResult.Result.ToString());
+
+            List<Patient_InboxMessages_Self_Root> inboxMessages = new List<Patient_InboxMessages_Self_Root>();
+            foreach (var page in inboxResultObj.Pages)
+            {
+                string pageLink = page.Links.Self.Href;
+                var pageSelfLinkResult = api.CallAPI(api, pageLink, Method.Get);
+                var pageSelfResult = JsonConvert.DeserializeObject<List<Patient_InboxMessages_Self_Root>>(pageSelfLinkResult.Result.ToString());
+
+                foreach (var pageObj in pageSelfResult)
+                {
+                    inboxMessages.Add(pageObj);
+                }
+            }
+            return inboxMessages;
+        }
+
+        /// <summary>
+        /// This method updates the field "Beskrivelse af tilstandsområde"
+        /// </summary>
+        /// <param name="citizenCPR"></param>
+        /// <param name="dashboardName"></param>
+        /// <param name="conditionToUpdateName"></param>
+        /// <param name="conditionGroupName"></param>
+        /// <param name="conditionText"></param>
+        /// <param name="appendTextToExistingData"></param>
+        /// <param name="currentScore"></param>
+        /// <param name="expectedScore"></param>
+        /// <returns></returns>
+        public (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment)
+            UpdateCitizenConditionGroup(
+            string citizenCPR,
+            string dashboardName,
+            string conditionToUpdateName,
+            string conditionGroupName,
+            string conditionText,
+            bool appendTextToExistingData,
+            int currentScore = 0,
+            int expectedScore = 0)
+        {
+
+            CitDashbCitCondSelfWidgVisi_Root visitation = api.GetCitizenConditionVisitations(citizenCPR, dashboardName, conditionToUpdateName);
+
+            // visitation lists all the different conditions.
+            // so we need to choose what to update
+
+            int? conditionGroupToUpdateElementInt = null;
+            int? conditionToUpdateElementInt = null;
+            CitDashbCitCondSelfWidgVisi_ConditionGroupVisitation conditionGroupToUpdate = new CitDashbCitCondSelfWidgVisi_ConditionGroupVisitation();
+            CitDashbCitCondSelfWidgVisi_Condition conditionToUpdate = new CitDashbCitCondSelfWidgVisi_Condition();
+
+            for (int i = 0; i < visitation.ConditionGroupVisitation.Count; i++)
+            {
+                var item = visitation.ConditionGroupVisitation[i];
+
+                if (item.ConditionGroup.GroupClassification.Name.ToLower() == conditionGroupName.ToLower())
+                {
+                    conditionGroupToUpdate = item;
+                    conditionGroupToUpdateElementInt = i;
+                    break;
+                }
+            }
+
+            
+
+            string updateText = string.Empty;
+            if (appendTextToExistingData)
+            {
+                if (conditionGroupToUpdate.ConditionGroup.Description == null || conditionGroupToUpdate.ConditionGroup.Description == string.Empty)
+                {
+                    updateText = conditionText;
+                }
+                else
+                {
+                    updateText = conditionGroupToUpdate.ConditionGroup.Description + "\n\n" + conditionText;
+                }
+            }
+            else
+            {
+                updateText = conditionText;
+            }
+            bool visitationUpdated = false;
+            //Check if new condition already contains the condition text. If so we don't update the condition
+            if (conditionGroupToUpdate.ConditionGroup.Description == null || !conditionGroupToUpdate.ConditionGroup.Description.Contains(conditionText))
+            {
+                conditionGroupToUpdate.ConditionGroup.Description = updateText;
+                //conditionToUpdate.State = "ACTIVE";
+                //conditionToUpdate.FollowUpDate = "2025-09-01T00:00:00.000000";
+
+                //conditionToUpdate.CurrentScore = currentScore;
+                //conditionToUpdate.ExpectedScore = expectedScore;
+
+                //conditionGroupToUpdate.Conditions[(int)conditionToUpdateElementInt] = conditionToUpdate;
+                visitation.ConditionGroupVisitation[(int)conditionGroupToUpdateElementInt] = conditionGroupToUpdate;
+                string jsonObj = JsonConvert.SerializeObject(visitation);
+                //var activateResult = api.CallAPI(api, conditionToUpdate.Links.Activate.Href, Method.Post, jsonObj);
+                var updateResult = api.CallAPI(api, visitation.Links.Visit.Href, Method.Post, jsonObj); // Updating visitations
+                                                                                                        //Converting element after updating to check if the update has passed
+                visitation = api.GetCitizenConditionVisitations(citizenCPR, dashboardName, conditionToUpdateName);
+                conditionGroupToUpdate = visitation.ConditionGroupVisitation[(int)conditionGroupToUpdateElementInt];
+                //conditionToUpdate = conditionGroupToUpdate.Conditions[(int)conditionToUpdateElementInt];
+
+
+                if (conditionGroupToUpdate.ConditionGroup.Description == updateText)
+                {
+                    visitationUpdated = true;
+                }
+                return (visitationUpdated, visitation, string.Empty);
+            }
+            else
+            {
+                
+                    return (visitationUpdated, visitation, "ConditionGroup already contains text from old potential condition");
+                
+
+
+            }
+
+
+
+
+        }
+        /// <summary>
+        /// If no score is added to this update method they will be 0 - only if the condition has the option
+        /// </summary>
+        /// <param name="citizenCPR">Person CPR</param>
+        /// <param name="dashboardName">Name of the dashboard</param>
+        /// <param name="conditionToUpdateName">Which condition to update</param>
+        /// <param name="conditionGroupName">Condition group name to update</param>
+        /// <param name="conditionName">The condition name to update</param>
+        /// <param name="conditionText">The text/description to add or update</param>
+        /// <param name="appendTextToExistingData">Should the text be appended to the existing text - false will override existing text</param>
+        /// <param name="currentScore">Current score if condition has the option</param>
+        /// <param name="expectedScore">Expected score if condition has the option</param>
+        /// <returns>Object: is condition updated, and the condition object</returns>
+        public (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment) 
+            UpdateCitizenCondition(
+            string citizenCPR, 
+            string dashboardName, 
+            string conditionToUpdateName, 
+            string conditionGroupName, 
+            string conditionName, 
+            string conditionText, 
+            bool appendTextToExistingData,
+            int currentScore = 0,
+            int expectedScore = 0)
+        {   
+
+            CitDashbCitCondSelfWidgVisi_Root visitation = api.GetCitizenConditionVisitations(citizenCPR, dashboardName, conditionToUpdateName);
+
+            // visitation lists all the different conditions.
+            // so we need to choose what to update
+
+            int? conditionGroupToUpdateElementInt = null;
+            int? conditionToUpdateElementInt = null;
+            CitDashbCitCondSelfWidgVisi_ConditionGroupVisitation conditionGroupToUpdate = new CitDashbCitCondSelfWidgVisi_ConditionGroupVisitation();
+            CitDashbCitCondSelfWidgVisi_Condition conditionToUpdate = new CitDashbCitCondSelfWidgVisi_Condition();
+
+            for (int i = 0; i < visitation.ConditionGroupVisitation.Count; i++)
+            {
+                var item = visitation.ConditionGroupVisitation[i];
+
+                if (item.ConditionGroup.GroupClassification.Name.ToLower() == conditionGroupName.ToLower())
+                {
+                    conditionGroupToUpdate = item;
+                    conditionGroupToUpdateElementInt = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < conditionGroupToUpdate.Conditions.Count; i++)
+            {
+                var item = conditionGroupToUpdate.Conditions[i];
+
+                if (item.Classification.Name.ToLower() == conditionName.ToLower())
+                {
+                    conditionToUpdate = item;
+                    conditionToUpdateElementInt = i;
+                    break;
+                }
+            }
+            
+            string updateText = string.Empty;
+            if (appendTextToExistingData)
+            {
+                if (conditionToUpdate.Description == null || conditionToUpdate.Description == string.Empty)
+                {
+                    updateText = conditionText;
+                }
+                else
+                {
+                    updateText = conditionToUpdate.Description + "\n\n" + conditionText;
+                }
+            }
+            else
+            {
+                updateText = conditionText;
+            }
+            bool visitationUpdated = false;
+            //Check if new condition already contains the condition text. If so we don't update the condition
+            if (conditionToUpdate.Description == null || !conditionToUpdate.Description.Contains(conditionText))
+            {
+                conditionToUpdate.Description = updateText;
+                conditionToUpdate.State = "ACTIVE";
+                conditionToUpdate.FollowUpDate = "2025-09-01T00:00:00.000000";
+
+                conditionToUpdate.CurrentScore = currentScore;
+                conditionToUpdate.ExpectedScore = expectedScore;
+
+                conditionGroupToUpdate.Conditions[(int)conditionToUpdateElementInt] = conditionToUpdate;
+                visitation.ConditionGroupVisitation[(int)conditionGroupToUpdateElementInt] = conditionGroupToUpdate;
+                string jsonObj = JsonConvert.SerializeObject(visitation);
+                //var activateResult = api.CallAPI(api, conditionToUpdate.Links.Activate.Href, Method.Post, jsonObj);
+                var updateResult = api.CallAPI(api, visitation.Links.Visit.Href, Method.Post, jsonObj); // Updating visitations
+                                                                                                        //Converting element after updating to check if the update has passed
+                visitation = api.GetCitizenConditionVisitations(citizenCPR, dashboardName, conditionToUpdateName);
+                conditionGroupToUpdate = visitation.ConditionGroupVisitation[(int)conditionGroupToUpdateElementInt];
+                conditionToUpdate = conditionGroupToUpdate.Conditions[(int)conditionToUpdateElementInt];
+
+                
+                if (conditionToUpdate.Description == updateText)
+                {
+                    visitationUpdated = true;
+                }
+                return (visitationUpdated, visitation,string.Empty);
+            }
+            else
+            {
+                if (conditionToUpdate.State != "ACTIVE")
+                {
+                    conditionToUpdate.State = "ACTIVE";
+                    conditionToUpdate.FollowUpDate = "2025-09-01T00:00:00.000000";
+
+                    conditionGroupToUpdate.Conditions[(int)conditionToUpdateElementInt] = conditionToUpdate;
+                    visitation.ConditionGroupVisitation[(int)conditionGroupToUpdateElementInt] = conditionGroupToUpdate;
+                    string jsonObj = JsonConvert.SerializeObject(visitation);
+                    var updateResult = api.CallAPI(api, visitation.Links.Visit.Href, Method.Post, jsonObj);
+                    
+                    return (visitationUpdated, visitation,"Condition already contains text from old condition. Condition just activated");
+                }
+                else
+                {
+                    return (visitationUpdated, visitation, "Condition already contains text from old condition");
+                }
+                
+
+            }
+
+           
+
+            
+        }
+
+        
+        
+        public void MigrateToNewFS3Conditions(string oldAndNewConditionsPath, string activityListName, string SQLConnectionString, string dbTableName, string environment)
+        {
+            DataHandler datahandler = new DataHandler();
+
+
+            int startDay = 1;
+            int startMonth = 7;
+            int startYear = 2024;
+            int endDay = 1;
+            int endMonth = 7;
+            int endYear = 2026;
+            var activityList1 = api.GetPreferencesActivityListSelfObjectContent(activityListName, startDay, startMonth, startYear, endDay, endMonth, endYear);
+
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions(oldAndNewConditionsPath);
+
+            List<ACTIVITYLIST_Pages_Content_Patient> PatientList = new List<ACTIVITYLIST_Pages_Content_Patient>();
+            foreach (var item in activityList1)
+            {
+                //if (PatientList.Count != 101)
+                //{
+                    ACTIVITYLIST_Pages_Content_Patient patientItem = item.Patients[0];
+                    if (!PatientList.Exists(x => x.Id == patientItem.Id))
+                    {
+                        PatientList.Add(patientItem);
+                    }
+                //}
+                //    else
+                //{
+                //    break;
+                //}
+        }
+
+            foreach (var patientElement in PatientList)
+            {
+                SqlConnection sqlConnection = new SqlConnection(SQLConnectionString);
+                string queryString = "SELECT * FROM " + dbTableName + " WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
+                SqlCommand command = new SqlCommand(queryString, sqlConnection);
+
+                int? patientIdInDb = null;
+                using (sqlConnection)
+                {
+                    command.Connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        patientIdInDb = Convert.ToInt32(reader["CitizenId"].ToString());
+                    }
+                    if (patientIdInDb == null)
+                    {
+                        MigrateConditionsOnPatientToCitizenCondition(Convert.ToInt32(patientElement.Id), oldAndNewConditions,environment, true);
+                    }
+                }
+            } // foreach patient end loop
+
+
+
+        }
+        public void MigrateConditionsOnPatientToCitizenCondition(int patientId, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false)
+        {
+            //NexusAPI_processes processes = new NexusAPI_processes(environment);
+            //var api = processes.api;
+            DataHandler datahandler = new DataHandler();
+            var patient = api.GetPatientDetails(patientId);
+            var links = patient.Links;
+
+            var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+            var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+            foreach (var condition in patientConditions)
+            {
+                (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment) citizenCondtion;
+                //try
+                //{
+                if (condition.Status == "ACTIVE")// || condition.Status == "POTENTIAL") // we only handle active and potential conditions
+                {
+                    string conditionArea = condition.ConditionClassificationItem.Group.Law;
+                    switch (conditionArea)
+                    {
+                        case "SERVICE_LAW":
+                            conditionArea = "Funktionsevnetilstande";
+                            break;
+                        case "HEALTH_LAW":
+                            conditionArea = "Helbredstilstande";
+                            break;
+                        case "TRAINING_LAW":
+                            continue;
+                        default:
+                            continue;
+                            //break;
+                    }
+                    string groupName = condition.ConditionClassificationItem.Group.Name;
+                    string conditionName = condition.ConditionClassificationItem.Name;
+
+                    var newCondition = oldAndNewConditions.GetNewMapping(conditionArea, groupName, conditionName);
+
+                    //(string ConditionGroupName, string ConditionType) = datahandler.GetCorrectConditionToUpdateName(groupName);
+                    //    string newConditionToUpdate = GetNewCondition(conditionName);
+                    string conditionText = GetNewConditionText(condition); //condition.CurrentLevelDescription;
+                    if (conditionText == null) { conditionText = "Ingen beskrivelse i gammel tilstand."; }
+
+                    if (conditionArea == "Funktionsevnetilstande")
+                    {
+                        citizenCondtion = UpdateCitizenCondition(
+                                patient.PatientIdentifier.Identifier,
+                                "Nye tilstandsgrupper",
+                                newCondition.NewArea,
+                                newCondition.NewCategory,
+                                newCondition.NewCondition,
+                                conditionText,
+                                true,
+                                condition.CurrentLevel != null ? (int)condition.CurrentLevel.NumericRepresentation : 0,
+                                condition.ExpectedLevel != null ? (int)condition.ExpectedLevel.NumericRepresentation : 0
+                                );
+                    }
+                    else
+                    {
+                        citizenCondtion = UpdateCitizenCondition(
+                                patient.PatientIdentifier.Identifier,
+                                "Nye tilstandsgrupper",
+                                newCondition.NewArea,
+                                newCondition.NewCategory,
+                                newCondition.NewCondition,
+                                conditionText,
+                                true
+                                );
+                    }
+                }
+
+
+            }
+            //catch (Exception)
+            //{
+
+            //    throw new Exception("Something went wrong with " + patient.FullName + " - ID: " + patient.Id);
+            //}
+
+
+
+            //}
+            // Add citizen to db for finished data transfer
+            datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+
+        }
+
+        public string GetNewConditionText(PatientConditions_Root patientCondition)
+        {
+            string currentAssesment = patientCondition.CurrentAssessment;
+            string currentLevelDescription = patientCondition.CurrentLevelDescription;
+            string expectedLEvelDescription = patientCondition.ExpectedLevelDescription;
+            string currentLevel = patientCondition.CurrentLevel != null ? patientCondition.CurrentLevel.NumericRepresentation.ToString() : 0.ToString();
+            string expectedLevel = patientCondition.ExpectedLevel != null ? patientCondition.ExpectedLevel.NumericRepresentation.ToString() : 0.ToString();
+
+            string NewConditionText = string.Empty;
+
+            string conditionArea = patientCondition.ConditionClassificationItem.Group.Law;
+            switch (conditionArea)
+            {
+                case "SERVICE_LAW":
+                    conditionArea = "Funktionsevnetilstande";
+                    NewConditionText = patientCondition.ConditionClassificationItem.Name.ToUpper() +
+                "\nFagligt notat: " + currentLevelDescription +
+                "\nBeskrivelse: " + expectedLEvelDescription +
+                "\nNuværende funktionsniveau: " + currentLevel +
+                "\nForventet funktionsniveau: " + expectedLevel;
+                    break;
+                case "HEALTH_LAW":
+                    conditionArea = "Helbredstilstande";
+                    NewConditionText = patientCondition.ConditionClassificationItem.Name.ToUpper() +
+                "\nNuværende vurdering: " + currentAssesment +
+                "\nFagligt notat: " + currentLevelDescription +
+                "\nBeskrivelse: " + expectedLEvelDescription;
+                    break;
+                case "TRAINING_LAW":
+                    NewConditionText = null;
+                    break;
+                default:
+                    break;
+            }
+
+            return NewConditionText;
+        }
     }
+}
 
 
 
         #endregion Shared processes
 
         #endregion processes
-    }
