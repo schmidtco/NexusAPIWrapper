@@ -1233,7 +1233,7 @@ namespace NexusAPITest
             NexusAPI_processes processes = new NexusAPI_processes(liveEnvironment);
             var api = processes.api;
 
-            processes.Add96HoursCitizensToDb(01, 07, 2025, 02, 07, 2025);
+            processes.Add96HoursCitizensToDb(17, 10, 2025, 20, 10, 2025);
         }
         [Test]
         public void Get96HoursCitizensToDb()
@@ -3371,7 +3371,7 @@ namespace NexusAPITest
             int startYear = 2024;
             int endDay = 1;
             int endMonth = 7;
-            int endYear = 2026; 
+            int endYear = 2026;
             var activityList1 = api.GetPreferencesActivityListSelfObjectContent("- 1 - Borgerliste til migrering", startDay, startMonth, startYear, endDay, endMonth, endYear);
 
             OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
@@ -3412,7 +3412,7 @@ namespace NexusAPITest
                     }
                     if (patientIdInDb == null)
                     {
-                        TestMigrateConditionsOnPatientToCitCon(Convert.ToInt32(patientElement.Id),oldAndNewConditions, true);
+                        TestMigrateConditionsOnPatientToCitCon(Convert.ToInt32(patientElement.Id), oldAndNewConditions, true);
                     }
                 }
             } // foreach patient end loop
@@ -3444,7 +3444,7 @@ namespace NexusAPITest
                 case "HEALTH_LAW":
                     conditionArea = "Helbredstilstande";
                     NewConditionText = patientCondition.ConditionClassificationItem.Name.ToUpper() +
-                "\nNuværende vurdering: " + currentAssesment+
+                "\nNuværende vurdering: " + currentAssesment +
                 "\nFagligt notat: " + currentLevelDescription +
                 "\nBeskrivelse: " + expectedLEvelDescription;
                     break;
@@ -3454,10 +3454,10 @@ namespace NexusAPITest
                 default:
                     break;
             }
-            
+
             return NewConditionText;
         }
-        
+
         public void TestMigrateConditionsOnPatientToCitCon(string citizenCPR, bool insertIntoDb = false)
         {
             NexusAPI_processes processes = new NexusAPI_processes("review");
@@ -3465,7 +3465,7 @@ namespace NexusAPITest
             var patient = api.GetPatientDetails(citizenCPR);
 
             OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
-            TestMigrateConditionsOnPatientToCitCon((int)patient.Id,oldAndNewConditions, true);
+            TestMigrateConditionsOnPatientToCitCon((int)patient.Id, oldAndNewConditions, true);
         }
         [Test]
         public void TestConditions()
@@ -3498,19 +3498,19 @@ namespace NexusAPITest
         {
             OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
 
-            var result = oldAndNewConditions.GetNewMapping("Helbredstilstande", "Ernæring", "Problemer med overvægt"); 
+            var result = oldAndNewConditions.GetNewMapping("Helbredstilstande", "Ernæring", "Problemer med overvægt");
         }
         [Test]
         public void MigrateCitizenConditions()
         {
             List<string> citizens = new List<string>();
-            
+
             citizens.Add("251248-9996");
 
             OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
             foreach (var citizen in citizens)
             {
-                TestMigrateConditionsOnPatientToCitCon(citizen,oldAndNewConditions, true);
+                TestMigrateConditionsOnPatientToCitCon(citizen, oldAndNewConditions, true);
             }
         }
         public void TestMigrateConditionsOnPatientToCitCon(string citizenCPR, OldAndNewConditions oldAndNewConditions, bool insertIntoDb = false)
@@ -3537,9 +3537,9 @@ namespace NexusAPITest
                 (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment) citizenCondtion;
                 //try
                 //{
-                    if (condition.Status == "ACTIVE")// || condition.Status == "POTENTIAL") // we only handle active and potential conditions
-                    {
-                        string conditionArea = condition.ConditionClassificationItem.Group.Law;
+                if (condition.Status == "ACTIVE")// || condition.Status == "POTENTIAL") // we only handle active and potential conditions
+                {
+                    string conditionArea = condition.ConditionClassificationItem.Group.Law;
                     switch (conditionArea)
                     {
                         case "SERVICE_LAW":
@@ -3561,11 +3561,11 @@ namespace NexusAPITest
 
                     //(string ConditionGroupName, string ConditionType) = datahandler.GetCorrectConditionToUpdateName(groupName);
                     //    string newConditionToUpdate = GetNewCondition(conditionName);
-                        string conditionText = GetNewConditionText(condition); //condition.CurrentLevelDescription;
-                        if (conditionText == null) { conditionText = "Ingen beskrivelse i gammel tilstand."; }
+                    string conditionText = GetNewConditionText(condition); //condition.CurrentLevelDescription;
+                    if (conditionText == null) { conditionText = "Ingen beskrivelse i gammel tilstand."; }
 
-                        if (conditionArea == "Funktionsevnetilstande")
-                        {
+                    if (conditionArea == "Funktionsevnetilstande")
+                    {
                         citizenCondtion = processes.UpdateCitizenCondition(
                                 patient.PatientIdentifier.Identifier,
                                 "Nye tilstandsgrupper",
@@ -3577,9 +3577,9 @@ namespace NexusAPITest
                                 condition.CurrentLevel != null ? (int)condition.CurrentLevel.NumericRepresentation : 0,
                                 condition.ExpectedLevel != null ? (int)condition.ExpectedLevel.NumericRepresentation : 0
                                 );
-                        }
-                        else
-                        {
+                    }
+                    else
+                    {
                         citizenCondtion = processes.UpdateCitizenCondition(
                                 patient.PatientIdentifier.Identifier,
                                 "Nye tilstandsgrupper",
@@ -3589,19 +3589,19 @@ namespace NexusAPITest
                                 conditionText,
                                 true
                                 );
-                        }
                     }
-                    
-
                 }
-                //catch (Exception)
-                //{
 
-                //    throw new Exception("Something went wrong with " + patient.FullName + " - ID: " + patient.Id);
-                //}
-                
-                
-                
+
+            }
+            //catch (Exception)
+            //{
+
+            //    throw new Exception("Something went wrong with " + patient.FullName + " - ID: " + patient.Id);
+            //}
+
+
+
             //}
             // Add citizen to db for finished data transfer
             datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
@@ -3609,6 +3609,56 @@ namespace NexusAPITest
         }
         [Test]
         public void TestRunMigrationProcess()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("live");
+            var api = processes.api;
+
+            string oldNewPath = "C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx";
+            string connectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+            string dbTableName = "FS3Migrering";
+            //string activityListName = "- 1 - Borgerliste til migrering"; //- 1 - Borgerliste til migrering af funktionsevne- og helbredstilstande
+            string activityListName = "- 1 - Borgerliste til migrering af funktionsevne- og helbredstilstande";
+            //string activityListName = "- 2 - Borgerliste til migrering af potentielle helbredstilstande";
+
+            processes.MigrateToNewFS3Conditions(oldNewPath, activityListName, connectionString, dbTableName, "Review");
+        }
+        //[Test]
+        //public void GetCitizensForSudarviliForFS3Migration()
+        //{
+        //    NexusAPI_processes processes = new NexusAPI_processes("live");
+        //    var api = processes.api;
+
+        //    string activityListName = "- 1 - Borgerliste til migrering af funktionsevne- og helbredstilstande";
+        //    //string activityListName = "- 2 - Borgerliste til migrering af potentielle helbredstilstande";
+
+        //    int startDay = 1;
+        //    int startMonth = 7;
+        //    int startYear = 2024;
+        //    int endDay = 1;
+        //    int endMonth = 7;
+        //    int endYear = 2026;
+        //    var activityList1 = api.GetPreferencesActivityListSelfObjectContent(activityListName, startDay, startMonth, startYear, endDay, endMonth, endYear);
+
+        //    Dictionary<string, string> dict = new Dictionary<string, string>();
+        //    List<ACTIVITYLIST_Pages_Content_Patient> PatientList = new List<ACTIVITYLIST_Pages_Content_Patient>();
+        //    foreach (var item in activityList1)
+        //    {
+        //        //if (PatientList.Count != 101)
+        //        //{
+        //        ACTIVITYLIST_Pages_Content_Patient patientItem = item.Patients[0];
+        //        if (!PatientList.Exists(x => x.Id == patientItem.Id))
+        //        {
+        //            PatientList.Add(patientItem);
+        //        }
+        //        var exists = dict.FirstOrDefault(x => x.Key == patientItem.Id.ToString());
+        //        if (exists.Key == null)
+        //        {
+        //            dict.Add(patientItem.Id.ToString(), patientItem.PatientIdentifier.Identifier);
+        //        }
+        //    }
+        //}
+        [Test]
+        public void TestFullMigrationOfActiveAndPotentialConditions()
         {
             NexusAPI_processes processes = new NexusAPI_processes("review");
             var api = processes.api;
@@ -3618,10 +3668,10 @@ namespace NexusAPITest
             string dbTableName = "FS3Migrering";
             string activityListName = "- 1 - Borgerliste til migrering";
 
-            processes.MigrateToNewFS3Conditions(oldNewPath, activityListName, connectionString, dbTableName, "Review");
+            //processes.MigrateToNewFS3Conditions(oldNewPath, activityListName, connectionString, dbTableName, "Review");
+            TestMigrationOfPotentialConditions();
         }
-
-        [Test]
+        //[Test]
         public void TestMigrationOfPotentialConditions()
         {
             NexusAPI_processes processes = new NexusAPI_processes("review");
@@ -3642,10 +3692,10 @@ namespace NexusAPITest
             int patientCounter = 0;
             foreach (var item in activityList)
             {
-                if (patientCounter == 200)
-                {
-                    break;
-                }
+                //if (patientCounter == 200)
+                //{
+                //    break;
+                //}
                 ACTIVITYLIST_Pages_Content_Patient patientItem = item.Patients[0];
                 if (!PatientList.Exists(x => x.Id == patientItem.Id))
                 {
@@ -3677,8 +3727,11 @@ namespace NexusAPITest
                     }
                     if (patientIdInDb == null)
                     {
-                        MigratePotentialConditionsOnPatientToCitizenConditionGroup(Convert.ToInt32(patientElement.Id), oldAndNewConditions, "Review", true);
-                        patientCounter++;
+                        if (patientElement.PatientState.Name != "Død")
+                        {
+                            MigratePotentialConditionsOnPatientToCitizenConditionGroup(Convert.ToInt32(patientElement.Id), oldAndNewConditions, "Review", true);
+                            patientCounter++;
+                        }
                     }
                 }
             } // foreach patient end loop
@@ -3691,7 +3744,7 @@ namespace NexusAPITest
             var api = processes.api;
             OldAndNewConditions oldAndNewConditions = new OldAndNewConditions("C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx");
 
-            MigratePotentialConditionsOnPatientToCitizenConditionGroup(16968, oldAndNewConditions, "Review");
+            MigratePotentialConditionsOnPatientToCitizenConditionGroup(153, oldAndNewConditions, "Review");
         }
         /// <summary>
         /// Denne er endnu ikke lagt ind som alm. proces der kan kaldes
@@ -3783,6 +3836,131 @@ namespace NexusAPITest
             //}
             // Add citizen to db for finished data transfer
             datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+
+        }
+
+        [Test]
+        public void TestManualCredentials()
+        {
+            NexusAPI api = new NexusAPI(true);
+        }
+
+        [Test]
+        public void TestMigrationKoege()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            string oldAndNewConditionsFilePath = "C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx";
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions(oldAndNewConditionsFilePath);
+            string citizenCPR = nancyBerggrenTestCPR;
+            processes.MigrateConditionsOnPatientToCitizenCondition("", oldAndNewConditions, "Review");
+            MigratePotentialConditionsOnPatientToCitizenConditionGroup(1, oldAndNewConditions, "Review", false);
+        }
+        [Test]
+        public void TestMigrationSingleCPR()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            string oldAndNewConditionsFilePath = "C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx";
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions(oldAndNewConditionsFilePath);
+            string citizenCPR = nancyBerggrenTestCPR;
+
+            processes.MigrateConditionsOnPatientToCitizenCondition("291182-9996", oldAndNewConditions, "Review",false);
+            MigratePotentialConditionsOnPatientToCitizenConditionGroup(19608, oldAndNewConditions, "Review", false);
+        }
+
+        [Test]
+        public void ResetNewConditionsOnCitizen()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            
+
+            processes.ResetCitizenConditions("291182-9996", "Pleje og omsorg");
+            processes.ResetCitizenConditions("291182-9996", "Sygepleje");
+        }
+
+
+        [Test]
+        public void GetActivityList()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("live");
+            var api = processes.api;
+
+            var list = api.GetPreferencesCitizenListSelfContent("1 - Antal borgere med  madservice");
+
+            foreach (var page in list.Pages)
+            {
+                string pagelink = page.Links.PatientData.Href;
+                var webResult = api.CallAPI(api, pagelink, Method.Get);
+
+                List<Content_Page_Root> pageContent = JsonConvert.DeserializeObject<List<Content_Page_Root>>(webResult.Result.ToString());
+
+                foreach (var patient in pageContent)
+                {
+                    string patientSelfLink = patient.Links.Self.Href;
+                    var webResultpatient = api.CallAPI(api, patientSelfLink, Method.Get);
+                    var patientObject = JsonConvert.DeserializeObject<PatientDetailsSearch_Root>(webResultpatient.Result.ToString());
+
+
+                }
+
+
+
+            }
+
+            
+
+
+
+
+
+        }
+
+        [Test]
+        public void TestNewFullMigrationOfActiveAndPotentialConditions()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("review");
+            var api = processes.api;
+            string oldAndNewConditionsFilePath = "C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx";
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions(oldAndNewConditionsFilePath);
+            string SQLConnectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+            string dbTableName = "FS3Migrering";
+            string activeListName = "- 1 - Borgerliste til migrering af funktionsevne- og helbredstilstande";
+            string potentialListName = "- 2 - Borgerliste til migrering af potentielle helbredstilstande";
+            //processes.MigrateToNewFS3Conditions(oldAndNewConditionsFilePath, activeListName, SQLConnectionString, dbTableName, "Review");
+            processes.MigratePotentialConditionsToNewFS3ConditionGroups(oldAndNewConditionsFilePath, potentialListName, SQLConnectionString, dbTableName, "Review");
+        }
+        [Test]
+        public void TestNewFullMigrationOfActiveAndPotentialConditionsInProduction()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("live");
+            var api = processes.api;
+            string oldAndNewConditionsFilePath = "C:\\Users\\msch\\OneDrive - Ringsted Kommune\\Desktop\\Docs der sendes\\Oversigt over Gamle og nye tilstande V2.xlsx";
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions(oldAndNewConditionsFilePath);
+            string SQLConnectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
+            string dbTableName = "FS3Migrering";
+            string activeListName = "- 1 - Borgerliste til migrering af funktionsevne- og helbredstilstande";
+            string potentialListName = "- 2 - Borgerliste til migrering af potentielle helbredstilstande";
+            //processes.MigrateToNewFS3Conditions(oldAndNewConditionsFilePath, activeListName, SQLConnectionString, dbTableName, "Review");
+            //processes.MigratePotentialConditionsToNewFS3ConditionGroups(oldAndNewConditionsFilePath, potentialListName, SQLConnectionString, dbTableName, "Review");
+
+            List<string> cprList = new List<string>();
+            cprList.Add("");
+            
+
+            cprList.Add("291182-9996");
+            cprList.Add("251248-9996");
+
+            foreach (var cpr in cprList)
+            {
+                var patient = api.GetPatientDetails(cpr);
+                processes.MigrateConditionsOnPatientToCitizenCondition(cpr, oldAndNewConditions, "live", false);
+                processes.MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions((int)patient.Id, oldAndNewConditions, "live", false);
+            }
+
+
+
 
         }
     }

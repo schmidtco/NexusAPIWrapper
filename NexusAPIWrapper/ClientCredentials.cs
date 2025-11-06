@@ -98,6 +98,34 @@ namespace NexusAPIWrapper
                 }
             }
         }
+        public ClientCredentials(bool manualSetup, string environment = "Review")
+        {
+            this.Nexus_Customer = ""; // eg. Ringsted kommune
+            this.Nexus_customer_instance = ""; // eg. ringsted
+            this.Third_part = ""; // eg. Ringsted kommune
+            this.Client_id = ""; // eg. Ringsted_client
+
+            switch (environment.ToLower())
+            {
+                case "live":
+                    this.Client_secret = ""; // The secret to your invironment
+                    this.Token_endpoint = ""; // eg. https://ringsted.nexus.kmd.dk/authx/realms/ringsted/protocol/openid-connect/token
+                    this.API_homeressource_endpoint = ""; // eg. https://ringsted.nexus.kmd.dk/api/core/mobile/ringsted/v2/
+                    this.Host = "https://" + ""; // eg. ringsted.nexus.kmd.dk
+                    this.Environment = "Live"; // eg. "Live"
+                    break;
+                case "review":
+                    this.Client_secret = ""; // The secret to your invironment
+                    this.Token_endpoint = ""; // eg. https://ringsted.nexus-review.kmd.dk/authx/realms/ringsted/protocol/openid-connect/token
+                    this.API_homeressource_endpoint = ""; // eg. https://ringsted.nexus-review.kmd.dk/api/core/mobile/ringsted/v2/
+                    this.Host = "https://" + ""; // eg. ringsted.nexus-review.kmd.dk
+                    this.Environment = "Review"; // eg. Review
+                    break ;
+                default:
+                    throw new Exception("Environment not available");
+            }
+            
+        }
 
         public string CapitalizeFirstLetter(string input)
         {

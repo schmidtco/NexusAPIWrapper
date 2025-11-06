@@ -24,6 +24,9 @@ namespace NexusAPIWrapper{
         [JsonProperty("visitation")]
         public CitizenDashboardCitizenConditionSelf_Visitation Visitation;
 
+        [JsonProperty("visitationPrototype")]
+        public CitizenDashboardCitizenConditionSelf_VisitationPrototype VisitationPrototype;
+
         [JsonProperty("self")]
         public CitizenDashboardCitizenConditionSelf_Self Self;
 
@@ -31,7 +34,7 @@ namespace NexusAPIWrapper{
         public CitizenDashboardCitizenConditionSelf_CopyPrototype CopyPrototype;
 
         [JsonProperty("editablePreference")]
-        public CitizenDashboardCitizenConditionSelf_EditablePreference EditablePreference;
+        public CitizenDashboardCitizenConditionSelf_EditablePreference EditablePreference; 
     }
 
 }

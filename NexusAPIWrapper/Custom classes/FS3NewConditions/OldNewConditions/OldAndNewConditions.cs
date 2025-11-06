@@ -1,7 +1,5 @@
-﻿using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Presentation;
+﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,15 +8,36 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NPOI.SS.UserModel;
 
 namespace NexusAPIWrapper.Custom_classes.FS3NewConditions.OldNewConditions
 {
     public class OldAndNewConditions
     {
         private readonly Dictionary<string, (string NewArea, string NewCategory, string NewCondition)> _mappings = new Dictionary<string, (string NewArea, string NewCategory, string NewCondition)>();
+        /// <summary>
+        /// Will not load conditions. Use .LoadExcelDataWithOLEDB or .LoadExcelDataWithoutOLEDB afterwards
+        /// </summary>
+        public OldAndNewConditions()
+        {
+
+        }
+        /// <summary>
+        /// Will load conditions using OLEDB
+        /// </summary>
+        /// <param name="excelFilePath"></param>
         public OldAndNewConditions(string excelFilePath)
         {
-            LoadExcelData(excelFilePath);
+            LoadExcelData(excelFilePath, true);
+        }
+        /// <summary>
+        /// Will load condition using OLEDB if true, and NPOI if false
+        /// </summary>
+        /// <param name="excelFilePath"></param>
+        /// <param name="useOLEDB"></param>
+        public OldAndNewConditions(string excelFilePath, bool useOLEDB)
+        {
+            LoadExcelData(excelFilePath,useOLEDB);
         }
 
         /// <summary>
@@ -51,7 +70,66 @@ namespace NexusAPIWrapper.Custom_classes.FS3NewConditions.OldNewConditions
                 _conditionKey = oldArea + oldCategory + oldCondition;
             }
         }
-        public void LoadExcelData(string filePath)
+        public void LoadExcelData(string filePath, bool useOLEDB)
+        {
+            if (useOLEDB)
+            {
+                LoadExcelDataWithOLEDB(filePath);
+            }
+            else
+            {
+                LoadExcelDataWithoutOLEDB(filePath);
+            }
+        }
+        public void LoadExcelDataWithoutOLEDB(string filePath)
+        {
+            // Ensure the file exists
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Excel file not found.", filePath);
+            }
+
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                // Load the workbook (supports both .xlsx and .xls)
+                IWorkbook workbook = WorkbookFactory.Create(fileStream);
+
+                // Get the first worksheet
+                ISheet worksheet = workbook.GetSheetAt(0);
+
+                // Ensure the worksheet has data (at least one data row beyond the header)
+                if (worksheet.LastRowNum < 1)
+                {
+                    throw new InvalidOperationException("The Excel file contains no data or only headers.");
+                }
+
+                // Loop through rows, starting from row 1 (0-based index, skipping header row)
+                for (int rowIndex = 1; rowIndex <= worksheet.LastRowNum; rowIndex++)
+                {
+                    IRow row = worksheet.GetRow(rowIndex);
+                    if (row == null) // Skip empty rows
+                        continue;
+
+                    // Read cell values (0-based column indices)
+                    string oldArea = row.GetCell(0)?.ToString()?.Trim();
+                    string oldCategory = row.GetCell(1)?.ToString()?.Trim();
+                    string oldCondition = row.GetCell(2)?.ToString()?.Trim();
+                    string newArea = row.GetCell(3)?.ToString()?.Trim();
+                    string newCategory = row.GetCell(4)?.ToString()?.Trim();
+                    string newCondition = row.GetCell(5)?.ToString()?.Trim();
+
+                    // Skip invalid rows (e.g., empty old keys)
+                    if (string.IsNullOrWhiteSpace(oldArea) || string.IsNullOrWhiteSpace(oldCategory) || string.IsNullOrWhiteSpace(oldCondition))
+                    {
+                        continue;
+                    }
+
+                    var key = new ConditionKey(oldArea, oldCategory, oldCondition).conditionKey;
+                    _mappings[key] = (newArea, newCategory, newCondition);
+                }
+            }
+        }
+        public void LoadExcelDataWithOLEDB(string filePath)
         {
             string connString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={filePath};Extended Properties='Excel 12.0 Xml;HDR=YES;'";
 
@@ -100,4 +178,5 @@ namespace NexusAPIWrapper.Custom_classes.FS3NewConditions.OldNewConditions
             }
         }
     }
+
 }

@@ -29,7 +29,7 @@ namespace NexusAPIWrapper{
         public CitizenDashboardCitizenConditionSelf_View View;
 
         [JsonProperty("_links")]
-        public CitizenDashboardCitizenConditionSelf_Links Links;
+        public CitizenDashboardCitizenConditionSelf_Links Links; 
     }
 
 }

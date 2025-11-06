@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.SqlServer.Server;
 using MimeKit;
 using Newtonsoft.Json;
 using NexusAPIWrapper.Custom_classes;
@@ -54,6 +55,11 @@ namespace NexusAPIWrapper
         public NexusAPI_processes(string environment)
         {
             api = new NexusAPI(environment);
+            _professionalsList = new List<Professional_Root>();
+        }
+        public NexusAPI_processes(bool manualSetup)
+        {
+            api = new NexusAPI(manualSetup);
             _professionalsList = new List<Professional_Root>();
         }
 
@@ -1707,6 +1713,30 @@ namespace NexusAPIWrapper
 
 
         }
+        
+        
+        public void ResetCitizenConditions(string citizenCPR, string conditionToReset = "Sygepleje")
+        {
+            CitDashbCitCondSelfWidgVisi_Root visitation = api.GetCitizenConditionVisitations(citizenCPR, "Nye tilstandsgrupper", conditionToReset);
+            
+            foreach (var group in visitation.ConditionGroupVisitation)
+            {
+                group.ConditionGroup.Description = "";
+                foreach (var condition in group.Conditions)
+                {
+                    condition.CurrentScore = null;
+                    condition.ExpectedScore = null;
+                    condition.Description = null;
+                    condition.FollowUpDate = null;
+                    condition.State = "INACTIVE";
+                }
+            }
+            //CitDashbCitCondSelfWidgVisi_Root visitation = JsonConvert.DeserializeObject<CitDashbCitCondSelfWidgVisi_Root>(EmptyPlejeOgOmsorg(patientId));
+
+            string updateString = visitation.Links.Visit.Href;
+            string jsonObj = JsonConvert.SerializeObject(visitation);
+            var updateResult = api.CallAPI(api, visitation.Links.Visit.Href, Method.Post, jsonObj); // Updating visitations
+        }
         /// <summary>
         /// If no score is added to this update method they will be 0 - only if the condition has the option
         /// </summary>
@@ -1789,7 +1819,7 @@ namespace NexusAPIWrapper
             {
                 conditionToUpdate.Description = updateText;
                 conditionToUpdate.State = "ACTIVE";
-                conditionToUpdate.FollowUpDate = "2025-09-01T00:00:00.000000";
+                conditionToUpdate.FollowUpDate = "2026-01-01T00:00:00.000000";
 
                 conditionToUpdate.CurrentScore = currentScore;
                 conditionToUpdate.ExpectedScore = expectedScore;
@@ -1816,7 +1846,7 @@ namespace NexusAPIWrapper
                 if (conditionToUpdate.State != "ACTIVE")
                 {
                     conditionToUpdate.State = "ACTIVE";
-                    conditionToUpdate.FollowUpDate = "2025-09-01T00:00:00.000000";
+                    conditionToUpdate.FollowUpDate = "2026-01-01T00:00:00.000000";
 
                     conditionGroupToUpdate.Conditions[(int)conditionToUpdateElementInt] = conditionToUpdate;
                     visitation.ConditionGroupVisitation[(int)conditionGroupToUpdateElementInt] = conditionGroupToUpdate;
@@ -1838,8 +1868,173 @@ namespace NexusAPIWrapper
             
         }
 
-        
-        
+
+        public void MigratePotentialConditionsToNewFS3ConditionGroups(string oldAndNewConditionsPath, string activityListName, string SQLConnectionString, string dbTableName, string environment)
+        {
+            DataHandler datahandler = new DataHandler();
+
+
+            int startDay = 1;
+            int startMonth = 7;
+            int startYear = 2018;
+            int endDay = 1;
+            int endMonth = 7;
+            int endYear = 2026;
+            var activityList1 = api.GetPreferencesActivityListSelfObjectContent(activityListName, startDay, startMonth, startYear, endDay, endMonth, endYear);
+
+            OldAndNewConditions oldAndNewConditions = new OldAndNewConditions(oldAndNewConditionsPath);
+
+            List<ACTIVITYLIST_Pages_Content_Patient> PatientList = new List<ACTIVITYLIST_Pages_Content_Patient>();
+            foreach (var item in activityList1)
+            {
+                //if (PatientList.Count != 101)
+                //{
+                ACTIVITYLIST_Pages_Content_Patient patientItem = item.Patients[0];
+                if (!PatientList.Exists(x => x.Id == patientItem.Id))
+                {
+                    PatientList.Add(patientItem);
+                }
+                //}
+                //    else
+                //{
+                //    break;
+                //}
+            }
+            //Dictionary<string, string> patients = new Dictionary<string, string>();
+            //foreach (var item in PatientList)
+            //{
+            //    if (item.Id != 1) // not doing Nancy
+            //    {
+            //        patients.Add(item.Id.ToString(), item.PatientIdentifier.Identifier);
+            //    }
+            //}
+
+            foreach (var patientElement in PatientList)
+            {
+                if (patientElement.Id != 1) // not doing nancy
+                {
+                    SqlConnection sqlConnection = new SqlConnection(SQLConnectionString);
+                    string queryString = "SELECT * FROM " + dbTableName + " WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
+                    SqlCommand command = new SqlCommand(queryString, sqlConnection);
+
+                    int? patientIdInDb = null;
+                    using (sqlConnection)
+                    {
+                        command.Connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            patientIdInDb = Convert.ToInt32(reader["CitizenId"].ToString());
+                        }
+                        if (patientIdInDb == null)
+                        {
+                            MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions(Convert.ToInt32(patientElement.Id), oldAndNewConditions, environment, true);
+                        }
+                    }
+                }
+                
+            } // foreach patient end loop
+
+
+
+        }
+        public void MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions(int patientId, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false)
+        {
+            //NexusAPI_processes processes = new NexusAPI_processes(environment);
+            //var api = processes.api;
+            //DataHandler datahandler = new DataHandler();
+            var patient = api.GetPatientDetails(patientId);
+
+            // check if CPR is a CPR or not
+            // if not just continue
+            string citizenCPR = patient.PatientIdentifier.Identifier;
+            if (CprValidator.IsValidCpr(citizenCPR))
+            {
+                var links = patient.Links;
+
+                var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+                var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+                foreach (var condition in patientConditions)
+                {
+                    (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment) citizenCondtion;
+                    //try
+                    //{
+                    string conditionNameT = condition.ConditionClassificationItem.Name;
+                    if (condition.Status == "POTENTIAL") // we only handle active and potential conditions
+                    {
+                        string conditionArea = condition.ConditionClassificationItem.Group.Law;
+                        switch (conditionArea)
+                        {
+                            case "SERVICE_LAW":
+                                conditionArea = "Funktionsevnetilstande";
+                                break;
+                            case "HEALTH_LAW":
+                                conditionArea = "Helbredstilstande";
+                                break;
+                            case "TRAINING_LAW":
+                                continue;
+                            default:
+                                continue;
+                                //break;
+                        }
+                        string groupName = condition.ConditionClassificationItem.Group.Name;
+                        string conditionName = condition.ConditionClassificationItem.Name;
+
+                        var newCondition = oldAndNewConditions.GetNewMapping(conditionArea, groupName, conditionName);
+
+                        //(string ConditionGroupName, string ConditionType) = datahandler.GetCorrectConditionToUpdateName(groupName);
+                        //    string newConditionToUpdate = GetNewCondition(conditionName);
+                        string conditionText = GetNewConditionText(condition); //condition.CurrentLevelDescription;
+                        if (conditionText == null) { conditionText = "Ingen beskrivelse i gammel tilstand."; }
+
+                        if (conditionArea == "Funktionsevnetilstande")
+                        {
+                            citizenCondtion = UpdateCitizenConditionGroup(
+                                    patient.PatientIdentifier.Identifier,
+                                    "Nye tilstandsgrupper",
+                                    newCondition.NewArea,
+                                    newCondition.NewCategory,
+                                    conditionText,
+                                    true,
+                                    condition.CurrentLevel != null ? (int)condition.CurrentLevel.NumericRepresentation : 0,
+                                    condition.ExpectedLevel != null ? (int)condition.ExpectedLevel.NumericRepresentation : 0
+                                    );
+                        }
+                        else // Helbredstilstande
+                        {
+                            citizenCondtion = UpdateCitizenConditionGroup(
+                                    patient.PatientIdentifier.Identifier,
+                                    "Nye tilstandsgrupper",
+                                    newCondition.NewArea,
+                                    newCondition.NewCategory,
+                                    conditionText,
+                                    true
+                                    );
+                        }
+                    }
+
+
+                }
+                //catch (Exception)
+                //{
+
+                //    throw new Exception("Something went wrong with " + patient.FullName + " - ID: " + patient.Id);
+                //}
+
+
+
+                //}
+                if (insertIntoDb)
+                {
+                    // Add citizen to db for finished data transfer
+                    api.dataHandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+                }
+            }
+            
+
+        }
         public void MigrateToNewFS3Conditions(string oldAndNewConditionsPath, string activityListName, string SQLConnectionString, string dbTableName, string environment)
         {
             DataHandler datahandler = new DataHandler();
@@ -1847,7 +2042,7 @@ namespace NexusAPIWrapper
 
             int startDay = 1;
             int startMonth = 7;
-            int startYear = 2024;
+            int startYear = 2018;
             int endDay = 1;
             int endMonth = 7;
             int endYear = 2026;
@@ -1870,33 +2065,50 @@ namespace NexusAPIWrapper
                 //{
                 //    break;
                 //}
-        }
+            }
+            Dictionary<string, string> patients = new Dictionary<string, string>();
+            foreach (var item in PatientList)
+            {
+                //if (item.Id != 1) // not doing Nancy
+                //{
+                    patients.Add(item.Id.ToString(), item.PatientIdentifier.Identifier);
+                //}
+            }
 
             foreach (var patientElement in PatientList)
             {
-                SqlConnection sqlConnection = new SqlConnection(SQLConnectionString);
-                string queryString = "SELECT * FROM " + dbTableName + " WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
-                SqlCommand command = new SqlCommand(queryString, sqlConnection);
-
-                int? patientIdInDb = null;
-                using (sqlConnection)
+                if (patientElement.Id !=1)
                 {
-                    command.Connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
+                    SqlConnection sqlConnection = new SqlConnection(SQLConnectionString);
+                    string queryString = "SELECT * FROM " + dbTableName + " WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
+                    SqlCommand command = new SqlCommand(queryString, sqlConnection);
 
-                    while (reader.Read())
+                    int? patientIdInDb = null;
+                    using (sqlConnection)
                     {
-                        patientIdInDb = Convert.ToInt32(reader["CitizenId"].ToString());
-                    }
-                    if (patientIdInDb == null)
-                    {
-                        MigrateConditionsOnPatientToCitizenCondition(Convert.ToInt32(patientElement.Id), oldAndNewConditions,environment, true);
+                        command.Connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            patientIdInDb = Convert.ToInt32(reader["CitizenId"].ToString());
+                        }
+                        if (patientIdInDb == null)
+                        {
+                            MigrateConditionsOnPatientToCitizenCondition(Convert.ToInt32(patientElement.Id), oldAndNewConditions, environment, true);
+                        }
                     }
                 }
+                
             } // foreach patient end loop
 
 
 
+        }
+        public void MigrateConditionsOnPatientToCitizenCondition(string citizenCPR, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false)
+        {
+            var patient = api.GetPatientDetails(citizenCPR);
+            MigrateConditionsOnPatientToCitizenCondition((int)patient.Id,oldAndNewConditions, environment, insertIntoDb);
         }
         public void MigrateConditionsOnPatientToCitizenCondition(int patientId, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false)
         {
@@ -1904,84 +2116,96 @@ namespace NexusAPIWrapper
             //var api = processes.api;
             DataHandler datahandler = new DataHandler();
             var patient = api.GetPatientDetails(patientId);
-            var links = patient.Links;
 
-            var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
-            var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
-
-            foreach (var condition in patientConditions)
+            // check if CPR is a CPR or not
+            // if not just continue
+            string citizenCPR = patient.PatientIdentifier.Identifier;
+            if (CprValidator.IsValidCpr(citizenCPR))
             {
-                (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment) citizenCondtion;
-                //try
-                //{
-                if (condition.Status == "ACTIVE")// || condition.Status == "POTENTIAL") // we only handle active and potential conditions
+                var links = patient.Links;
+
+                var result = api.CallAPI(api, links.PatientConditions.Href, Method.Get);
+                var patientConditions = JsonConvert.DeserializeObject<List<PatientConditions_Root>>(result.Result.ToString());
+
+                foreach (var condition in patientConditions)
                 {
-                    string conditionArea = condition.ConditionClassificationItem.Group.Law;
-                    switch (conditionArea)
+                    (bool conditionUpdated, CitDashbCitCondSelfWidgVisi_Root visitationObject, string comment) citizenCondtion;
+                    //try
+                    //{
+                    if (condition.Status == "ACTIVE")// || condition.Status == "POTENTIAL") // we only handle active and potential conditions
                     {
-                        case "SERVICE_LAW":
-                            conditionArea = "Funktionsevnetilstande";
-                            break;
-                        case "HEALTH_LAW":
-                            conditionArea = "Helbredstilstande";
-                            break;
-                        case "TRAINING_LAW":
-                            continue;
-                        default:
-                            continue;
-                            //break;
-                    }
-                    string groupName = condition.ConditionClassificationItem.Group.Name;
-                    string conditionName = condition.ConditionClassificationItem.Name;
+                        string conditionArea = condition.ConditionClassificationItem.Group.Law;
+                        switch (conditionArea)
+                        {
+                            case "SERVICE_LAW":
+                                conditionArea = "Funktionsevnetilstande";
+                                break;
+                            case "HEALTH_LAW":
+                                conditionArea = "Helbredstilstande";
+                                break;
+                            case "TRAINING_LAW":
+                                continue;
+                            default:
+                                continue;
+                                //break;
+                        }
+                        string groupName = condition.ConditionClassificationItem.Group.Name;
+                        string conditionName = condition.ConditionClassificationItem.Name;
 
-                    var newCondition = oldAndNewConditions.GetNewMapping(conditionArea, groupName, conditionName);
+                        var newCondition = oldAndNewConditions.GetNewMapping(conditionArea, groupName, conditionName);
 
-                    //(string ConditionGroupName, string ConditionType) = datahandler.GetCorrectConditionToUpdateName(groupName);
-                    //    string newConditionToUpdate = GetNewCondition(conditionName);
-                    string conditionText = GetNewConditionText(condition); //condition.CurrentLevelDescription;
-                    if (conditionText == null) { conditionText = "Ingen beskrivelse i gammel tilstand."; }
+                        //(string ConditionGroupName, string ConditionType) = datahandler.GetCorrectConditionToUpdateName(groupName);
+                        //    string newConditionToUpdate = GetNewCondition(conditionName);
+                        string conditionText = GetNewConditionText(condition); //condition.CurrentLevelDescription;
+                        if (conditionText == null) { conditionText = "Ingen beskrivelse i gammel tilstand."; }
 
-                    if (conditionArea == "Funktionsevnetilstande")
-                    {
-                        citizenCondtion = UpdateCitizenCondition(
-                                patient.PatientIdentifier.Identifier,
-                                "Nye tilstandsgrupper",
-                                newCondition.NewArea,
-                                newCondition.NewCategory,
-                                newCondition.NewCondition,
-                                conditionText,
-                                true,
-                                condition.CurrentLevel != null ? (int)condition.CurrentLevel.NumericRepresentation : 0,
-                                condition.ExpectedLevel != null ? (int)condition.ExpectedLevel.NumericRepresentation : 0
-                                );
+                        if (conditionArea == "Funktionsevnetilstande")
+                        {
+                            citizenCondtion = UpdateCitizenCondition(
+                                    patient.PatientIdentifier.Identifier,
+                                    "Nye tilstandsgrupper",
+                                    newCondition.NewArea,
+                                    newCondition.NewCategory,
+                                    newCondition.NewCondition,
+                                    conditionText,
+                                    true,
+                                    condition.CurrentLevel != null ? (int)condition.CurrentLevel.NumericRepresentation : 0,
+                                    condition.ExpectedLevel != null ? (int)condition.ExpectedLevel.NumericRepresentation : 0
+                                    );
+                        }
+                        else
+                        {
+                            citizenCondtion = UpdateCitizenCondition(
+                                    patient.PatientIdentifier.Identifier,
+                                    "Nye tilstandsgrupper",
+                                    newCondition.NewArea,
+                                    newCondition.NewCategory,
+                                    newCondition.NewCondition,
+                                    conditionText,
+                                    true
+                                    );
+                        }
                     }
-                    else
-                    {
-                        citizenCondtion = UpdateCitizenCondition(
-                                patient.PatientIdentifier.Identifier,
-                                "Nye tilstandsgrupper",
-                                newCondition.NewArea,
-                                newCondition.NewCategory,
-                                newCondition.NewCondition,
-                                conditionText,
-                                true
-                                );
-                    }
+
+
                 }
+                //catch (Exception)
+                //{
 
-
-            }
-            //catch (Exception)
-            //{
-
-            //    throw new Exception("Something went wrong with " + patient.FullName + " - ID: " + patient.Id);
-            //}
+                //    throw new Exception("Something went wrong with " + patient.FullName + " - ID: " + patient.Id);
+                //}
 
 
 
-            //}
-            // Add citizen to db for finished data transfer
-            datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+                //}
+                // Add citizen to db for finished data transfer
+                if (insertIntoDb)
+                {
+                    datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+                }
+            } // if citizen CPR is valid END
+
+            
 
         }
 

@@ -48,7 +48,6 @@ namespace NexusAPIWrapper
             get => _dataHandler;
             set => _dataHandler = value;
         }
-
         public NexusTokenObject tokenObject
         {
             get => _tokenObject;
@@ -86,6 +85,19 @@ namespace NexusAPIWrapper
             dataHandler = new DataHandler();
             GetHomeRessource();
             GetMIMETypes();
+        }
+        public NexusAPI(bool manualSetup)
+        {
+            if (manualSetup)
+            {
+                clientCredentials = new ClientCredentials(manualSetup);
+                tokenObject = new NexusTokenObject(clientCredentials);
+                result = new NexusResult();
+                dataHandler = new DataHandler();
+                GetHomeRessource();
+                GetMIMETypes();
+            }
+            
         }
         #endregion Constructors
 
@@ -2703,6 +2715,7 @@ namespace NexusAPIWrapper
             CitizenDashboardCitizenConditionSelf_Root citizenConditionElement = GetCitizenDashboardCitizenConditionElement(citizenCPR, dashboardElementName);
             var chosenCondition = citizenConditionElement.View.Widgets.FirstOrDefault(x => x.HeaderTitle == conditionName);
 
+            var visitationsResultTest = CallAPI(this, chosenCondition.Links.VisitationPrototype.Href, Method.Get, true);
             var visitationsResult = CallAPI(this, chosenCondition.Links.Visitation.Href, Method.Get, true); // this is like clicking the edit/rediger button       
             CitDashbCitCondSelfWidgVisi_Root visitation = JsonConvert.DeserializeObject<CitDashbCitCondSelfWidgVisi_Root>(visitationsResult.Result.ToString());
             return visitation;
