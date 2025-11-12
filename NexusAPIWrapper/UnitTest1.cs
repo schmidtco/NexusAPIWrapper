@@ -3931,6 +3931,8 @@ namespace NexusAPITest
             //processes.MigrateToNewFS3Conditions(oldAndNewConditionsFilePath, activeListName, SQLConnectionString, dbTableName, "Review");
             processes.MigratePotentialConditionsToNewFS3ConditionGroups(oldAndNewConditionsFilePath, potentialListName, SQLConnectionString, dbTableName, "Review");
         }
+
+
         [Test]
         public void TestNewFullMigrationOfActiveAndPotentialConditionsInProduction()
         {
@@ -3940,28 +3942,46 @@ namespace NexusAPITest
             OldAndNewConditions oldAndNewConditions = new OldAndNewConditions(oldAndNewConditionsFilePath);
             string SQLConnectionString = "Data Source=RKSQL03;Initial Catalog=RKSQLRPA01;Persist Security Info=True;User ID=rpasql01;Password=Sol@1427";
             string dbTableName = "FS3Migrering";
+            string dbTableNamePotential = "FS3MigreringPotentielleTilstande";
             string activeListName = "- 1 - Borgerliste til migrering af funktionsevne- og helbredstilstande";
             string potentialListName = "- 2 - Borgerliste til migrering af potentielle helbredstilstande";
-            //processes.MigrateToNewFS3Conditions(oldAndNewConditionsFilePath, activeListName, SQLConnectionString, dbTableName, "Review");
-            //processes.MigratePotentialConditionsToNewFS3ConditionGroups(oldAndNewConditionsFilePath, potentialListName, SQLConnectionString, dbTableName, "Review");
+            processes.MigrateToNewFS3Conditions(oldAndNewConditionsFilePath, activeListName, SQLConnectionString, dbTableName, "Live");
+            processes.MigratePotentialConditionsToNewFS3ConditionGroups(oldAndNewConditionsFilePath, potentialListName, SQLConnectionString, dbTableNamePotential, "Live");
+
+            //List<string> cprList = new List<string>();
+            ////cprList.Add("");
+
+
+            ////cprList.Add("291182-9996");
+            //cprList.Add("251248-9996");
+
+            //foreach (var cpr in cprList)
+            //{
+            //    var patient = api.GetPatientDetails(cpr);
+            //    processes.MigrateConditionsOnPatientToCitizenCondition(cpr, oldAndNewConditions, "live", false);
+            //    processes.MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions((int)patient.Id, oldAndNewConditions, "live", false);
+            //}
+
+
+
+
+        }
+        [Test]
+        public void TestResetMigratedCitizens()
+        {
+            NexusAPI_processes processes = new NexusAPI_processes("live");
+            var api = processes.api;
 
             List<string> cprList = new List<string>();
-            cprList.Add("");
-            
 
             cprList.Add("291182-9996");
             cprList.Add("251248-9996");
 
-            foreach (var cpr in cprList)
+            foreach (var citizen in cprList)
             {
-                var patient = api.GetPatientDetails(cpr);
-                processes.MigrateConditionsOnPatientToCitizenCondition(cpr, oldAndNewConditions, "live", false);
-                processes.MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions((int)patient.Id, oldAndNewConditions, "live", false);
+                processes.ResetCitizenConditions(citizen, "Pleje og omsorg");
+                processes.ResetCitizenConditions(citizen, "Sygepleje");
             }
-
-
-
-
         }
     }
 }

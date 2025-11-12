@@ -1903,16 +1903,16 @@ namespace NexusAPIWrapper
             //Dictionary<string, string> patients = new Dictionary<string, string>();
             //foreach (var item in PatientList)
             //{
-            //    if (item.Id != 1) // not doing Nancy
-            //    {
+            //    //if (item.Id != 1) // not doing Nancy
+            //    //{
             //        patients.Add(item.Id.ToString(), item.PatientIdentifier.Identifier);
-            //    }
+            //    //}
             //}
 
             foreach (var patientElement in PatientList)
             {
-                if (patientElement.Id != 1) // not doing nancy
-                {
+                //if (patientElement.Id != 1) // not doing nancy
+                //{
                     SqlConnection sqlConnection = new SqlConnection(SQLConnectionString);
                     string queryString = "SELECT * FROM " + dbTableName + " WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
                     SqlCommand command = new SqlCommand(queryString, sqlConnection);
@@ -1929,17 +1929,17 @@ namespace NexusAPIWrapper
                         }
                         if (patientIdInDb == null)
                         {
-                            MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions(Convert.ToInt32(patientElement.Id), oldAndNewConditions, environment, true);
+                            MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions(Convert.ToInt32(patientElement.Id), oldAndNewConditions, environment, true, dbTableName);
                         }
                     }
-                }
+                //}
                 
             } // foreach patient end loop
 
 
 
         }
-        public void MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions(int patientId, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false)
+        public void MigratePotentialConditionsOnPatientToCitizenConditionGroupNewFS3Conditions(int patientId, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false, string dbTableName = null)
         {
             //NexusAPI_processes processes = new NexusAPI_processes(environment);
             //var api = processes.api;
@@ -2026,10 +2026,14 @@ namespace NexusAPIWrapper
 
 
                 //}
-                if (insertIntoDb)
+                if (insertIntoDb && dbTableName != null)
                 {
                     // Add citizen to db for finished data transfer
-                    api.dataHandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+                    api.dataHandler.RunSQLWithoutReturnResult("INSERT INTO " + dbTableName + " VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+                }
+                else if (insertIntoDb && dbTableName == null)
+                {
+                    throw new Exception("dbTableName is null");
                 }
             }
             
@@ -2066,19 +2070,19 @@ namespace NexusAPIWrapper
                 //    break;
                 //}
             }
-            Dictionary<string, string> patients = new Dictionary<string, string>();
-            foreach (var item in PatientList)
-            {
-                //if (item.Id != 1) // not doing Nancy
-                //{
-                    patients.Add(item.Id.ToString(), item.PatientIdentifier.Identifier);
-                //}
-            }
+            //Dictionary<string, string> patients = new Dictionary<string, string>();
+            //foreach (var item in PatientList)
+            //{
+            //    //if (item.Id != 1) // not doing Nancy
+            //    //{
+            //        patients.Add(item.Id.ToString(), item.PatientIdentifier.Identifier);
+            //    //}
+            //}
 
             foreach (var patientElement in PatientList)
             {
-                if (patientElement.Id !=1)
-                {
+                //if (patientElement.Id !=1)
+                //{
                     SqlConnection sqlConnection = new SqlConnection(SQLConnectionString);
                     string queryString = "SELECT * FROM " + dbTableName + " WHERE CitizenId = " + Convert.ToInt32(patientElement.Id);
                     SqlCommand command = new SqlCommand(queryString, sqlConnection);
@@ -2095,10 +2099,10 @@ namespace NexusAPIWrapper
                         }
                         if (patientIdInDb == null)
                         {
-                            MigrateConditionsOnPatientToCitizenCondition(Convert.ToInt32(patientElement.Id), oldAndNewConditions, environment, true);
+                            MigrateConditionsOnPatientToCitizenCondition(Convert.ToInt32(patientElement.Id), oldAndNewConditions, environment, true, dbTableName);
                         }
                     }
-                }
+                //}
                 
             } // foreach patient end loop
 
@@ -2110,7 +2114,7 @@ namespace NexusAPIWrapper
             var patient = api.GetPatientDetails(citizenCPR);
             MigrateConditionsOnPatientToCitizenCondition((int)patient.Id,oldAndNewConditions, environment, insertIntoDb);
         }
-        public void MigrateConditionsOnPatientToCitizenCondition(int patientId, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false)
+        public void MigrateConditionsOnPatientToCitizenCondition(int patientId, OldAndNewConditions oldAndNewConditions, string environment, bool insertIntoDb = false, string dbTableName = null)
         {
             //NexusAPI_processes processes = new NexusAPI_processes(environment);
             //var api = processes.api;
@@ -2199,10 +2203,15 @@ namespace NexusAPIWrapper
 
                 //}
                 // Add citizen to db for finished data transfer
-                if (insertIntoDb)
+                if (insertIntoDb && dbTableName != null)
                 {
-                    datahandler.RunSQLWithoutReturnResult("INSERT INTO FS3Migrering VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
+                    datahandler.RunSQLWithoutReturnResult("INSERT INTO " + dbTableName + " VALUES  (" + patient.Id + ",'" + patient.FullName + "')");
                 }
+                else if( insertIntoDb && dbTableName == null)
+                {
+                    throw new Exception("dbTableName is missing");
+                }
+
             } // if citizen CPR is valid END
 
             
